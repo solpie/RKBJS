@@ -1,5 +1,4 @@
 var nodeExternals = require('webpack-node-externals');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 module.exports = {
     entry: {

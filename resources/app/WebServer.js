@@ -46,6 +46,7 @@
 
 	"use strict";
 	var Env_1 = __webpack_require__(1);
+	var AdminRouter_1 = __webpack_require__(3);
 	var localhost;
 	var WebServer = (function () {
 	    function WebServer(callback) {
@@ -56,10 +57,10 @@
 	    };
 	    WebServer.prototype.initEnv = function (callback) {
 	        var _this = this;
-	        var process = __webpack_require__(3);
+	        var process = __webpack_require__(5);
 	        Env_1.ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
 	        console.log(process.execPath, Env_1.ServerConf.isDev);
-	        var fs = __webpack_require__(4);
+	        var fs = __webpack_require__(6);
 	        fs.readFile('resources/app/package.json', function (err, data) {
 	            if (err)
 	                throw err;
@@ -74,12 +75,12 @@
 	    };
 	    WebServer.prototype.initServer = function () {
 	        var _this = this;
-	        var express = __webpack_require__(5);
+	        var express = __webpack_require__(4);
 	        var app = express();
 	        app.set('views', "./resources/app/view");
 	        app.set('view engine', 'ejs');
 	        app.use(express.static("./resources/app/static"));
-	        var bodyParser = __webpack_require__(6);
+	        var bodyParser = __webpack_require__(7);
 	        app.use(bodyParser.urlencoded({ extended: false, limit: '55mb' }));
 	        app.use(bodyParser.json({ limit: '50mb' }));
 	        app.all("*", function (req, res, next) {
@@ -94,8 +95,9 @@
 	            }
 	        });
 	        app.get('/', function (req, res) {
-	            res.send('hello' + new Date().getDate());
+	            res.redirect('/admin');
 	        });
+	        app.use('/admin', AdminRouter_1.adminRouter);
 	        app.listen(Env_1.ServerConf.port, function () {
 	            _this.initSocketIO();
 	            console.log("server on:  ws port:");
@@ -134,24 +136,35 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("process");
+	"use strict";
+	exports.adminRouter = __webpack_require__(4).Router();
+	exports.adminRouter.get('/', function (req, res) {
+	    res.render('admin/index', { version: 0.5, opUrlArr: ['http://123', '21'] });
+	});
+
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
-	module.exports = require("fs");
+	module.exports = require("express");
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = require("express");
+	module.exports = require("process");
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("fs");
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");

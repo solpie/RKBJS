@@ -1,6 +1,7 @@
 // import {adminRouter} from "./router/AdminRouter";
 // import {initDB} from "./model/DbInfo";
 import {ServerConf} from "./Env";
+import {adminRouter} from "./router/AdminRouter";
 // import {dbRouter} from "./router/DbRouter";
 // import {SocketIOSrv} from "./SocketIOSrv";
 // import {panelRouter} from "./router/PanelRouter";
@@ -89,11 +90,11 @@ export class WebServer {
 
 
         app.get('/', function (req: any, res: any) {
-            res.send('hello' + new Date().getDate());
-            // res.redirect('/admin');
+            // res.send('hello' + new Date().getDate());
+            res.redirect('/admin');
         });
 
-        // app.use('/admin', adminRouter);
+        app.use('/admin', adminRouter);
         // app.use('/panel', panelRouter);
         // app.use('/db', dbRouter);
         // app.use('/m', mobileRouter);

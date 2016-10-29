@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "copy-webpack-plugin": "^4.0.0",
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "nedb": "^1.8.0",
