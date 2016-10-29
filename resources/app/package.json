@@ -1,0 +1,9 @@
+{
+  "name": "RKB",
+  "version": "1.0.0",
+  "description": "RKB",
+  "main": "main.js",
+  "server": {
+    "port": 80
+  }
+}

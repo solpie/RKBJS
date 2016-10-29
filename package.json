@@ -1,0 +1,36 @@
+{
+  "name": "rkb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
+    "nedb": "^1.8.0",
+    "socket.io": "^1.5.1",
+    "unirest": "^0.5.1"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.0.0",
+    "electron-packager": "^8.1.0",
+    "electron-prebuilt": "^1.4.4",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.9.5",
+    "tsd": "^0.6.5",
+    "typescript": "^2.0.6",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "scripts": {
+    "app": "npm run build && electron resources/app --enable-logging",
+    "build": "npm run server-build",
+    "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
+    "pack64": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=x64 --overwrite",
+    "pack32": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=ia32 --overwrite",
+    "server": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
+    "server-build": "webpack --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
