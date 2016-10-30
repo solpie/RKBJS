@@ -57,12 +57,23 @@ export class WebServer {
     }
 
     initServer() {
+        // var ejsss = require('ejs');
         var express: any = require('express');
         var app = express();
-        // view engine setup
+        // template engine setup
         app.set('views', "./resources/app/view");
-        app.set('view engine', 'ejs');
+        // app.set('view engine', 'ejs');
 
+        var mustacheExpress = require('mustache-express');
+
+// Register '.mustache' extension with The Mustache Express
+        app.engine('mustache', mustacheExpress());
+
+        app.set('view engine', 'mustache');
+        // app.set('views', __dirname + '/views');
+
+
+        ///
         app.use(express.static("./resources/app/static"));//
         // app.use('/static', express.static(_path("./app/static")));//
         // app.use(express.static(_path("./app/db")));//
