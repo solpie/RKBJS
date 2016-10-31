@@ -1,11 +1,11 @@
-import {Stage1v1View, stage1v1View} from "./stage1v1/Stage1v1View";
+import {RKBOPView} from "./stageRKB/RKBOPView";
 //////////////
 ///////////////////
 
 var routes = [
     {
-        path: '/', name: 'home',
-        components: {default: stage1v1View}
+        path: '/', name: 'panel',
+        components: {default: RKBOPView}
     }
 ];
 
@@ -19,7 +19,6 @@ var router = new VueRouter({
 
 router.afterEach((to, from) => {
 });
-
 var app = new Vue({
     router
-}).$mount('#app');
+}).$mount('#panel');

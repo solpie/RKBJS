@@ -195,9 +195,9 @@ export class Command {
     constructor() {
         // super();
         this.cmdArr = [];
-        for (var k in CommandId) {
-            CommandId[k] = k;
-        }
+        // for (var k in CommandId) {
+        //     CommandId[k] = k;
+        // }
         console.log("CommandId", CommandId);
         ////test cmd
     }

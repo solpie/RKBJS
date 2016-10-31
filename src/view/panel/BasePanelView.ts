@@ -1,11 +1,22 @@
 import {ViewConst} from "../libs";
 import Stage = createjs.Stage;
 import Container = createjs.Container;
-export class BasePanelView{
+declare var $;
+export class BasePanelView {
     stageWidth;
     stageHeight;
     ctn;
     stage;
+    opReq: (cmdId: string, param: any, callback?: any)=>void;
+
+    constructor(pid) {
+        this.opReq = (cmdId: string, param: any, callback?: any)=> {
+            $.post(`/panel/${pid}/${cmdId}`,
+                param,
+                callback);
+        };
+    }
+
     initCanvas() {
         this.stageWidth = ViewConst.STAGE_WIDTH;
         this.stageHeight = ViewConst.STAGE_HEIGHT;
