@@ -16,6 +16,8 @@
     "electron-packager": "^8.1.0",
     "electron-prebuilt": "^1.4.4",
     "hogan-express": "^0.5.2",
+    "html-loader": "^0.4.4",
+    "jquery": "^3.1.1",
     "json-loader": "^0.5.4",
     "source-map-loader": "^0.1.5",
     "ts-loader": "^0.9.5",
@@ -26,6 +28,7 @@
   "scripts": {
     "app": "npm run build && electron resources/app --enable-logging",
     "build": "npm run server-build",
+    "view": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
     "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
     "pack64": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=x64 --overwrite",
     "pack32": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=ia32 --overwrite",

@@ -7,7 +7,7 @@ module.exports = {
         "view/panel": "./src/view/panel/index.ts"
     },
     output: {
-        path: './static',
+        path: './resources/app/static',
         filename: "[name].js"
     },
     devtool: 'source-map',

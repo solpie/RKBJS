@@ -3,8 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>RKB 0.5</title>
+    <style>
+        body {
+            margin: 0;
+            -webkit-app-region: drag;
+            background: black;
+        }
+        #dashboard {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 2;
+            width: 950px;
+        }
+    </style>
 </head>
 <body>
+<img src="file:///resources/app/static/img/index.gif" style=" -webkit-app-region: no-drag;position: fixed;z-index: 1">
+<div id="dashboard">
+    <div style="color: #0acbfc">
+        RKB
+        <!-- All of the Node.js APIs are available in this renderer process. -->
+        <script>document.write(process.versions.node)</script>
+        ,
+        Chromium
+        <script>document.write(process.versions.chrome)</script>
+        ,
+        Electron
+        <script>document.write(process.versions.electron)</script>
+        <br>
+        <script>
+            var isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
+            if (isDev)
+                document.write("dev version<br>");
+        </script>
+    </div>
+</div>
 <script>
     var webServer = require('./WebServer.js');
 </script>

@@ -1,0 +1,78 @@
+<div>
+    <div id="progress1" class="ui indicating progress" data-percent="60">
+        <div class="bar"></div>
+        <div class="label">Loading</div>
+    </div>
+    <div class="ui two column grid" style="">
+        <div class="six wide column">
+            <table class="ui striped table">
+                <thead>
+                <tr>
+                    <th width="50px"></th>
+                    <th width="150px">ID</th>
+                    <th width="50px" @click="onSortGameCount">场数</th>
+                    <th width="70px" @click="onSortWinPercent">胜率</th>
+                    <th width="70px">贡献值</th>
+                    <th width="70px">天梯分</th>
+                    <th>战绩</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(playerDoc,index) in playerDocArr">
+                    <!--<td><img src="{{playerDoc.avatar}}" style="width: 100px"></td>-->
+                    <td v-text="index+1"></td>
+                    <td v-text="playerDoc.name"></td>
+                    <td v-text="(playerDoc.winGameCount+playerDoc.loseGameCount)||0"></td>
+                    <td v-text="(playerDoc.winGameCount/(playerDoc.winGameCount+playerDoc.loseGameCount)*100||0).toFixed(2)+'%'"></td>
+                    <td v-text="playerDoc.score"></td>
+                    <td v-text="playerDoc.eloScore"></td>
+                    <td>
+                        <button class="ui right labeled icon button showRec" @click="onShowRec(playerDoc.name)">
+                            <i class="right arrow icon"></i>
+                            查看
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="four wide column" style="position: fixed;top: 60px;">
+            <table class="ui striped table">
+                <thead>
+                <tr>
+                    <th>round</th>
+                    <th width="150px">ID</th>
+                    <th width="80px">VS</th>
+                    <th width="150px">ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(rec,index) in playerGameRecArr" :class="[{ positive: rec.win }, { negative: !rec.win }]">
+                    <td v-text="rec.round"></td>
+                    <td v-text="rec.left.name" :class="{bold:rec.name==rec.left.name}"></td>
+                    <td v-text="rec.left.score+' : '+rec.right.score"></td>
+                    <td v-text="rec.right.name":class="{bold:rec.name==rec.right.name}"></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="3">
+                        <div class="ui right floated pagination menu">
+                            <a class="icon item">
+                                <i class="left chevron icon"></i>
+                            </a>
+                            <a class="item " v-for="(page,pageIdx) in playerGameRecPageArr"
+                               @click="onClkGameRecPage(pageIdx)">{{pageIdx+1}}</a>
+                            <a class="icon item">
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
