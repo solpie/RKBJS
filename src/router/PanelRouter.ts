@@ -1,4 +1,6 @@
 import {ServerConf} from "../Env";
+import {PanelId, ScParam} from "../view/libs";
+import {CommandId} from "../view/Command";
 export var panelRouter = require('express').Router();
 
 panelRouter.get('/', function (req, res) {
@@ -33,5 +35,17 @@ panelRouter.get('/auto/player/:game_id', function (req, res) {
             res.send(response.body);
         });
 });
+
+panelRouter.initWs = (io)=> {
+    console.log('initWs');
+    io = io.of(`/${PanelId.rkbPanel}`);
+    io
+        .on("connect", (socket) => {
+            socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: this.gameInfo, isDev: ServerConf.isDev}));
+        })
+        .on('disconnect', function (socket) {
+            console.log('disconnect');
+        });
+};
 
 

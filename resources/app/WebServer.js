@@ -47,7 +47,7 @@
 	"use strict";
 	var Env_1 = __webpack_require__(1);
 	var AdminRouter_1 = __webpack_require__(3);
-	var PanelRouter_1 = __webpack_require__(128);
+	var PanelRouter_1 = __webpack_require__(85);
 	var WebServer = (function () {
 	    function WebServer(callback) {
 	        this.initEnv(callback);
@@ -57,7 +57,7 @@
 	    };
 	    WebServer.prototype.initEnv = function (callback) {
 	        var _this = this;
-	        var process = __webpack_require__(85);
+	        var process = __webpack_require__(94);
 	        Env_1.ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
 	        console.log(process.execPath, Env_1.ServerConf.isDev);
 	        var fs = __webpack_require__(15);
@@ -78,11 +78,11 @@
 	        var express = __webpack_require__(4);
 	        var app = express();
 	        app.set('views', "./resources/app/view");
-	        var mustacheExpress = __webpack_require__(86);
+	        var mustacheExpress = __webpack_require__(95);
 	        app.engine('mustache', mustacheExpress());
 	        app.set('view engine', 'mustache');
 	        app.use(express.static("./resources/app/static"));
-	        var bodyParser = __webpack_require__(91);
+	        var bodyParser = __webpack_require__(100);
 	        app.use(bodyParser.urlencoded({ extended: false, limit: '55mb' }));
 	        app.use(bodyParser.json({ limit: '50mb' }));
 	        app.all("*", function (req, res, next) {
@@ -107,6 +107,7 @@
 	        });
 	    };
 	    WebServer.prototype.initSocketIO = function () {
+	        var io = __webpack_require__(129)();
 	    };
 	    return WebServer;
 	}());
@@ -125,8 +126,6 @@
 	    if (!exports.ServerConf.isDev)
 	        return Node_path.join('resources', path);
 	    return path;
-	};
-	exports._asar = function (path) {
 	};
 	exports.ServerConf = { isDev: false, hupuWsUrl: '' };
 
@@ -24598,21 +24597,1410 @@
 
 /***/ },
 /* 85 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("process");
+	"use strict";
+	var _this = this;
+	var Env_1 = __webpack_require__(1);
+	var libs_1 = __webpack_require__(86);
+	var Command_1 = __webpack_require__(88);
+	exports.panelRouter = __webpack_require__(4).Router();
+	exports.panelRouter.get('/', function (req, res) {
+	    console.log('get panel:');
+	    res.render('panel.mustache', { host: Env_1.ServerConf.host, wsPort: Env_1.ServerConf.wsPort, hupuWsUrl: Env_1.ServerConf.hupuWsUrl });
+	});
+	exports.panelRouter.get('/screen', function (req, res) {
+	    console.log('get screen:');
+	    res.render('screen/index', { host: Env_1.ServerConf.host, wsPort: Env_1.ServerConf.wsPort, hupuWsUrl: Env_1.ServerConf.hupuWsUrl });
+	});
+	var unirest = __webpack_require__(89);
+	exports.panelRouter.get('/auto/bracket/:game_id', function (req, res) {
+	    console.log('get /auto/bracket', req.params.game_id);
+	    var game_id = req.params.game_id;
+	    var api1 = 'http://api.liangle.com/api/passerbyking/game/top8Match/' + game_id;
+	    unirest.get(api1)
+	        .end(function (response) {
+	        console.log(response.body);
+	        res.send(response.body);
+	    });
+	});
+	exports.panelRouter.get('/auto/player/:game_id', function (req, res) {
+	    console.log('get /auto/player');
+	    var game_id = req.params.game_id;
+	    var api1 = 'http://api.liangle.com/api/passerbyking/game/players/' + game_id;
+	    unirest.get(api1)
+	        .end(function (response) {
+	        console.log(response.body);
+	        res.send(response.body);
+	    });
+	});
+	exports.panelRouter.initWs = function (io) {
+	    console.log('initWs');
+	    io = io.of("/" + libs_1.PanelId.rkbPanel);
+	    io
+	        .on("connect", function (socket) {
+	        socket.emit("" + Command_1.CommandId.initPanel, libs_1.ScParam({ gameInfo: _this.gameInfo, isDev: Env_1.ServerConf.isDev }));
+	    })
+	        .on('disconnect', function (socket) {
+	        console.log('disconnect');
+	    });
+	};
+
 
 /***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	exports.$ = __webpack_require__(87);
+	exports.PanelId = {
+	    stagePanel: 'stage',
+	    stage1v1Panel: 'stage1v1',
+	    rkbPanel: 'rkb',
+	    bracketPanel: 'bracket',
+	    winPanel: 'win',
+	    actPanel: 'act',
+	    screenPanel: 'screen',
+	    playerPanel: 'player'
+	};
+	exports.ServerConst = {
+	    SEND_ASYNC: true,
+	    DEF_AVATAR: '/img/panel/stage/blue.png'
+	};
+	exports.ViewConst = {
+	    STAGE_WIDTH: 1920,
+	    STAGE_HEIGHT: 1080
+	};
+	exports.TimerState = {
+	    START_STR: 'start',
+	    PAUSE_STR: 'pause',
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	exports.ViewEvent = {
+	    PLAYER_EDIT: 'edit player',
+	    PLAYER_ADD: 'add player',
+	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
+	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
+	};
+	function ScParam(param) {
+	    return param;
+	}
+	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports) {
+
+	module.exports = require("jquery");
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.JParam = function (o) {
+	    return { jstr: JSON.stringify(o) };
+	};
+	(function (CommandId) {
+	    CommandId[CommandId["dmkPush"] = 0] = "dmkPush";
+	    CommandId[CommandId["ShowConsoleWin"] = 100000] = "ShowConsoleWin";
+	    CommandId[CommandId["toggleTracker"] = 100001] = "toggleTracker";
+	    CommandId[CommandId["toggleBallRolling"] = 100002] = "toggleBallRolling";
+	    CommandId[CommandId["toggleTimer"] = 100003] = "toggleTimer";
+	    CommandId[CommandId["cs_toggleTimer"] = 100004] = "cs_toggleTimer";
+	    CommandId[CommandId["resetTimer"] = 100005] = "resetTimer";
+	    CommandId[CommandId["cs_resetTimer"] = 100006] = "cs_resetTimer";
+	    CommandId[CommandId["disableTracker"] = 100007] = "disableTracker";
+	    CommandId[CommandId["updateLeftScore"] = 100008] = "updateLeftScore";
+	    CommandId[CommandId["cs_addLeftScore"] = 100009] = "cs_addLeftScore";
+	    CommandId[CommandId["updateRightScore"] = 100010] = "updateRightScore";
+	    CommandId[CommandId["cs_addRightScore"] = 100011] = "cs_addRightScore";
+	    CommandId[CommandId["updateLeftBall"] = 100012] = "updateLeftBall";
+	    CommandId[CommandId["updateRightBall"] = 100013] = "updateRightBall";
+	    CommandId[CommandId["cs_addLeftBall"] = 100014] = "cs_addLeftBall";
+	    CommandId[CommandId["cs_addRightBall"] = 100015] = "cs_addRightBall";
+	    CommandId[CommandId["cs_minLeftBall"] = 100016] = "cs_minLeftBall";
+	    CommandId[CommandId["cs_minRightBall"] = 100017] = "cs_minRightBall";
+	    CommandId[CommandId["cs_updateInitBallCount"] = 100018] = "cs_updateInitBallCount";
+	    CommandId[CommandId["minLeftScore"] = 100019] = "minLeftScore";
+	    CommandId[CommandId["cs_minLeftScore"] = 100020] = "cs_minLeftScore";
+	    CommandId[CommandId["minRightScore"] = 100021] = "minRightScore";
+	    CommandId[CommandId["cs_minRightScore"] = 100022] = "cs_minRightScore";
+	    CommandId[CommandId["updateLeftFoul"] = 100023] = "updateLeftFoul";
+	    CommandId[CommandId["cs_addLeftFoul"] = 100024] = "cs_addLeftFoul";
+	    CommandId[CommandId["cs_minLeftFoul"] = 100025] = "cs_minLeftFoul";
+	    CommandId[CommandId["updateRightFoul"] = 100026] = "updateRightFoul";
+	    CommandId[CommandId["cs_addRightFoul"] = 100027] = "cs_addRightFoul";
+	    CommandId[CommandId["cs_minRightFoul"] = 100028] = "cs_minRightFoul";
+	    CommandId[CommandId["cs_updateLeftSkill"] = 100029] = "cs_updateLeftSkill";
+	    CommandId[CommandId["updateLeftSkill"] = 100030] = "updateLeftSkill";
+	    CommandId[CommandId["cs_updateRightSkill"] = 100031] = "cs_updateRightSkill";
+	    CommandId[CommandId["updateRightSkill"] = 100032] = "updateRightSkill";
+	    CommandId[CommandId["stageFadeOut"] = 100033] = "stageFadeOut";
+	    CommandId[CommandId["cs_fadeOut"] = 100034] = "cs_fadeOut";
+	    CommandId[CommandId["playerScore"] = 100035] = "playerScore";
+	    CommandId[CommandId["cs_playerScore"] = 100036] = "cs_playerScore";
+	    CommandId[CommandId["stageFadeIn"] = 100037] = "stageFadeIn";
+	    CommandId[CommandId["cs_stageFadeIn"] = 100038] = "cs_stageFadeIn";
+	    CommandId[CommandId["moveStagePanel"] = 100039] = "moveStagePanel";
+	    CommandId[CommandId["cs_moveStagePanel"] = 100040] = "cs_moveStagePanel";
+	    CommandId[CommandId["updatePlayer"] = 100041] = "updatePlayer";
+	    CommandId[CommandId["cs_updatePlayer"] = 100042] = "cs_updatePlayer";
+	    CommandId[CommandId["updatePlayerAll"] = 100043] = "updatePlayerAll";
+	    CommandId[CommandId["cs_changeColor"] = 100044] = "cs_changeColor";
+	    CommandId[CommandId["cs_updatePlayerAll"] = 100045] = "cs_updatePlayerAll";
+	    CommandId[CommandId["cs_updatePlayerBackNum"] = 100046] = "cs_updatePlayerBackNum";
+	    CommandId[CommandId["updatePlayerBackNum"] = 100047] = "updatePlayerBackNum";
+	    CommandId[CommandId["fadeInNotice"] = 100048] = "fadeInNotice";
+	    CommandId[CommandId["cs_fadeInNotice"] = 100049] = "cs_fadeInNotice";
+	    CommandId[CommandId["cs_resetGame"] = 100050] = "cs_resetGame";
+	    CommandId[CommandId["cs_toggleDmk"] = 100051] = "cs_toggleDmk";
+	    CommandId[CommandId["toggleDmk"] = 100052] = "toggleDmk";
+	    CommandId[CommandId["resetGame"] = 100053] = "resetGame";
+	    CommandId[CommandId["cs_unLimitScore"] = 100054] = "cs_unLimitScore";
+	    CommandId[CommandId["unLimitScore"] = 100055] = "unLimitScore";
+	    CommandId[CommandId["cs_updatePlayerState"] = 100056] = "cs_updatePlayerState";
+	    CommandId[CommandId["updatePlayerState"] = 100057] = "updatePlayerState";
+	    CommandId[CommandId["cs_setGameIdx"] = 100058] = "cs_setGameIdx";
+	    CommandId[CommandId["setGameIdx"] = 100059] = "setGameIdx";
+	    CommandId[CommandId["fadeInWinPanel"] = 100060] = "fadeInWinPanel";
+	    CommandId[CommandId["cs_fadeInWinPanel"] = 100061] = "cs_fadeInWinPanel";
+	    CommandId[CommandId["fadeOutWinPanel"] = 100062] = "fadeOutWinPanel";
+	    CommandId[CommandId["cs_fadeOutWinPanel"] = 100063] = "cs_fadeOutWinPanel";
+	    CommandId[CommandId["saveGameRec"] = 100064] = "saveGameRec";
+	    CommandId[CommandId["cs_saveGameRec"] = 100065] = "cs_saveGameRec";
+	    CommandId[CommandId["cs_fadeInFinalPlayer"] = 100066] = "cs_fadeInFinalPlayer";
+	    CommandId[CommandId["fadeInFinalPlayer"] = 100067] = "fadeInFinalPlayer";
+	    CommandId[CommandId["cs_fadeOutFinalPlayer"] = 100068] = "cs_fadeOutFinalPlayer";
+	    CommandId[CommandId["fadeOutFinalPlayer"] = 100069] = "fadeOutFinalPlayer";
+	    CommandId[CommandId["cs_setActPlayer"] = 100070] = "cs_setActPlayer";
+	    CommandId[CommandId["cs_setBracketPlayer"] = 100071] = "cs_setBracketPlayer";
+	    CommandId[CommandId["cs_clearActPlayerGameRec"] = 100072] = "cs_clearActPlayerGameRec";
+	    CommandId[CommandId["cs_getBracketPlayerByIdx"] = 100073] = "cs_getBracketPlayerByIdx";
+	    CommandId[CommandId["cs_refreshClient"] = 100074] = "cs_refreshClient";
+	    CommandId[CommandId["refreshClient"] = 100075] = "refreshClient";
+	    CommandId[CommandId["cs_updateWinScore"] = 100076] = "cs_updateWinScore";
+	    CommandId[CommandId["updateWinScore"] = 100077] = "updateWinScore";
+	    CommandId[CommandId["cs_updateKingPlayer"] = 100078] = "cs_updateKingPlayer";
+	    CommandId[CommandId["updateKingPlayer"] = 100079] = "updateKingPlayer";
+	    CommandId[CommandId["cs_setCursorPlayer"] = 100080] = "cs_setCursorPlayer";
+	    CommandId[CommandId["setCursorPlayer"] = 100081] = "setCursorPlayer";
+	    CommandId[CommandId["cs_saveToTotalScore"] = 100082] = "cs_saveToTotalScore";
+	    CommandId[CommandId["cs_setScorePanelVisible"] = 100083] = "cs_setScorePanelVisible";
+	    CommandId[CommandId["setScorePanelVisible"] = 100084] = "setScorePanelVisible";
+	    CommandId[CommandId["cs_autoSaveGameRec"] = 100085] = "cs_autoSaveGameRec";
+	    CommandId[CommandId["cs_startingLine"] = 100086] = "cs_startingLine";
+	    CommandId[CommandId["startingLine"] = 100087] = "startingLine";
+	    CommandId[CommandId["cs_hideStartingLine"] = 100088] = "cs_hideStartingLine";
+	    CommandId[CommandId["hideStartingLine"] = 100089] = "hideStartingLine";
+	    CommandId[CommandId["cs_queryPlayerByPos"] = 100090] = "cs_queryPlayerByPos";
+	    CommandId[CommandId["fadeInPlayerPanel"] = 100091] = "fadeInPlayerPanel";
+	    CommandId[CommandId["cs_fadeInPlayerPanel"] = 100092] = "cs_fadeInPlayerPanel";
+	    CommandId[CommandId["fadeOutPlayerPanel"] = 100093] = "fadeOutPlayerPanel";
+	    CommandId[CommandId["cs_fadeOutPlayerPanel"] = 100094] = "cs_fadeOutPlayerPanel";
+	    CommandId[CommandId["movePlayerPanel"] = 100095] = "movePlayerPanel";
+	    CommandId[CommandId["cs_movePlayerPanel"] = 100096] = "cs_movePlayerPanel";
+	    CommandId[CommandId["straightScore3"] = 100097] = "straightScore3";
+	    CommandId[CommandId["straightScore5"] = 100098] = "straightScore5";
+	    CommandId[CommandId["initPanel"] = 100099] = "initPanel";
+	    CommandId[CommandId["cs_fadeInActivityPanel"] = 100100] = "cs_fadeInActivityPanel";
+	    CommandId[CommandId["fadeInActivityPanel"] = 100101] = "fadeInActivityPanel";
+	    CommandId[CommandId["cs_fadeInNextActivity"] = 100102] = "cs_fadeInNextActivity";
+	    CommandId[CommandId["fadeInNextActivity"] = 100103] = "fadeInNextActivity";
+	    CommandId[CommandId["cs_fadeInActivityExGame"] = 100104] = "cs_fadeInActivityExGame";
+	    CommandId[CommandId["fadeInActivityExGame"] = 100105] = "fadeInActivityExGame";
+	    CommandId[CommandId["cs_fadeOutActivityPanel"] = 100106] = "cs_fadeOutActivityPanel";
+	    CommandId[CommandId["fadeOutActivityPanel"] = 100107] = "fadeOutActivityPanel";
+	    CommandId[CommandId["cs_startGame"] = 100108] = "cs_startGame";
+	    CommandId[CommandId["cs_restartGame"] = 100109] = "cs_restartGame";
+	    CommandId[CommandId["cs_fadeInRankPanel"] = 100110] = "cs_fadeInRankPanel";
+	    CommandId[CommandId["fadeInRankPanel"] = 100111] = "fadeInRankPanel";
+	    CommandId[CommandId["cs_fadeInNextRank"] = 100112] = "cs_fadeInNextRank";
+	    CommandId[CommandId["fadeInNextRank"] = 100113] = "fadeInNextRank";
+	    CommandId[CommandId["cs_setGameComing"] = 100114] = "cs_setGameComing";
+	    CommandId[CommandId["setGameComing"] = 100115] = "setGameComing";
+	    CommandId[CommandId["cs_fadeOutRankPanel"] = 100116] = "cs_fadeOutRankPanel";
+	    CommandId[CommandId["fadeOutRankPanel"] = 100117] = "fadeOutRankPanel";
+	    CommandId[CommandId["cs_fadeInCountDown"] = 100118] = "cs_fadeInCountDown";
+	    CommandId[CommandId["fadeInCountDown"] = 100119] = "fadeInCountDown";
+	    CommandId[CommandId["cs_fadeOutCountDown"] = 100120] = "cs_fadeOutCountDown";
+	    CommandId[CommandId["fadeOutCountDown"] = 100121] = "fadeOutCountDown";
+	    CommandId[CommandId["cs_inScreenScore"] = 100122] = "cs_inScreenScore";
+	    CommandId[CommandId["inScreenScore"] = 100123] = "inScreenScore";
+	    CommandId[CommandId["cs_fadeInFTShow"] = 100124] = "cs_fadeInFTShow";
+	    CommandId[CommandId["fadeInFTShow"] = 100125] = "fadeInFTShow";
+	    CommandId[CommandId["cs_fadeOutFTShow"] = 100126] = "cs_fadeOutFTShow";
+	    CommandId[CommandId["fadeOutFTShow"] = 100127] = "fadeOutFTShow";
+	    CommandId[CommandId["cs_fadeInPlayerRank"] = 100128] = "cs_fadeInPlayerRank";
+	    CommandId[CommandId["fadeInPlayerRank"] = 100129] = "fadeInPlayerRank";
+	    CommandId[CommandId["cs_fadeInFtRank"] = 100130] = "cs_fadeInFtRank";
+	    CommandId[CommandId["fadeInFtRank"] = 100131] = "fadeInFtRank";
+	    CommandId[CommandId["cs_fadeInMixRank"] = 100132] = "cs_fadeInMixRank";
+	    CommandId[CommandId["fadeInMixRank"] = 100133] = "fadeInMixRank";
+	    CommandId[CommandId["cs_findPlayerData"] = 100134] = "cs_findPlayerData";
+	    CommandId[CommandId["cs_attack"] = 100135] = "cs_attack";
+	    CommandId[CommandId["attack"] = 100136] = "attack";
+	    CommandId[CommandId["cs_addHealth"] = 100137] = "cs_addHealth";
+	    CommandId[CommandId["addHealth"] = 100138] = "addHealth";
+	    CommandId[CommandId["fadeInOK"] = 100139] = "fadeInOK";
+	    CommandId[CommandId["cs_combo"] = 100140] = "cs_combo";
+	    CommandId[CommandId["combo"] = 100141] = "combo";
+	})(exports.CommandId || (exports.CommandId = {}));
+	var CommandId = exports.CommandId;
+	var CommandItem = (function () {
+	    function CommandItem(id) {
+	        this.id = id;
+	    }
+	    return CommandItem;
+	}());
+	var Command = (function () {
+	    function Command() {
+	        this.cmdArr = [];
+	        console.log("CommandId", CommandId);
+	    }
+	    return Command;
+	}());
+	exports.Command = Command;
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Unirest for Node.js
+	 *
+	 * @author Nijko Yonskai
+	 * @copyright 2013-2015
+	 * @license MIT
+	 */
 	
-	var async = __webpack_require__(87);
-	var findPartials = __webpack_require__(88);
+	/**
+	 * Module Dependencies
+	 */
+	
+	var StringDecoder = __webpack_require__(90).StringDecoder
+	var QueryString = __webpack_require__(66)
+	var FormData = __webpack_require__(91)
+	var Stream = __webpack_require__(54)
+	var mime = __webpack_require__(59)
+	var zlib = __webpack_require__(92)
+	var path = __webpack_require__(2)
+	var URL = __webpack_require__(38)
+	var fs = __webpack_require__(15)
+	
+	/**
+	 * Define form mime type
+	 */
+	mime.define({
+	  'application/x-www-form-urlencoded': ['form', 'urlencoded', 'form-data']
+	})
+	
+	/**
+	 * Initialize our Rest Container
+	 *
+	 * @type {Object}
+	 */
+	var Unirest = function (method, uri, headers, body, callback) {
+	  var unirest = function (uri, headers, body, callback) {
+	    var $this = {
+	      /**
+	       * Stream Multipart form-data request
+	       *
+	       * @type {Boolean}
+	       */
+	      _stream: false,
+	
+	      /**
+	       * Container to hold multipart form data for processing upon request.
+	       *
+	       * @type {Array}
+	       * @private
+	       */
+	      _multipart: [],
+	
+	      /**
+	       * Container to hold form data for processing upon request.
+	       *
+	       * @type {Array}
+	       * @private
+	       */
+	      _form: [],
+	
+	      /**
+	       * Request option container for details about the request.
+	       *
+	       * @type {Object}
+	       */
+	      options: {
+	        /**
+	         * Url obtained from request method arguments.
+	         *
+	         * @type {String}
+	         */
+	        url: uri,
+	
+	        /**
+	         * Method obtained from request method arguments.
+	         *
+	         * @type {String}
+	         */
+	        method: method,
+	
+	        /**
+	         * List of headers with case-sensitive fields.
+	         *
+	         * @type {Object}
+	         */
+	        headers: {}
+	      },
+	
+	      hasHeader: function (name) {
+	        var headers
+	        var lowercaseHeaders
+	
+	        name = name.toLowerCase()
+	        headers = Object.keys($this.options.headers)
+	        lowercaseHeaders = headers.map(function (header) {
+	          return header.toLowerCase()
+	        })
+	
+	        for (var i = 0; i < lowercaseHeaders.length; i++) {
+	          if (lowercaseHeaders[i] === name) {
+	            return headers[i]
+	          }
+	        }
+	
+	        return false
+	      },
+	
+	      /**
+	       * Turn on multipart-form streaming
+	       *
+	       * @return {Object}
+	       */
+	      stream: function () {
+	        $this._stream = true
+	        return this
+	      },
+	
+	      /**
+	       * Attaches a field to the multipart-form request, with pre-processing.
+	       *
+	       * @param  {String} name
+	       * @param  {String} value
+	       * @return {Object}
+	       */
+	      field: function (name, value, options) {
+	        return handleField(name, value, options)
+	      },
+	
+	      /**
+	       * Attaches a file to the multipart-form request.
+	       *
+	       * @param  {String} name
+	       * @param  {String|Object} path
+	       * @return {Object}
+	       */
+	      attach: function (name, path, options) {
+	        options = options || {}
+	        options.attachment = true
+	        return handleField(name, path, options)
+	      },
+	
+	      /**
+	       * Attaches field to the multipart-form request, with no pre-processing.
+	       *
+	       * @param  {String} name
+	       * @param  {String|Object} path
+	       * @param  {Object} options
+	       * @return {Object}
+	       */
+	      rawField: function (name, value, options) {
+	        $this._multipart.push({
+	          name: name,
+	          value: value,
+	          options: options,
+	          attachment: options.attachment || false
+	        })
+	      },
+	
+	      /**
+	       * Basic Header Authentication Method
+	       *
+	       * Supports user being an Object to reflect Request
+	       * Supports user, password to reflect SuperAgent
+	       *
+	       * @param  {String|Object} user
+	       * @param  {String} password
+	       * @param  {Boolean} sendImmediately
+	       * @return {Object}
+	       */
+	      auth: function (user, password, sendImmediately) {
+	        $this.options.auth = (is(user).a(Object)) ? user : {
+	          user: user,
+	          password: password,
+	          sendImmediately: sendImmediately
+	        }
+	
+	        return $this
+	      },
+	
+	      /**
+	       * Sets header field to value
+	       *
+	       * @param  {String} field Header field
+	       * @param  {String} value Header field value
+	       * @return {Object}
+	       */
+	      header: function (field, value) {
+	        if (is(field).a(Object)) {
+	          for (var key in field) {
+	            if (field.hasOwnProperty(key)) {
+	              $this.header(key, field[key])
+	            }
+	          }
+	
+	          return $this
+	        }
+	
+	        var existingHeaderName = $this.hasHeader(field)
+	        $this.options.headers[existingHeaderName || field] = value
+	
+	        return $this
+	      },
+	
+	      /**
+	       * Serialize value as querystring representation, and append or set on `Request.options.url`
+	       *
+	       * @param  {String|Object} value
+	       * @return {Object}
+	       */
+	      query: function (value) {
+	        if (is(value).a(Object)) value = Unirest.serializers.form(value)
+	        if (!value.length) return $this
+	        $this.options.url += (does($this.options.url).contain('?') ? '&' : '?') + value
+	        return $this
+	      },
+	
+	      /**
+	       * Set _content-type_ header with type passed through `mime.lookup()` when necessary.
+	       *
+	       * @param  {String} type
+	       * @return {Object}
+	       */
+	      type: function (type) {
+	        $this.header('Content-Type', does(type).contain('/')
+	          ? type
+	          : mime.lookup(type))
+	        return $this
+	      },
+	
+	      /**
+	       * Data marshalling for HTTP request body data
+	       *
+	       * Determines whether type is `form` or `json`.
+	       * For irregular mime-types the `.type()` method is used to infer the `content-type` header.
+	       *
+	       * When mime-type is `application/x-www-form-urlencoded` data is appended rather than overwritten.
+	       *
+	       * @param  {Mixed} data
+	       * @return {Object}
+	       */
+	      send: function (data) {
+	        var type = $this.options.headers[$this.hasHeader('content-type')]
+	
+	        if ((is(data).a(Object) || is(data).a(Array)) && !Buffer.isBuffer(data)) {
+	          if (!type) {
+	            $this.type('form')
+	            type = $this.options.headers[$this.hasHeader('content-type')]
+	            $this.options.body = Unirest.serializers.form(data)
+	          } else if (~type.indexOf('json')) {
+	            $this.options.json = true
+	
+	            if ($this.options.body && is($this.options.body).a(Object)) {
+	              for (var key in data) {
+	                if (data.hasOwnProperty(key)) {
+	                  $this.options.body[key] = data[key]
+	                }
+	              }
+	            } else {
+	              $this.options.body = data
+	            }
+	          } else {
+	            $this.options.body = Unirest.Request.serialize(data, type)
+	          }
+	        } else if (is(data).a(String)) {
+	          if (!type) {
+	            $this.type('form')
+	            type = $this.options.headers[$this.hasHeader('content-type')]
+	          }
+	
+	          if (type === 'application/x-www-form-urlencoded') {
+	            $this.options.body = $this.options.body
+	              ? $this.options.body + '&' + data
+	              : data
+	          } else {
+	            $this.options.body = ($this.options.body || '') + data
+	          }
+	        } else {
+	          $this.options.body = data
+	        }
+	
+	        return $this
+	      },
+	
+	      /**
+	       * Takes multipart options and places them on `options.multipart` array.
+	       * Transforms body when an `Object` or _content-type_ is present.
+	       *
+	       * Example:
+	       *
+	       *      Unirest.get('http://google.com').part({
+	       *        'content-type': 'application/json',
+	       *        body: {
+	       *          phrase: 'Hello'
+	       *        }
+	       *      }).part({
+	       *        'content-type': 'application/json',
+	       *        body: {
+	       *          phrase: 'World'
+	       *        }
+	       *      }).end(function (response) {})
+	       *
+	       * @param  {Object|String} options When an Object, headers should be placed directly on the object,
+	       *                                 not under a child property.
+	       * @return {Object}
+	       */
+	      part: function (options) {
+	        if (!$this._multipart) {
+	          $this.options.multipart = []
+	        }
+	
+	        if (is(options).a(Object)) {
+	          if (options['content-type']) {
+	            var type = Unirest.type(options['content-type'], true)
+	            if (type) options.body = Unirest.Response.parse(options.body)
+	          } else {
+	            if (is(options.body).a(Object)) {
+	              options.body = Unirest.serializers.json(options.body)
+	            }
+	          }
+	
+	          $this.options.multipart.push(options)
+	        } else {
+	          $this.options.multipart.push({
+	            body: options
+	          })
+	        }
+	
+	        return $this
+	      },
+	
+	      /**
+	       * Sends HTTP Request and awaits Response finalization. Request compression and Response decompression occurs here.
+	       * Upon HTTP Response post-processing occurs and invokes `callback` with a single argument, the `[Response](#response)` object.
+	       *
+	       * @param  {Function} callback
+	       * @return {Object}
+	       */
+	      end: function (callback) {
+	        var Request
+	        var header
+	        var parts
+	        var form
+	
+	        function handleRequestResponse (error, response, body) {
+	          var result = {}
+	          var status
+	          var data
+	          var type
+	
+	          // Handle pure error
+	          if (error && !response) {
+	            result.error = error
+	
+	            if (callback) {
+	              callback(result)
+	            }
+	
+	            return
+	          }
+	
+	          // Handle No Response...
+	          // This is weird.
+	          if (!response) {
+	            console.log('This is odd, report this action / request to: http://github.com/mashape/unirest-nodejs')
+	
+	            result.error = {
+	              message: 'No response found.'
+	            }
+	
+	            if (callback) {
+	              callback(result)
+	            }
+	
+	            return
+	          }
+	
+	          // Create response reference
+	          result = response
+	
+	          // Create response status reference
+	          status = response.statusCode
+	
+	          // Normalize MSIE response to HTTP 204
+	          status = (status === 1223 ? 204 : status)
+	
+	          // Obtain status range typecode (1, 2, 3, 4, 5, etc.)
+	          type = status / 100 | 0
+	
+	          // Generate sugar helper properties for status information
+	          result.code = status
+	          result.status = status
+	          result.statusType = type
+	          result.info = type === 1
+	          result.ok = type === 2
+	          result.clientError = type === 4
+	          result.serverError = type === 5
+	          result.error = (type === 4 || type === 5) ? (function generateErrorMessage () {
+	            var msg = 'got ' + result.status + ' response'
+	            var err = new Error(msg)
+	            err.status = result.status
+	            return err
+	          })() : false
+	
+	          // Iterate over Response Status Codes and generate more sugar
+	          for (var name in Unirest.Response.statusCodes) {
+	            result[name] = Unirest.Response.statusCodes[name] === status
+	          }
+	
+	          // Cookie Holder
+	          result.cookies = {}
+	
+	          // Cookie Sugar Method
+	          result.cookie = function (name) {
+	            return result.cookies[name]
+	          }
+	
+	          function setCookie (cookie) {
+	            var crumbs = Unirest.trim(cookie).split('=')
+	            var key = Unirest.trim(crumbs[0])
+	            var value = Unirest.trim(crumbs.slice(1).join('='))
+	
+	            if (crumbs[0] && crumbs[0] !== '') {
+	              result.cookies[key] = value === '' ? true : value
+	            }
+	          }
+	
+	          if (response.cookies && is(response.cookies).a(Object) && Object.keys(response.cookies).length > 0) {
+	            result.cookies = response.cookies
+	          } else {
+	            // Handle cookies to be set
+	            var cookies = response.headers['set-cookie']
+	            if (cookies && is(cookies).a(Array)) {
+	              for (var index = 0; index < cookies.length; index++) {
+	                var entry = cookies[index]
+	
+	                if (is(entry).a(String) && does(entry).contain(';')) {
+	                  entry.split(';').forEach(setCookie)
+	                }
+	              }
+	            }
+	
+	            // Handle cookies that have been set
+	            cookies = response.headers.cookie
+	            if (cookies && is(cookies).a(String)) {
+	              cookies.split(';').forEach(setCookie)
+	            }
+	          }
+	
+	          // Obtain response body
+	          body = body || response.body
+	          result.raw_body = body
+	          result.headers = response.headers
+	
+	          // Handle Response Body
+	          if (body) {
+	            type = Unirest.type(result.headers['content-type'], true)
+	            if (type) data = Unirest.Response.parse(body, type)
+	            else data = body
+	          }
+	
+	          result.body = data
+	
+	          ;(callback) && callback(result)
+	        }
+	
+	        function handleGZIPResponse (response) {
+	          if (/^(deflate|gzip)$/.test(response.headers['content-encoding'])) {
+	            var unzip = zlib.createUnzip()
+	            var stream = new Stream()
+	            var _on = response.on
+	            var decoder
+	
+	            // Keeping node happy
+	            stream.req = response.req
+	
+	            // Make sure we emit prior to processing
+	            unzip.on('error', function (error) {
+	              // Catch the parser error when there is no content
+	              if (error.errno === zlib.Z_BUF_ERROR || error.errno === zlib.Z_DATA_ERROR) {
+	                stream.emit('end')
+	                return
+	              }
+	
+	              stream.emit('error', error)
+	            })
+	
+	            // Start the processing
+	            response.pipe(unzip)
+	
+	            // Ensure encoding is captured
+	            response.setEncoding = function (type) {
+	              decoder = new StringDecoder(type)
+	            }
+	
+	            // Capture decompression and decode with captured encoding
+	            unzip.on('data', function (buffer) {
+	              if (!decoder) return stream.emit('data', buffer)
+	              var string = decoder.write(buffer)
+	              if (string.length) stream.emit('data', string)
+	            })
+	
+	            // Emit yoself
+	            unzip.on('end', function () {
+	              stream.emit('end')
+	            })
+	
+	            response.on = function (type, next) {
+	              if (type === 'data' || type === 'end') {
+	                stream.on(type, next)
+	              } else if (type === 'error') {
+	                _on.call(response, type, next)
+	              } else {
+	                _on.call(response, type, next)
+	              }
+	            }
+	          }
+	        }
+	
+	        function handleFormData (form) {
+	          for (var i = 0; i < $this._multipart.length; i++) {
+	            var item = $this._multipart[i]
+	
+	            if (item.attachment && is(item.value).a(String)) {
+	              if (does(item.value).contain('http://') || does(item.value).contain('https://')) {
+	                item.value = Unirest.request(item.value)
+	              } else {
+	                item.value = fs.createReadStream(path.resolve(item.value))
+	              }
+	            }
+	
+	            form.append(item.name, item.value, item.options)
+	          }
+	
+	          return form
+	        }
+	
+	        if ($this._multipart.length && !$this._stream) {
+	          header = $this.options.headers[$this.hasHeader('content-type')]
+	          parts = URL.parse($this.options.url)
+	          form = new FormData()
+	
+	          if (header) {
+	            $this.options.headers['content-type'] = header.split(';')[0] + '; boundary=' + form.getBoundary()
+	          } else {
+	            $this.options.headers['content-type'] = 'multipart/form-data; boundary=' + form.getBoundary()
+	          }
+	
+	          function authn(auth) {
+	              if (!auth) return null;
+	              if (typeof auth === 'string') return auth;
+	              if (auth.user && auth.pass) return auth.user + ':' + auth.pass;
+	              return auth;
+	          }
+	
+	          return handleFormData(form).submit({
+	            protocol: parts.protocol,
+	            port: parts.port,
+	            // Formdata doesn't expect port to be included with host
+	            // so we use hostname rather than host
+	            host: parts.hostname,
+	            path: parts.path,
+	            method: $this.options.method,
+	            headers: $this.options.headers,
+	            auth: authn($this.options.auth || parts.auth)
+	          }, function (error, response) {
+	            var decoder = new StringDecoder('utf8')
+	
+	            if (error) {
+	              return handleRequestResponse(error, response)
+	            }
+	
+	            if (!response.body) {
+	              response.body = ''
+	            }
+	
+	            // Node 10+
+	            response.resume()
+	
+	            // GZIP, Feel me?
+	            handleGZIPResponse(response)
+	
+	            // Fallback
+	            response.on('data', function (chunk) {
+	              if (typeof chunk === 'string') response.body += chunk
+	              else response.body += decoder.write(chunk)
+	            })
+	
+	            // After all, we end up here
+	            response.on('end', function () {
+	              return handleRequestResponse(error, response)
+	            })
+	          })
+	        }
+	
+	        Request = Unirest.request($this.options, handleRequestResponse)
+	        Request.on('response', handleGZIPResponse)
+	
+	        if ($this._multipart.length && $this._stream) {
+	          handleFormData(Request.form())
+	        }
+	
+	        return Request
+	      }
+	    }
+	
+	    /**
+	     * Alias for _.header_
+	     * @type {Function}
+	     */
+	    $this.headers = $this.header
+	
+	    /**
+	     * Alias for _.header_
+	     *
+	     * @type {Function}
+	     */
+	    $this.set = $this.header
+	
+	    /**
+	     * Alias for _.end_
+	     *
+	     * @type {Function}
+	     */
+	    $this.complete = $this.end
+	
+	    /**
+	     * Aliases for _.end_
+	     *
+	     * @type {Object}
+	     */
+	
+	    $this.as = {
+	      json: $this.end,
+	      binary: $this.end,
+	      string: $this.end
+	    }
+	
+	    /**
+	     * Handles Multipart Field Processing
+	     *
+	     * @param {String} name
+	     * @param {Mixed} value
+	     * @param {Object} options
+	     */
+	    function handleField (name, value, options) {
+	      var serialized
+	      var length
+	      var key
+	      var i
+	
+	      options = options || { attachment: false }
+	
+	      if (is(name).a(Object)) {
+	        for (key in name) {
+	          if (name.hasOwnProperty(key)) {
+	            handleField(key, name[key], options)
+	          }
+	        }
+	      } else {
+	        if (is(value).a(Array)) {
+	          for (i = 0, length = value.length; i < length; i++) {
+	            serialized = handleFieldValue(value[i])
+	            if (serialized) {
+	              $this.rawField(name, serialized, options)
+	            }
+	          }
+	        } else if (value != null) {
+	          $this.rawField(name, handleFieldValue(value), options)
+	        }
+	      }
+	
+	      return $this
+	    }
+	
+	    /**
+	     * Handles Multipart Value Processing
+	     *
+	     * @param {Mixed} value
+	     */
+	    function handleFieldValue (value) {
+	      if (!(value instanceof Buffer || typeof value === 'string')) {
+	        if (is(value).a(Object)) {
+	          if (value instanceof fs.FileReadStream) {
+	            return value
+	          } else {
+	            return Unirest.serializers.json(value)
+	          }
+	        } else {
+	          return value.toString()
+	        }
+	      } else return value
+	    }
+	
+	    function setupOption (name, ref) {
+	      $this[name] = function (arg) {
+	        $this.options[ref || name] = arg
+	        return $this
+	      }
+	    }
+	
+	    // Iterates over a list of option methods to generate the chaining
+	    // style of use you see in Superagent and jQuery.
+	    for (var x in Unirest.enum.options) {
+	      if (Unirest.enum.options.hasOwnProperty(x)) {
+	        var option = Unirest.enum.options[x]
+	        var reference = null
+	
+	        if (option.indexOf(':') > -1) {
+	          option = option.split(':')
+	          reference = option[1]
+	          option = option[0]
+	        }
+	
+	        setupOption(option, reference)
+	      }
+	    }
+	
+	    if (headers && typeof headers === 'function') {
+	      callback = headers
+	      headers = null
+	    } else if (body && typeof body === 'function') {
+	      callback = body
+	      body = null
+	    }
+	
+	    if (headers) $this.set(headers)
+	    if (body) $this.send(body)
+	
+	    return callback ? $this.end(callback) : $this
+	  }
+	
+	  return uri ? unirest(uri, headers, body, callback) : unirest
+	}
+	
+	/**
+	 * Expose the underlying layer.
+	 */
+	Unirest.request = __webpack_require__(93)
+	Unirest.cookie = Unirest.request.cookie
+	Unirest.pipe = Unirest.request.pipe
+	
+	/**
+	 * Mime-type lookup / parser.
+	 *
+	 * @param  {String} type
+	 * @param  {Boolean} parse Should we parse?
+	 * @return {String}
+	 */
+	Unirest.type = function (type, parse) {
+	  if (typeof type !== 'string') return false
+	  return parse ? type.split(/ *; */).shift() : (Unirest.types[type] || type)
+	}
+	
+	/**
+	 * Utility method to trim strings.
+	 *
+	 * @type {String}
+	 */
+	Unirest.trim = ''.trim
+	  ? function (s) { return s.trim() }
+	  : function (s) { return s.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '') }
+	
+	/**
+	 * Parser methods for different data types.
+	 *
+	 * @type {Object}
+	 */
+	Unirest.parsers = {
+	  string: function (data) {
+	    var obj = {}
+	    var pairs = data.split('&')
+	    var parts
+	    var pair
+	
+	    for (var i = 0, len = pairs.length; i < len; ++i) {
+	      pair = pairs[i]
+	      parts = pair.split('=')
+	      obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1])
+	    }
+	
+	    return obj
+	  },
+	
+	  json: function (data) {
+	    try {
+	      data = JSON.parse(data)
+	    } catch (e) {}
+	
+	    return data
+	  }
+	}
+	
+	/**
+	 * Serialization methods for different data types.
+	 *
+	 * @type {Object}
+	 */
+	Unirest.serializers = {
+	  form: function (obj) {
+	    return QueryString.stringify(obj)
+	  },
+	
+	  json: function (obj) {
+	    return JSON.stringify(obj)
+	  }
+	}
+	
+	/**
+	 * Unirest Request Utility Methods
+	 *
+	 * @type {Object}
+	 */
+	Unirest.Request = {
+	  serialize: function (string, type) {
+	    var serializer = Unirest.firstMatch(type, Unirest.enum.serialize)
+	    return serializer ? serializer(string) : string
+	  },
+	
+	  uid: function (len) {
+	    var output = ''
+	    var chars = 'abcdefghijklmnopqrstuvwxyz123456789'
+	    var nchars = chars.length
+	    while (len--) output += chars[Math.random() * nchars | 0]
+	    return output
+	  }
+	}
+	
+	/**
+	 * Unirest Response Utility Methods
+	 *
+	 * @type {Object}
+	 */
+	Unirest.Response = {
+	  parse: function (string, type) {
+	    var parser = Unirest.firstMatch(type, Unirest.enum.parse)
+	    return parser ? parser(string) : string
+	  },
+	
+	  parseHeader: function (str) {
+	    var lines = str.split(/\r?\n/)
+	    var fields = {}
+	    var index
+	    var line
+	    var field
+	    var val
+	
+	    // Trailing CRLF
+	    lines.pop()
+	
+	    for (var i = 0, len = lines.length; i < len; ++i) {
+	      line = lines[i]
+	      index = line.indexOf(':')
+	      field = line.slice(0, index).toLowerCase()
+	      val = Unirest.trim(line.slice(index + 1))
+	      fields[field] = val
+	    }
+	
+	    return fields
+	  },
+	
+	  statusCodes: {
+	    'created': 201,
+	    'accepted': 202,
+	    'nonAuthoritativeInformation': 203,
+	    'noContent': 204,
+	    'resetContent': 205,
+	    'partialContent': 206,
+	    'multiStatus': 207,
+	    'alreadyReported': 208,
+	    'imUsed': 226,
+	    'multipleChoices': 300,
+	    'movedPermanently': 301,
+	    'found': 302,
+	    'seeOther': 303,
+	    'notModified': 304,
+	    'useProxy': 305,
+	    'temporaryRedirect': 307,
+	    'permanentRedirect': 308,
+	    'badRequest': 400,
+	    'unauthorized': 401,
+	    'paymentRequired': 402,
+	    'forbidden': 403,
+	    'notFound': 404,
+	    'methodNotAllowed': 405,
+	    'notAcceptable': 406,
+	    'proxyAuthenticationRequired': 407,
+	    'requestTimeout': 408,
+	    'conflict': 409,
+	    'gone': 410,
+	    'lengthRequired': 411,
+	    'preconditionFailed': 412,
+	    'requestEntityTooLarge': 413,
+	    'uriTooLong': 414,
+	    'unsupportedMediaType': 415,
+	    'rangeNotSatisfiable': 416,
+	    'expectationFailed': 417,
+	    'misdirectedRequest': 421,
+	    'unprocessableEntity': 422,
+	    'locked': 423,
+	    'failedDependency': 424,
+	    'upgradeRequired': 426,
+	    'preconditionRequired': 428,
+	    'tooManyRequests': 429,
+	    'requestHeaderFieldsTooLarge': 431,
+	    'internalServerError': 500,
+	    'notImplemented': 501,
+	    'badGateway': 502,
+	    'serviceUnavailable': 503,
+	    'gatewayTimeout': 504,
+	    'httpVersionNotSupported': 505,
+	    'variantAlsoNegotiates': 506,
+	    'insufficientStorage': 507,
+	    'loopDetected': 508,
+	    'notExtended': 510
+	  }
+	}
+	
+	/**
+	 * Expose cookie store (tough-cookie)
+	 *
+	 * @return {Function} Cookie Store
+	 */
+	Unirest.jar = function (options) {
+	  var jar = Unirest.request.jar()
+	  options = options || {}
+	
+	  // Because Requests aliases toughcookie rather than returning.
+	  if (options.store) {
+	    jar._jar.store = options.store
+	  }
+	
+	  if (options.rejectPublicSuffixes) {
+	    jar._jar.rejectPublicSuffixes = options.rejectPublicSuffixes
+	  }
+	
+	  // Alias helper methods
+	  jar.add = jar.setCookie
+	  jar.toString = jar.getCookieString
+	
+	  // Export
+	  return jar
+	}
+	
+	/**
+	 * Enum Structures
+	 *
+	 * @type {Object}
+	 */
+	Unirest.enum = {
+	  serialize: {
+	    'application/x-www-form-urlencoded': Unirest.serializers.form,
+	    'application/json': Unirest.serializers.json,
+	    '+json': Unirest.serializers.json
+	  },
+	
+	  parse: {
+	    'application/x-www-form-urlencoded': Unirest.parsers.string,
+	    'application/json': Unirest.parsers.json,
+	    '+json': Unirest.parsers.json
+	  },
+	
+	  methods: [
+	    'GET',
+	    'HEAD',
+	    'PUT',
+	    'POST',
+	    'PATCH',
+	    'DELETE',
+	    'OPTIONS'
+	  ],
+	
+	  options: [
+	    'uri:url', 'redirects:maxRedirects', 'redirect:followRedirect', 'url', 'method', 'qs', 'form', 'json', 'multipart',
+	    'followRedirect', 'followAllRedirects', 'maxRedirects', 'encoding', 'pool', 'timeout', 'proxy', 'oauth', 'hawk', 'time',
+	    'ssl:strictSSL', 'strictSSL', 'jar', 'cookies:jar', 'aws', 'httpSignature', 'localAddress', 'ip:localAddress', 'secureProtocol', 'forever'
+	  ]
+	}
+	
+	/**
+	 * Returns a list of values obtained by checking the specified string
+	 * whether it contains array value or object key, when true the value
+	 * is appended to the list to be returned.
+	 *
+	 * @param  {String} string String to be tested
+	 * @param  {Object|Array} map    Values / Keys to test against string.
+	 * @return {Array} List of values truthfully matched against string.
+	 */
+	Unirest.matches = function matches (string, map) {
+	  var results = []
+	
+	  for (var key in map) {
+	    if (typeof map.length !== 'undefined') {
+	      key = map[key]
+	    }
+	
+	    if (string.indexOf(key) !== -1) {
+	      results.push(map[key])
+	    }
+	  }
+	
+	  return results
+	}
+	
+	/**
+	 * Returns the first value obtained through #matches
+	 *
+	 * @see #matches
+	 * @param  {String} string String to be tested
+	 * @param  {Object|Array} map Values / Keys to test against string.
+	 * @return {Mixed} First match value
+	 */
+	Unirest.firstMatch = function firstMatch (string, map) {
+	  return Unirest.matches(string, map)[0]
+	}
+	
+	/**
+	 * Generate sugar for request library.
+	 *
+	 * This allows us to mock super-agent chaining style while using request library under the hood.
+	 */
+	function setupMethod (method) {
+	  Unirest[method] = Unirest(method)
+	}
+	
+	for (var i = 0; i < Unirest.enum.methods.length; i++) {
+	  var method = Unirest.enum.methods[i].toLowerCase()
+	  setupMethod(method)
+	}
+	
+	/**
+	 * Simple Utility Methods for checking information about a value.
+	 *
+	 * @param  {Mixed}  value  Could be anything.
+	 * @return {Object}
+	 */
+	function is (value) {
+	  return {
+	    a: function (check) {
+	      if (check.prototype) check = check.prototype.constructor.name
+	      var type = Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
+	      return value != null && type === check.toLowerCase()
+	    }
+	  }
+	}
+	
+	/**
+	 * Simple Utility Methods for checking information about a value.
+	 *
+	 * @param  {Mixed}  value  Could be anything.
+	 * @return {Object}
+	 */
+	function does (value) {
+	  var arrayIndexOf = (Array.indexOf ? function (arr, obj, from) {
+	    return arr.indexOf(obj, from)
+	  } : function (arr, obj, from) {
+	    var l = arr.length
+	    var i = from ? parseInt((1 * from) + (from < 0 ? l : 0), 10) : 0
+	    i = i < 0 ? 0 : i
+	    for (; i < l; i++) if (i in arr && arr[i] === obj) return i
+	    return -1
+	  })
+	
+	  return {
+	    startWith: function (string) {
+	      if (is(value).a(String)) return value.slice(0, string.length) === string
+	      if (is(value).a(Array)) return value[0] === string
+	      return false
+	    },
+	
+	    endWith: function (string) {
+	      if (is(value).a(String)) return value.slice(-string.length) === string
+	      if (is(value).a(Array)) return value[value.length - 1] === string
+	      return false
+	    },
+	
+	    contain: function (field) {
+	      if (is(value).a(String)) return value.indexOf(field) > -1
+	      if (is(value).a(Object)) return value.hasOwnProperty(field)
+	      if (is(value).a(Array)) return !!~arrayIndexOf(value, field)
+	      return false
+	    }
+	  }
+	}
+	
+	/**
+	 * Expose the Unirest Container
+	 */
+	
+	module.exports = exports = Unirest
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports) {
+
+	module.exports = require("string_decoder");
+
+/***/ },
+/* 91 */
+/***/ function(module, exports) {
+
+	module.exports = require("form-data");
+
+/***/ },
+/* 92 */
+/***/ function(module, exports) {
+
+	module.exports = require("zlib");
+
+/***/ },
+/* 93 */
+/***/ function(module, exports) {
+
+	module.exports = require("request");
+
+/***/ },
+/* 94 */
+/***/ function(module, exports) {
+
+	module.exports = require("process");
+
+/***/ },
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var async = __webpack_require__(96);
+	var findPartials = __webpack_require__(97);
 	var fs = __webpack_require__(15);
-	var lruCache = __webpack_require__(90);
-	var mustache = __webpack_require__(89);
+	var lruCache = __webpack_require__(99);
+	var mustache = __webpack_require__(98);
 	var path = __webpack_require__(2);
 	
 	// Load a single file, and return the data.
@@ -24785,7 +26173,7 @@
 
 
 /***/ },
-/* 87 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*global setImmediate: false, setTimeout: false, console: false */
@@ -25749,10 +27137,10 @@
 
 
 /***/ },
-/* 88 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mustache = __webpack_require__(89);
+	var mustache = __webpack_require__(98);
 	
 	
 	function iteratePartials(parsed) {
@@ -25788,7 +27176,7 @@
 
 
 /***/ },
-/* 89 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -26364,7 +27752,7 @@
 
 
 /***/ },
-/* 90 */
+/* 99 */
 /***/ function(module, exports) {
 
 	;(function () { // closure for web browsers
@@ -26623,7 +28011,7 @@
 
 
 /***/ },
-/* 91 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -26767,16 +28155,16 @@
 	  // this uses a switch for static require analysis
 	  switch (parserName) {
 	    case 'json':
-	      parser = __webpack_require__(92)
+	      parser = __webpack_require__(101)
 	      break
 	    case 'raw':
-	      parser = __webpack_require__(119)
+	      parser = __webpack_require__(126)
 	      break
 	    case 'text':
-	      parser = __webpack_require__(120)
+	      parser = __webpack_require__(127)
 	      break
 	    case 'urlencoded':
-	      parser = __webpack_require__(121)
+	      parser = __webpack_require__(128)
 	      break
 	  }
 	
@@ -26786,7 +28174,7 @@
 
 
 /***/ },
-/* 92 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -26803,11 +28191,11 @@
 	 * @private
 	 */
 	
-	var bytes = __webpack_require__(93)
+	var bytes = __webpack_require__(102)
 	var contentType = __webpack_require__(48)
 	var createError = __webpack_require__(50)
 	var debug = __webpack_require__(10)('body-parser:json')
-	var read = __webpack_require__(94)
+	var read = __webpack_require__(103)
 	var typeis = __webpack_require__(78)
 	
 	/**
@@ -26967,7 +28355,7 @@
 
 
 /***/ },
-/* 93 */
+/* 102 */
 /***/ function(module, exports) {
 
 	/*!
@@ -27130,7 +28518,7 @@
 
 
 /***/ },
-/* 94 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -27147,10 +28535,10 @@
 	 */
 	
 	var createError = __webpack_require__(50)
-	var getBody = __webpack_require__(95)
-	var iconv = __webpack_require__(96)
+	var getBody = __webpack_require__(104)
+	var iconv = __webpack_require__(105)
 	var onFinished = __webpack_require__(18)
-	var zlib = __webpack_require__(118)
+	var zlib = __webpack_require__(92)
 	
 	/**
 	 * Module exports.
@@ -27324,7 +28712,7 @@
 
 
 /***/ },
-/* 95 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -27341,8 +28729,8 @@
 	 * @private
 	 */
 	
-	var bytes = __webpack_require__(93)
-	var iconv = __webpack_require__(96)
+	var bytes = __webpack_require__(102)
+	var iconv = __webpack_require__(105)
 	var unpipe = __webpack_require__(22)
 	
 	/**
@@ -27650,12 +29038,12 @@
 
 
 /***/ },
-/* 96 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
 	
-	var bomHandling = __webpack_require__(97),
+	var bomHandling = __webpack_require__(106),
 	    iconv = module.exports;
 	
 	// All codecs and aliases are kept here, keyed by encoding name/alias.
@@ -27713,7 +29101,7 @@
 	iconv._codecDataCache = {};
 	iconv.getCodec = function getCodec(encoding) {
 	    if (!iconv.encodings)
-	        iconv.encodings = __webpack_require__(98); // Lazy load all encoding definitions.
+	        iconv.encodings = __webpack_require__(107); // Lazy load all encoding definitions.
 	    
 	    // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
 	    var enc = (''+encoding).toLowerCase().replace(/[^0-9a-z]|:\d{4}$/g, "");
@@ -27787,17 +29175,17 @@
 	    // Load streaming support in Node v0.10+
 	    var nodeVerArr = nodeVer.split(".").map(Number);
 	    if (nodeVerArr[0] > 0 || nodeVerArr[1] >= 10) {
-	        __webpack_require__(116)(iconv);
+	        __webpack_require__(124)(iconv);
 	    }
 	
 	    // Load Node primitive extensions.
-	    __webpack_require__(117)(iconv);
+	    __webpack_require__(125)(iconv);
 	}
 	
 
 
 /***/ },
-/* 97 */
+/* 106 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -27855,7 +29243,7 @@
 
 
 /***/ },
-/* 98 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -27863,14 +29251,14 @@
 	// Update this array if you add/rename/remove files in this directory.
 	// We support Browserify by skipping automatic module discovery and requiring modules directly.
 	var modules = [
-	    __webpack_require__(99),
-	    __webpack_require__(101),
-	    __webpack_require__(102),
-	    __webpack_require__(103),
-	    __webpack_require__(104),
-	    __webpack_require__(105),
-	    __webpack_require__(106),
-	    __webpack_require__(107),
+	    __webpack_require__(108),
+	    __webpack_require__(109),
+	    __webpack_require__(110),
+	    __webpack_require__(111),
+	    __webpack_require__(112),
+	    __webpack_require__(113),
+	    __webpack_require__(114),
+	    __webpack_require__(115),
 	];
 	
 	// Put all encoding/alias/codec definitions to single object and export it. 
@@ -27883,7 +29271,7 @@
 
 
 /***/ },
-/* 99 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -27933,7 +29321,7 @@
 	//------------------------------------------------------------------------------
 	
 	// We use node.js internal decoder. Its signature is the same as ours.
-	var StringDecoder = __webpack_require__(100).StringDecoder;
+	var StringDecoder = __webpack_require__(90).StringDecoder;
 	
 	if (!StringDecoder.prototype.end) // Node v0.8 doesn't have this method.
 	    StringDecoder.prototype.end = function() {};
@@ -28076,13 +29464,7 @@
 
 
 /***/ },
-/* 100 */
-/***/ function(module, exports) {
-
-	module.exports = require("string_decoder");
-
-/***/ },
-/* 101 */
+/* 109 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -28262,7 +29644,7 @@
 
 
 /***/ },
-/* 102 */
+/* 110 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -28557,7 +29939,7 @@
 
 
 /***/ },
-/* 103 */
+/* 111 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -28635,7 +30017,7 @@
 
 
 /***/ },
-/* 104 */
+/* 112 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -28810,7 +30192,7 @@
 
 
 /***/ },
-/* 105 */
+/* 113 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -29266,7 +30648,7 @@
 	}
 
 /***/ },
-/* 106 */
+/* 114 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -29826,7 +31208,7 @@
 
 
 /***/ },
-/* 107 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -29872,7 +31254,7 @@
 	
 	    'shiftjis': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(108) },
+	        table: function() { return __webpack_require__(116) },
 	        encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
 	        encodeSkipVals: [{from: 0xED40, to: 0xF940}],
 	    },
@@ -29887,7 +31269,7 @@
 	
 	    'eucjp': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(109) },
+	        table: function() { return __webpack_require__(117) },
 	        encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
 	    },
 	
@@ -29913,21 +31295,21 @@
 	    '936': 'cp936',
 	    'cp936': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(110) },
+	        table: function() { return __webpack_require__(118) },
 	    },
 	
 	    // GBK (~22000 chars) is an extension of CP936 that added user-mapped chars and some other.
 	    'gbk': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(110).concat(__webpack_require__(111)) },
+	        table: function() { return __webpack_require__(118).concat(__webpack_require__(119)) },
 	    },
 	    'xgbk': 'gbk',
 	
 	    // GB18030 is an algorithmic extension of GBK.
 	    'gb18030': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(110).concat(__webpack_require__(111)) },
-	        gb18030: function() { return __webpack_require__(112) },
+	        table: function() { return __webpack_require__(118).concat(__webpack_require__(119)) },
+	        gb18030: function() { return __webpack_require__(120) },
 	    },
 	
 	    'chinese': 'gb18030',
@@ -29943,7 +31325,7 @@
 	    '949': 'cp949',
 	    'cp949': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(113) },
+	        table: function() { return __webpack_require__(121) },
 	    },
 	
 	    'cseuckr': 'cp949',
@@ -29983,14 +31365,14 @@
 	    '950': 'cp950',
 	    'cp950': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(114) },
+	        table: function() { return __webpack_require__(122) },
 	    },
 	
 	    // Big5 has many variations and is an extension of cp950. We use Encoding Standard's as a consensus.
 	    'big5': 'big5hkscs',
 	    'big5hkscs': {
 	        type: '_dbcs',
-	        table: function() { return __webpack_require__(114).concat(__webpack_require__(115)) },
+	        table: function() { return __webpack_require__(122).concat(__webpack_require__(123)) },
 	        encodeSkipVals: [0xa2cc],
 	    },
 	
@@ -30002,7 +31384,7 @@
 
 
 /***/ },
-/* 108 */
+/* 116 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -30553,7 +31935,7 @@
 	];
 
 /***/ },
-/* 109 */
+/* 117 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -31378,7 +32760,7 @@
 	];
 
 /***/ },
-/* 110 */
+/* 118 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -34002,7 +35384,7 @@
 	];
 
 /***/ },
-/* 111 */
+/* 119 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -34265,7 +35647,7 @@
 	];
 
 /***/ },
-/* 112 */
+/* 120 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -34690,7 +36072,7 @@
 	};
 
 /***/ },
-/* 113 */
+/* 121 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -37073,7 +38455,7 @@
 	];
 
 /***/ },
-/* 114 */
+/* 122 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -37805,7 +39187,7 @@
 	];
 
 /***/ },
-/* 115 */
+/* 123 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -38314,7 +39696,7 @@
 	];
 
 /***/ },
-/* 116 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -38440,7 +39822,7 @@
 
 
 /***/ },
-/* 117 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -38660,13 +40042,7 @@
 
 
 /***/ },
-/* 118 */
-/***/ function(module, exports) {
-
-	module.exports = require("zlib");
-
-/***/ },
-/* 119 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -38681,9 +40057,9 @@
 	 * Module dependencies.
 	 */
 	
-	var bytes = __webpack_require__(93)
+	var bytes = __webpack_require__(102)
 	var debug = __webpack_require__(10)('body-parser:raw')
-	var read = __webpack_require__(94)
+	var read = __webpack_require__(103)
 	var typeis = __webpack_require__(78)
 	
 	/**
@@ -38773,7 +40149,7 @@
 
 
 /***/ },
-/* 120 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -38788,10 +40164,10 @@
 	 * Module dependencies.
 	 */
 	
-	var bytes = __webpack_require__(93)
+	var bytes = __webpack_require__(102)
 	var contentType = __webpack_require__(48)
 	var debug = __webpack_require__(10)('body-parser:text')
-	var read = __webpack_require__(94)
+	var read = __webpack_require__(103)
 	var typeis = __webpack_require__(78)
 	
 	/**
@@ -38900,7 +40276,7 @@
 
 
 /***/ },
-/* 121 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -38917,12 +40293,12 @@
 	 * @private
 	 */
 	
-	var bytes = __webpack_require__(93)
+	var bytes = __webpack_require__(102)
 	var contentType = __webpack_require__(48)
 	var createError = __webpack_require__(50)
 	var debug = __webpack_require__(10)('body-parser:urlencoded')
 	var deprecate = __webpack_require__(31)('body-parser')
-	var read = __webpack_require__(94)
+	var read = __webpack_require__(103)
 	var typeis = __webpack_require__(78)
 	
 	/**
@@ -39185,1155 +40561,10 @@
 
 
 /***/ },
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var Env_1 = __webpack_require__(1);
-	exports.panelRouter = __webpack_require__(4).Router();
-	exports.panelRouter.get('/', function (req, res) {
-	    console.log('get panel:');
-	    res.render('panel.mustache', { host: Env_1.ServerConf.host, wsPort: Env_1.ServerConf.wsPort, hupuWsUrl: Env_1.ServerConf.hupuWsUrl });
-	});
-	exports.panelRouter.get('/screen', function (req, res) {
-	    console.log('get screen:');
-	    res.render('screen/index', { host: Env_1.ServerConf.host, wsPort: Env_1.ServerConf.wsPort, hupuWsUrl: Env_1.ServerConf.hupuWsUrl });
-	});
-	var unirest = __webpack_require__(129);
-	exports.panelRouter.get('/auto/bracket/:game_id', function (req, res) {
-	    console.log('get /auto/bracket', req.params.game_id);
-	    var game_id = req.params.game_id;
-	    var api1 = 'http://api.liangle.com/api/passerbyking/game/top8Match/' + game_id;
-	    unirest.get(api1)
-	        .end(function (response) {
-	        console.log(response.body);
-	        res.send(response.body);
-	    });
-	});
-	exports.panelRouter.get('/auto/player/:game_id', function (req, res) {
-	    console.log('get /auto/player');
-	    var game_id = req.params.game_id;
-	    var api1 = 'http://api.liangle.com/api/passerbyking/game/players/' + game_id;
-	    unirest.get(api1)
-	        .end(function (response) {
-	        console.log(response.body);
-	        res.send(response.body);
-	    });
-	});
-
-
-/***/ },
 /* 129 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Unirest for Node.js
-	 *
-	 * @author Nijko Yonskai
-	 * @copyright 2013-2015
-	 * @license MIT
-	 */
-	
-	/**
-	 * Module Dependencies
-	 */
-	
-	var StringDecoder = __webpack_require__(100).StringDecoder
-	var QueryString = __webpack_require__(66)
-	var FormData = __webpack_require__(130)
-	var Stream = __webpack_require__(54)
-	var mime = __webpack_require__(59)
-	var zlib = __webpack_require__(118)
-	var path = __webpack_require__(2)
-	var URL = __webpack_require__(38)
-	var fs = __webpack_require__(15)
-	
-	/**
-	 * Define form mime type
-	 */
-	mime.define({
-	  'application/x-www-form-urlencoded': ['form', 'urlencoded', 'form-data']
-	})
-	
-	/**
-	 * Initialize our Rest Container
-	 *
-	 * @type {Object}
-	 */
-	var Unirest = function (method, uri, headers, body, callback) {
-	  var unirest = function (uri, headers, body, callback) {
-	    var $this = {
-	      /**
-	       * Stream Multipart form-data request
-	       *
-	       * @type {Boolean}
-	       */
-	      _stream: false,
-	
-	      /**
-	       * Container to hold multipart form data for processing upon request.
-	       *
-	       * @type {Array}
-	       * @private
-	       */
-	      _multipart: [],
-	
-	      /**
-	       * Container to hold form data for processing upon request.
-	       *
-	       * @type {Array}
-	       * @private
-	       */
-	      _form: [],
-	
-	      /**
-	       * Request option container for details about the request.
-	       *
-	       * @type {Object}
-	       */
-	      options: {
-	        /**
-	         * Url obtained from request method arguments.
-	         *
-	         * @type {String}
-	         */
-	        url: uri,
-	
-	        /**
-	         * Method obtained from request method arguments.
-	         *
-	         * @type {String}
-	         */
-	        method: method,
-	
-	        /**
-	         * List of headers with case-sensitive fields.
-	         *
-	         * @type {Object}
-	         */
-	        headers: {}
-	      },
-	
-	      hasHeader: function (name) {
-	        var headers
-	        var lowercaseHeaders
-	
-	        name = name.toLowerCase()
-	        headers = Object.keys($this.options.headers)
-	        lowercaseHeaders = headers.map(function (header) {
-	          return header.toLowerCase()
-	        })
-	
-	        for (var i = 0; i < lowercaseHeaders.length; i++) {
-	          if (lowercaseHeaders[i] === name) {
-	            return headers[i]
-	          }
-	        }
-	
-	        return false
-	      },
-	
-	      /**
-	       * Turn on multipart-form streaming
-	       *
-	       * @return {Object}
-	       */
-	      stream: function () {
-	        $this._stream = true
-	        return this
-	      },
-	
-	      /**
-	       * Attaches a field to the multipart-form request, with pre-processing.
-	       *
-	       * @param  {String} name
-	       * @param  {String} value
-	       * @return {Object}
-	       */
-	      field: function (name, value, options) {
-	        return handleField(name, value, options)
-	      },
-	
-	      /**
-	       * Attaches a file to the multipart-form request.
-	       *
-	       * @param  {String} name
-	       * @param  {String|Object} path
-	       * @return {Object}
-	       */
-	      attach: function (name, path, options) {
-	        options = options || {}
-	        options.attachment = true
-	        return handleField(name, path, options)
-	      },
-	
-	      /**
-	       * Attaches field to the multipart-form request, with no pre-processing.
-	       *
-	       * @param  {String} name
-	       * @param  {String|Object} path
-	       * @param  {Object} options
-	       * @return {Object}
-	       */
-	      rawField: function (name, value, options) {
-	        $this._multipart.push({
-	          name: name,
-	          value: value,
-	          options: options,
-	          attachment: options.attachment || false
-	        })
-	      },
-	
-	      /**
-	       * Basic Header Authentication Method
-	       *
-	       * Supports user being an Object to reflect Request
-	       * Supports user, password to reflect SuperAgent
-	       *
-	       * @param  {String|Object} user
-	       * @param  {String} password
-	       * @param  {Boolean} sendImmediately
-	       * @return {Object}
-	       */
-	      auth: function (user, password, sendImmediately) {
-	        $this.options.auth = (is(user).a(Object)) ? user : {
-	          user: user,
-	          password: password,
-	          sendImmediately: sendImmediately
-	        }
-	
-	        return $this
-	      },
-	
-	      /**
-	       * Sets header field to value
-	       *
-	       * @param  {String} field Header field
-	       * @param  {String} value Header field value
-	       * @return {Object}
-	       */
-	      header: function (field, value) {
-	        if (is(field).a(Object)) {
-	          for (var key in field) {
-	            if (field.hasOwnProperty(key)) {
-	              $this.header(key, field[key])
-	            }
-	          }
-	
-	          return $this
-	        }
-	
-	        var existingHeaderName = $this.hasHeader(field)
-	        $this.options.headers[existingHeaderName || field] = value
-	
-	        return $this
-	      },
-	
-	      /**
-	       * Serialize value as querystring representation, and append or set on `Request.options.url`
-	       *
-	       * @param  {String|Object} value
-	       * @return {Object}
-	       */
-	      query: function (value) {
-	        if (is(value).a(Object)) value = Unirest.serializers.form(value)
-	        if (!value.length) return $this
-	        $this.options.url += (does($this.options.url).contain('?') ? '&' : '?') + value
-	        return $this
-	      },
-	
-	      /**
-	       * Set _content-type_ header with type passed through `mime.lookup()` when necessary.
-	       *
-	       * @param  {String} type
-	       * @return {Object}
-	       */
-	      type: function (type) {
-	        $this.header('Content-Type', does(type).contain('/')
-	          ? type
-	          : mime.lookup(type))
-	        return $this
-	      },
-	
-	      /**
-	       * Data marshalling for HTTP request body data
-	       *
-	       * Determines whether type is `form` or `json`.
-	       * For irregular mime-types the `.type()` method is used to infer the `content-type` header.
-	       *
-	       * When mime-type is `application/x-www-form-urlencoded` data is appended rather than overwritten.
-	       *
-	       * @param  {Mixed} data
-	       * @return {Object}
-	       */
-	      send: function (data) {
-	        var type = $this.options.headers[$this.hasHeader('content-type')]
-	
-	        if ((is(data).a(Object) || is(data).a(Array)) && !Buffer.isBuffer(data)) {
-	          if (!type) {
-	            $this.type('form')
-	            type = $this.options.headers[$this.hasHeader('content-type')]
-	            $this.options.body = Unirest.serializers.form(data)
-	          } else if (~type.indexOf('json')) {
-	            $this.options.json = true
-	
-	            if ($this.options.body && is($this.options.body).a(Object)) {
-	              for (var key in data) {
-	                if (data.hasOwnProperty(key)) {
-	                  $this.options.body[key] = data[key]
-	                }
-	              }
-	            } else {
-	              $this.options.body = data
-	            }
-	          } else {
-	            $this.options.body = Unirest.Request.serialize(data, type)
-	          }
-	        } else if (is(data).a(String)) {
-	          if (!type) {
-	            $this.type('form')
-	            type = $this.options.headers[$this.hasHeader('content-type')]
-	          }
-	
-	          if (type === 'application/x-www-form-urlencoded') {
-	            $this.options.body = $this.options.body
-	              ? $this.options.body + '&' + data
-	              : data
-	          } else {
-	            $this.options.body = ($this.options.body || '') + data
-	          }
-	        } else {
-	          $this.options.body = data
-	        }
-	
-	        return $this
-	      },
-	
-	      /**
-	       * Takes multipart options and places them on `options.multipart` array.
-	       * Transforms body when an `Object` or _content-type_ is present.
-	       *
-	       * Example:
-	       *
-	       *      Unirest.get('http://google.com').part({
-	       *        'content-type': 'application/json',
-	       *        body: {
-	       *          phrase: 'Hello'
-	       *        }
-	       *      }).part({
-	       *        'content-type': 'application/json',
-	       *        body: {
-	       *          phrase: 'World'
-	       *        }
-	       *      }).end(function (response) {})
-	       *
-	       * @param  {Object|String} options When an Object, headers should be placed directly on the object,
-	       *                                 not under a child property.
-	       * @return {Object}
-	       */
-	      part: function (options) {
-	        if (!$this._multipart) {
-	          $this.options.multipart = []
-	        }
-	
-	        if (is(options).a(Object)) {
-	          if (options['content-type']) {
-	            var type = Unirest.type(options['content-type'], true)
-	            if (type) options.body = Unirest.Response.parse(options.body)
-	          } else {
-	            if (is(options.body).a(Object)) {
-	              options.body = Unirest.serializers.json(options.body)
-	            }
-	          }
-	
-	          $this.options.multipart.push(options)
-	        } else {
-	          $this.options.multipart.push({
-	            body: options
-	          })
-	        }
-	
-	        return $this
-	      },
-	
-	      /**
-	       * Sends HTTP Request and awaits Response finalization. Request compression and Response decompression occurs here.
-	       * Upon HTTP Response post-processing occurs and invokes `callback` with a single argument, the `[Response](#response)` object.
-	       *
-	       * @param  {Function} callback
-	       * @return {Object}
-	       */
-	      end: function (callback) {
-	        var Request
-	        var header
-	        var parts
-	        var form
-	
-	        function handleRequestResponse (error, response, body) {
-	          var result = {}
-	          var status
-	          var data
-	          var type
-	
-	          // Handle pure error
-	          if (error && !response) {
-	            result.error = error
-	
-	            if (callback) {
-	              callback(result)
-	            }
-	
-	            return
-	          }
-	
-	          // Handle No Response...
-	          // This is weird.
-	          if (!response) {
-	            console.log('This is odd, report this action / request to: http://github.com/mashape/unirest-nodejs')
-	
-	            result.error = {
-	              message: 'No response found.'
-	            }
-	
-	            if (callback) {
-	              callback(result)
-	            }
-	
-	            return
-	          }
-	
-	          // Create response reference
-	          result = response
-	
-	          // Create response status reference
-	          status = response.statusCode
-	
-	          // Normalize MSIE response to HTTP 204
-	          status = (status === 1223 ? 204 : status)
-	
-	          // Obtain status range typecode (1, 2, 3, 4, 5, etc.)
-	          type = status / 100 | 0
-	
-	          // Generate sugar helper properties for status information
-	          result.code = status
-	          result.status = status
-	          result.statusType = type
-	          result.info = type === 1
-	          result.ok = type === 2
-	          result.clientError = type === 4
-	          result.serverError = type === 5
-	          result.error = (type === 4 || type === 5) ? (function generateErrorMessage () {
-	            var msg = 'got ' + result.status + ' response'
-	            var err = new Error(msg)
-	            err.status = result.status
-	            return err
-	          })() : false
-	
-	          // Iterate over Response Status Codes and generate more sugar
-	          for (var name in Unirest.Response.statusCodes) {
-	            result[name] = Unirest.Response.statusCodes[name] === status
-	          }
-	
-	          // Cookie Holder
-	          result.cookies = {}
-	
-	          // Cookie Sugar Method
-	          result.cookie = function (name) {
-	            return result.cookies[name]
-	          }
-	
-	          function setCookie (cookie) {
-	            var crumbs = Unirest.trim(cookie).split('=')
-	            var key = Unirest.trim(crumbs[0])
-	            var value = Unirest.trim(crumbs.slice(1).join('='))
-	
-	            if (crumbs[0] && crumbs[0] !== '') {
-	              result.cookies[key] = value === '' ? true : value
-	            }
-	          }
-	
-	          if (response.cookies && is(response.cookies).a(Object) && Object.keys(response.cookies).length > 0) {
-	            result.cookies = response.cookies
-	          } else {
-	            // Handle cookies to be set
-	            var cookies = response.headers['set-cookie']
-	            if (cookies && is(cookies).a(Array)) {
-	              for (var index = 0; index < cookies.length; index++) {
-	                var entry = cookies[index]
-	
-	                if (is(entry).a(String) && does(entry).contain(';')) {
-	                  entry.split(';').forEach(setCookie)
-	                }
-	              }
-	            }
-	
-	            // Handle cookies that have been set
-	            cookies = response.headers.cookie
-	            if (cookies && is(cookies).a(String)) {
-	              cookies.split(';').forEach(setCookie)
-	            }
-	          }
-	
-	          // Obtain response body
-	          body = body || response.body
-	          result.raw_body = body
-	          result.headers = response.headers
-	
-	          // Handle Response Body
-	          if (body) {
-	            type = Unirest.type(result.headers['content-type'], true)
-	            if (type) data = Unirest.Response.parse(body, type)
-	            else data = body
-	          }
-	
-	          result.body = data
-	
-	          ;(callback) && callback(result)
-	        }
-	
-	        function handleGZIPResponse (response) {
-	          if (/^(deflate|gzip)$/.test(response.headers['content-encoding'])) {
-	            var unzip = zlib.createUnzip()
-	            var stream = new Stream()
-	            var _on = response.on
-	            var decoder
-	
-	            // Keeping node happy
-	            stream.req = response.req
-	
-	            // Make sure we emit prior to processing
-	            unzip.on('error', function (error) {
-	              // Catch the parser error when there is no content
-	              if (error.errno === zlib.Z_BUF_ERROR || error.errno === zlib.Z_DATA_ERROR) {
-	                stream.emit('end')
-	                return
-	              }
-	
-	              stream.emit('error', error)
-	            })
-	
-	            // Start the processing
-	            response.pipe(unzip)
-	
-	            // Ensure encoding is captured
-	            response.setEncoding = function (type) {
-	              decoder = new StringDecoder(type)
-	            }
-	
-	            // Capture decompression and decode with captured encoding
-	            unzip.on('data', function (buffer) {
-	              if (!decoder) return stream.emit('data', buffer)
-	              var string = decoder.write(buffer)
-	              if (string.length) stream.emit('data', string)
-	            })
-	
-	            // Emit yoself
-	            unzip.on('end', function () {
-	              stream.emit('end')
-	            })
-	
-	            response.on = function (type, next) {
-	              if (type === 'data' || type === 'end') {
-	                stream.on(type, next)
-	              } else if (type === 'error') {
-	                _on.call(response, type, next)
-	              } else {
-	                _on.call(response, type, next)
-	              }
-	            }
-	          }
-	        }
-	
-	        function handleFormData (form) {
-	          for (var i = 0; i < $this._multipart.length; i++) {
-	            var item = $this._multipart[i]
-	
-	            if (item.attachment && is(item.value).a(String)) {
-	              if (does(item.value).contain('http://') || does(item.value).contain('https://')) {
-	                item.value = Unirest.request(item.value)
-	              } else {
-	                item.value = fs.createReadStream(path.resolve(item.value))
-	              }
-	            }
-	
-	            form.append(item.name, item.value, item.options)
-	          }
-	
-	          return form
-	        }
-	
-	        if ($this._multipart.length && !$this._stream) {
-	          header = $this.options.headers[$this.hasHeader('content-type')]
-	          parts = URL.parse($this.options.url)
-	          form = new FormData()
-	
-	          if (header) {
-	            $this.options.headers['content-type'] = header.split(';')[0] + '; boundary=' + form.getBoundary()
-	          } else {
-	            $this.options.headers['content-type'] = 'multipart/form-data; boundary=' + form.getBoundary()
-	          }
-	
-	          function authn(auth) {
-	              if (!auth) return null;
-	              if (typeof auth === 'string') return auth;
-	              if (auth.user && auth.pass) return auth.user + ':' + auth.pass;
-	              return auth;
-	          }
-	
-	          return handleFormData(form).submit({
-	            protocol: parts.protocol,
-	            port: parts.port,
-	            // Formdata doesn't expect port to be included with host
-	            // so we use hostname rather than host
-	            host: parts.hostname,
-	            path: parts.path,
-	            method: $this.options.method,
-	            headers: $this.options.headers,
-	            auth: authn($this.options.auth || parts.auth)
-	          }, function (error, response) {
-	            var decoder = new StringDecoder('utf8')
-	
-	            if (error) {
-	              return handleRequestResponse(error, response)
-	            }
-	
-	            if (!response.body) {
-	              response.body = ''
-	            }
-	
-	            // Node 10+
-	            response.resume()
-	
-	            // GZIP, Feel me?
-	            handleGZIPResponse(response)
-	
-	            // Fallback
-	            response.on('data', function (chunk) {
-	              if (typeof chunk === 'string') response.body += chunk
-	              else response.body += decoder.write(chunk)
-	            })
-	
-	            // After all, we end up here
-	            response.on('end', function () {
-	              return handleRequestResponse(error, response)
-	            })
-	          })
-	        }
-	
-	        Request = Unirest.request($this.options, handleRequestResponse)
-	        Request.on('response', handleGZIPResponse)
-	
-	        if ($this._multipart.length && $this._stream) {
-	          handleFormData(Request.form())
-	        }
-	
-	        return Request
-	      }
-	    }
-	
-	    /**
-	     * Alias for _.header_
-	     * @type {Function}
-	     */
-	    $this.headers = $this.header
-	
-	    /**
-	     * Alias for _.header_
-	     *
-	     * @type {Function}
-	     */
-	    $this.set = $this.header
-	
-	    /**
-	     * Alias for _.end_
-	     *
-	     * @type {Function}
-	     */
-	    $this.complete = $this.end
-	
-	    /**
-	     * Aliases for _.end_
-	     *
-	     * @type {Object}
-	     */
-	
-	    $this.as = {
-	      json: $this.end,
-	      binary: $this.end,
-	      string: $this.end
-	    }
-	
-	    /**
-	     * Handles Multipart Field Processing
-	     *
-	     * @param {String} name
-	     * @param {Mixed} value
-	     * @param {Object} options
-	     */
-	    function handleField (name, value, options) {
-	      var serialized
-	      var length
-	      var key
-	      var i
-	
-	      options = options || { attachment: false }
-	
-	      if (is(name).a(Object)) {
-	        for (key in name) {
-	          if (name.hasOwnProperty(key)) {
-	            handleField(key, name[key], options)
-	          }
-	        }
-	      } else {
-	        if (is(value).a(Array)) {
-	          for (i = 0, length = value.length; i < length; i++) {
-	            serialized = handleFieldValue(value[i])
-	            if (serialized) {
-	              $this.rawField(name, serialized, options)
-	            }
-	          }
-	        } else if (value != null) {
-	          $this.rawField(name, handleFieldValue(value), options)
-	        }
-	      }
-	
-	      return $this
-	    }
-	
-	    /**
-	     * Handles Multipart Value Processing
-	     *
-	     * @param {Mixed} value
-	     */
-	    function handleFieldValue (value) {
-	      if (!(value instanceof Buffer || typeof value === 'string')) {
-	        if (is(value).a(Object)) {
-	          if (value instanceof fs.FileReadStream) {
-	            return value
-	          } else {
-	            return Unirest.serializers.json(value)
-	          }
-	        } else {
-	          return value.toString()
-	        }
-	      } else return value
-	    }
-	
-	    function setupOption (name, ref) {
-	      $this[name] = function (arg) {
-	        $this.options[ref || name] = arg
-	        return $this
-	      }
-	    }
-	
-	    // Iterates over a list of option methods to generate the chaining
-	    // style of use you see in Superagent and jQuery.
-	    for (var x in Unirest.enum.options) {
-	      if (Unirest.enum.options.hasOwnProperty(x)) {
-	        var option = Unirest.enum.options[x]
-	        var reference = null
-	
-	        if (option.indexOf(':') > -1) {
-	          option = option.split(':')
-	          reference = option[1]
-	          option = option[0]
-	        }
-	
-	        setupOption(option, reference)
-	      }
-	    }
-	
-	    if (headers && typeof headers === 'function') {
-	      callback = headers
-	      headers = null
-	    } else if (body && typeof body === 'function') {
-	      callback = body
-	      body = null
-	    }
-	
-	    if (headers) $this.set(headers)
-	    if (body) $this.send(body)
-	
-	    return callback ? $this.end(callback) : $this
-	  }
-	
-	  return uri ? unirest(uri, headers, body, callback) : unirest
-	}
-	
-	/**
-	 * Expose the underlying layer.
-	 */
-	Unirest.request = __webpack_require__(131)
-	Unirest.cookie = Unirest.request.cookie
-	Unirest.pipe = Unirest.request.pipe
-	
-	/**
-	 * Mime-type lookup / parser.
-	 *
-	 * @param  {String} type
-	 * @param  {Boolean} parse Should we parse?
-	 * @return {String}
-	 */
-	Unirest.type = function (type, parse) {
-	  if (typeof type !== 'string') return false
-	  return parse ? type.split(/ *; */).shift() : (Unirest.types[type] || type)
-	}
-	
-	/**
-	 * Utility method to trim strings.
-	 *
-	 * @type {String}
-	 */
-	Unirest.trim = ''.trim
-	  ? function (s) { return s.trim() }
-	  : function (s) { return s.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '') }
-	
-	/**
-	 * Parser methods for different data types.
-	 *
-	 * @type {Object}
-	 */
-	Unirest.parsers = {
-	  string: function (data) {
-	    var obj = {}
-	    var pairs = data.split('&')
-	    var parts
-	    var pair
-	
-	    for (var i = 0, len = pairs.length; i < len; ++i) {
-	      pair = pairs[i]
-	      parts = pair.split('=')
-	      obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1])
-	    }
-	
-	    return obj
-	  },
-	
-	  json: function (data) {
-	    try {
-	      data = JSON.parse(data)
-	    } catch (e) {}
-	
-	    return data
-	  }
-	}
-	
-	/**
-	 * Serialization methods for different data types.
-	 *
-	 * @type {Object}
-	 */
-	Unirest.serializers = {
-	  form: function (obj) {
-	    return QueryString.stringify(obj)
-	  },
-	
-	  json: function (obj) {
-	    return JSON.stringify(obj)
-	  }
-	}
-	
-	/**
-	 * Unirest Request Utility Methods
-	 *
-	 * @type {Object}
-	 */
-	Unirest.Request = {
-	  serialize: function (string, type) {
-	    var serializer = Unirest.firstMatch(type, Unirest.enum.serialize)
-	    return serializer ? serializer(string) : string
-	  },
-	
-	  uid: function (len) {
-	    var output = ''
-	    var chars = 'abcdefghijklmnopqrstuvwxyz123456789'
-	    var nchars = chars.length
-	    while (len--) output += chars[Math.random() * nchars | 0]
-	    return output
-	  }
-	}
-	
-	/**
-	 * Unirest Response Utility Methods
-	 *
-	 * @type {Object}
-	 */
-	Unirest.Response = {
-	  parse: function (string, type) {
-	    var parser = Unirest.firstMatch(type, Unirest.enum.parse)
-	    return parser ? parser(string) : string
-	  },
-	
-	  parseHeader: function (str) {
-	    var lines = str.split(/\r?\n/)
-	    var fields = {}
-	    var index
-	    var line
-	    var field
-	    var val
-	
-	    // Trailing CRLF
-	    lines.pop()
-	
-	    for (var i = 0, len = lines.length; i < len; ++i) {
-	      line = lines[i]
-	      index = line.indexOf(':')
-	      field = line.slice(0, index).toLowerCase()
-	      val = Unirest.trim(line.slice(index + 1))
-	      fields[field] = val
-	    }
-	
-	    return fields
-	  },
-	
-	  statusCodes: {
-	    'created': 201,
-	    'accepted': 202,
-	    'nonAuthoritativeInformation': 203,
-	    'noContent': 204,
-	    'resetContent': 205,
-	    'partialContent': 206,
-	    'multiStatus': 207,
-	    'alreadyReported': 208,
-	    'imUsed': 226,
-	    'multipleChoices': 300,
-	    'movedPermanently': 301,
-	    'found': 302,
-	    'seeOther': 303,
-	    'notModified': 304,
-	    'useProxy': 305,
-	    'temporaryRedirect': 307,
-	    'permanentRedirect': 308,
-	    'badRequest': 400,
-	    'unauthorized': 401,
-	    'paymentRequired': 402,
-	    'forbidden': 403,
-	    'notFound': 404,
-	    'methodNotAllowed': 405,
-	    'notAcceptable': 406,
-	    'proxyAuthenticationRequired': 407,
-	    'requestTimeout': 408,
-	    'conflict': 409,
-	    'gone': 410,
-	    'lengthRequired': 411,
-	    'preconditionFailed': 412,
-	    'requestEntityTooLarge': 413,
-	    'uriTooLong': 414,
-	    'unsupportedMediaType': 415,
-	    'rangeNotSatisfiable': 416,
-	    'expectationFailed': 417,
-	    'misdirectedRequest': 421,
-	    'unprocessableEntity': 422,
-	    'locked': 423,
-	    'failedDependency': 424,
-	    'upgradeRequired': 426,
-	    'preconditionRequired': 428,
-	    'tooManyRequests': 429,
-	    'requestHeaderFieldsTooLarge': 431,
-	    'internalServerError': 500,
-	    'notImplemented': 501,
-	    'badGateway': 502,
-	    'serviceUnavailable': 503,
-	    'gatewayTimeout': 504,
-	    'httpVersionNotSupported': 505,
-	    'variantAlsoNegotiates': 506,
-	    'insufficientStorage': 507,
-	    'loopDetected': 508,
-	    'notExtended': 510
-	  }
-	}
-	
-	/**
-	 * Expose cookie store (tough-cookie)
-	 *
-	 * @return {Function} Cookie Store
-	 */
-	Unirest.jar = function (options) {
-	  var jar = Unirest.request.jar()
-	  options = options || {}
-	
-	  // Because Requests aliases toughcookie rather than returning.
-	  if (options.store) {
-	    jar._jar.store = options.store
-	  }
-	
-	  if (options.rejectPublicSuffixes) {
-	    jar._jar.rejectPublicSuffixes = options.rejectPublicSuffixes
-	  }
-	
-	  // Alias helper methods
-	  jar.add = jar.setCookie
-	  jar.toString = jar.getCookieString
-	
-	  // Export
-	  return jar
-	}
-	
-	/**
-	 * Enum Structures
-	 *
-	 * @type {Object}
-	 */
-	Unirest.enum = {
-	  serialize: {
-	    'application/x-www-form-urlencoded': Unirest.serializers.form,
-	    'application/json': Unirest.serializers.json,
-	    '+json': Unirest.serializers.json
-	  },
-	
-	  parse: {
-	    'application/x-www-form-urlencoded': Unirest.parsers.string,
-	    'application/json': Unirest.parsers.json,
-	    '+json': Unirest.parsers.json
-	  },
-	
-	  methods: [
-	    'GET',
-	    'HEAD',
-	    'PUT',
-	    'POST',
-	    'PATCH',
-	    'DELETE',
-	    'OPTIONS'
-	  ],
-	
-	  options: [
-	    'uri:url', 'redirects:maxRedirects', 'redirect:followRedirect', 'url', 'method', 'qs', 'form', 'json', 'multipart',
-	    'followRedirect', 'followAllRedirects', 'maxRedirects', 'encoding', 'pool', 'timeout', 'proxy', 'oauth', 'hawk', 'time',
-	    'ssl:strictSSL', 'strictSSL', 'jar', 'cookies:jar', 'aws', 'httpSignature', 'localAddress', 'ip:localAddress', 'secureProtocol', 'forever'
-	  ]
-	}
-	
-	/**
-	 * Returns a list of values obtained by checking the specified string
-	 * whether it contains array value or object key, when true the value
-	 * is appended to the list to be returned.
-	 *
-	 * @param  {String} string String to be tested
-	 * @param  {Object|Array} map    Values / Keys to test against string.
-	 * @return {Array} List of values truthfully matched against string.
-	 */
-	Unirest.matches = function matches (string, map) {
-	  var results = []
-	
-	  for (var key in map) {
-	    if (typeof map.length !== 'undefined') {
-	      key = map[key]
-	    }
-	
-	    if (string.indexOf(key) !== -1) {
-	      results.push(map[key])
-	    }
-	  }
-	
-	  return results
-	}
-	
-	/**
-	 * Returns the first value obtained through #matches
-	 *
-	 * @see #matches
-	 * @param  {String} string String to be tested
-	 * @param  {Object|Array} map Values / Keys to test against string.
-	 * @return {Mixed} First match value
-	 */
-	Unirest.firstMatch = function firstMatch (string, map) {
-	  return Unirest.matches(string, map)[0]
-	}
-	
-	/**
-	 * Generate sugar for request library.
-	 *
-	 * This allows us to mock super-agent chaining style while using request library under the hood.
-	 */
-	function setupMethod (method) {
-	  Unirest[method] = Unirest(method)
-	}
-	
-	for (var i = 0; i < Unirest.enum.methods.length; i++) {
-	  var method = Unirest.enum.methods[i].toLowerCase()
-	  setupMethod(method)
-	}
-	
-	/**
-	 * Simple Utility Methods for checking information about a value.
-	 *
-	 * @param  {Mixed}  value  Could be anything.
-	 * @return {Object}
-	 */
-	function is (value) {
-	  return {
-	    a: function (check) {
-	      if (check.prototype) check = check.prototype.constructor.name
-	      var type = Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
-	      return value != null && type === check.toLowerCase()
-	    }
-	  }
-	}
-	
-	/**
-	 * Simple Utility Methods for checking information about a value.
-	 *
-	 * @param  {Mixed}  value  Could be anything.
-	 * @return {Object}
-	 */
-	function does (value) {
-	  var arrayIndexOf = (Array.indexOf ? function (arr, obj, from) {
-	    return arr.indexOf(obj, from)
-	  } : function (arr, obj, from) {
-	    var l = arr.length
-	    var i = from ? parseInt((1 * from) + (from < 0 ? l : 0), 10) : 0
-	    i = i < 0 ? 0 : i
-	    for (; i < l; i++) if (i in arr && arr[i] === obj) return i
-	    return -1
-	  })
-	
-	  return {
-	    startWith: function (string) {
-	      if (is(value).a(String)) return value.slice(0, string.length) === string
-	      if (is(value).a(Array)) return value[0] === string
-	      return false
-	    },
-	
-	    endWith: function (string) {
-	      if (is(value).a(String)) return value.slice(-string.length) === string
-	      if (is(value).a(Array)) return value[value.length - 1] === string
-	      return false
-	    },
-	
-	    contain: function (field) {
-	      if (is(value).a(String)) return value.indexOf(field) > -1
-	      if (is(value).a(Object)) return value.hasOwnProperty(field)
-	      if (is(value).a(Array)) return !!~arrayIndexOf(value, field)
-	      return false
-	    }
-	  }
-	}
-	
-	/**
-	 * Expose the Unirest Container
-	 */
-	
-	module.exports = exports = Unirest
-
-
-/***/ },
-/* 130 */
 /***/ function(module, exports) {
 
-	module.exports = require("form-data");
-
-/***/ },
-/* 131 */
-/***/ function(module, exports) {
-
-	module.exports = require("request");
+	module.exports = require("socket.io");
 
 /***/ }
 /******/ ]);

@@ -7,13 +7,14 @@ import {PanelId} from "../../libs";
 declare var io;
 export class StageRKBView extends BasePanelView {
     opView;
+
     constructor(opView) {
         super(PanelId.rkbPanel);
         this.opView = opView;
         opView.test = "test";
         // RKBOPView.props.test = "dsfsd";
         console.log("StageRKBView");
-        var ws = new io();
+        var ws = io.connect(`http://${window.location.hostname}/${PanelId.rkbPanel}`);
         ws.on('connect', function (msg) {
             console.log('connect', window.location.hostname);
             ws.emit("opUrl", JParam({opUrl: window.location.hostname}));

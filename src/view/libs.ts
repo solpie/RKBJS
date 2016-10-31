@@ -30,3 +30,6 @@ export const ViewEvent = {
     STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
     STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
 };
+export function ScParam(param) {
+    return param
+}

@@ -5,12 +5,9 @@ import {adminRouter} from "./router/AdminRouter";
 // import {dbRouter} from "./router/DbRouter";
 // import {SocketIOSrv} from "./SocketIOSrv";
 import {panelRouter} from "./router/PanelRouter";
-// import {getIPAddress} from "./utils/NodeJsFunc";
 // import {mobileRouter} from "./router/MobileRouter";
 // import {dmkRouter} from "./router/DmkRouter";
 // import {startRtmpServer} from "./utils/rtmpServer/rtmpServer2";
-
-
 /**
  * WebServer
  */
@@ -27,8 +24,6 @@ export class WebServer {
     }
 
     test() {
-
-        // ExternalInfo.importHuiTi();
     }
 
     //
@@ -98,6 +93,7 @@ export class WebServer {
 
         app.get('/', function (req: any, res: any) {
             // res.send('hello' + new Date().getDate());
+
             res.redirect('/admin');
         });
 
@@ -117,8 +113,12 @@ export class WebServer {
     }
 
     initSocketIO() {
+        var io = require('socket.io')();
+
+        // panelRouter.initWS(io);
         // this.socketIO = new SocketIOSrv();
     }
 }
 export var serverConf = ServerConf;
 export var webServer = new WebServer();
+
