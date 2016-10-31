@@ -1,11 +1,11 @@
-import {Stage1v1View} from "./stage1v1/Stage1v1View";
+import {Stage1v1View, stage1v1View} from "./stage1v1/Stage1v1View";
 //////////////
 ///////////////////
 
 var routes = [
     {
         path: '/', name: 'home',
-        components: {default: Stage1v1View}
+        components: {default: stage1v1View}
     }
 ];
 

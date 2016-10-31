@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "copy-webpack-plugin": "^4.0.0",
+    "createjs": "^0.0.1",
     "electron-packager": "^8.1.0",
     "electron-prebuilt": "^1.4.4",
     "hogan-express": "^0.5.2",

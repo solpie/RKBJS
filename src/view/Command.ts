@@ -195,26 +195,12 @@ export class Command {
     constructor() {
         // super();
         this.cmdArr = [];
-        // this.newCmd(CommandId.updateLeftScore, "addLeftScore");
-        // this.newCmd(CommandId.updateRightScore, "addRightScore");
-        // this.newCmd(CommandId.toggleTracker, "toggleTracker");
-        // this.newCmd(CommandId.toggleTimer, "toggleTimer");
-        // this.newCmd(CommandId.toggleBallRolling, "toggleBallRolling");
-        // this.newCmd(CommandId.disableTracker, "disableTracker");
         for (var k in CommandId) {
             CommandId[k] = k;
         }
         console.log("CommandId", CommandId);
         ////test cmd
-
-        // this.newCmd(CommandId.testSwapTrack, "test swap track");
     }
 
-    newCmd(id: number, name: string, desc?: string) {
-        var ci = new CommandItem(id);
-        ci.name = name;
-        ci.desc = desc;
-        this.cmdArr.push(ci);
-    }
 }
 
