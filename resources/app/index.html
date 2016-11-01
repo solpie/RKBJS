@@ -41,11 +41,9 @@
 </div>
 <script>
     var nodeLibs = require('./libsES6.min.js');
-    var express = nodeLibs.express;
-    var bodyParser = nodeLibs.bodyParser;
-    var mustacheExpress = nodeLibs.mustacheExpress;
-    var SocketIO = nodeLibs.SocketIO;
-    var rest = nodeLibs.rest;
+    for(var lib in nodeLibs){
+        window[lib] = nodeLibs[lib];
+    }
     var WebServer = require('./WebServer.js');
 </script>
 </body>

@@ -178,7 +178,7 @@
 	});
 	exports.panelRouter.get('/auto/player/:game_id', function (req, res) {
 	    var game_id = req.params.game_id;
-	    console.log('get /auto/player 212', game_id);
+	    console.log('get /auto/player', game_id);
 	    var api1 = 'http://api.liangle.com/api/passerbyking/game/players/' + game_id;
 	    rest(api1).then(function (response) {
 	        res.send(response.entity);
