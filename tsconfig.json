@@ -6,7 +6,8 @@
         "isolatedModules": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "declaration": false,
+        "allowJs": true,//允许编译javascript文件。
+        "declaration": false,//生成相应的'.d.ts'文件。
         "noImplicitAny": false,
         "removeComments": true,
         "noLib": false,

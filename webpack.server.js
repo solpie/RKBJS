@@ -25,8 +25,8 @@ var bodyparserArr = [
     'type-is',
     'media-typer',
     'mime-types',
-    'mime-db',
-]
+    'mime-db'
+];
 var unirestArr = [
     'unirest',
     'form-data',
@@ -173,7 +173,6 @@ module.exports = {
             'vary'].concat(unirestArr).concat(mustacheArr).concat(bodyparserArr)
     })],
     output: {
-        libraryTarget: "var",
         path: './RKB-win32-x64/resources/app',
         // path: './resources/app',
         filename: "[name]"

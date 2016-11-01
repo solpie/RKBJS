@@ -41,6 +41,7 @@ panelRouter.initWs = (io)=> {
     io = io.of(`/${PanelId.rkbPanel}`);
     io
         .on("connect", (socket) => {
+            console.log('connect');
             socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: this.gameInfo, isDev: ServerConf.isDev}));
         })
         .on('disconnect', function (socket) {

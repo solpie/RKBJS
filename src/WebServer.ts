@@ -5,6 +5,8 @@ import {adminRouter} from "./router/AdminRouter";
 // import {dbRouter} from "./router/DbRouter";
 // import {SocketIOSrv} from "./SocketIOSrv";
 import {panelRouter} from "./router/PanelRouter";
+import {CommandId} from "./view/Command";
+import {PanelId, ScParam} from "./view/libs";
 // import {mobileRouter} from "./router/MobileRouter";
 // import {dmkRouter} from "./router/DmkRouter";
 // import {startRtmpServer} from "./utils/rtmpServer/rtmpServer2";
@@ -53,6 +55,7 @@ export class WebServer {
         // var ejsss = require('ejs');
         var express: any = require('express');
         var app = express();
+
         // template engine setup
         app.set('views', "./resources/app/view");
         // app.set('view engine', 'ejs');
@@ -103,19 +106,40 @@ export class WebServer {
         // app.use('/m', mobileRouter);
         // app.use('/dmk', dmkRouter);
 
+        var server = require('http').createServer(app);
+        var io = require('socket.io')(server);
+        io.on('connection', function(){ /* … */ });
+        io = io.of(`/${PanelId.rkbPanel}`);
+        io
+            .on("connect", (socket) => {
+                console.log('connect');
+                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
+            })
+            .on('disconnect', function (socket) {
+                console.log('disconnect');
+            });
 
-        app.listen(ServerConf.port, () => {
-            this.initSocketIO();
-            // this.initRtmpServer();
-            //and... we're live
-            console.log("server on:  ws port:");
-        });
+        server.listen(ServerConf.port);
+        //
+        // app.listen(ServerConf.port, () => {
+        //     this.initSocketIO(app);
+        //     // this.initRtmpServer();
+        //     //and... we're live
+        //     console.log("server on:  ws port:");
+        // });
     }
 
-    initSocketIO() {
-        var io = require('socket.io')();
-
-        // panelRouter.initWS(io);
+    initSocketIO(app) {
+        var io = require('socket.io')(app);
+        io = io.of(`/${PanelId.rkbPanel}`);
+        io
+            .on("connect", (socket) => {
+                console.log('connect');
+                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
+            })
+            .on('disconnect', function (socket) {
+                console.log('disconnect');
+            });
         // this.socketIO = new SocketIOSrv();
     }
 }
