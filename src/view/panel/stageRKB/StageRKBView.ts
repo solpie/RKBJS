@@ -1,6 +1,6 @@
 import {JParam} from "../../Command";
 import {BasePanelView} from "../BasePanelView";
-import {PanelId} from "../../libs";
+import {PanelId} from "../../const";
 /**
  * Created by toramisu on 2016/10/24.
  */

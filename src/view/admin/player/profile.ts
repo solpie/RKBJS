@@ -1,9 +1,10 @@
 // import {StagePlayerCard} from "../../../panel/render/PlayerRender";
 // import {PlayerInfo} from "../../../../model/PlayerInfo";
 // import {ViewEvent} from "../../../../event/Const";
-import {$, ViewEvent} from "../../libs";
+import { ViewEvent} from "../../const";
 declare var Cropper;
 var _this_ = Profile;
+var $ = require('jquery');
 export var  Profile =  {
     template: require('./profile.html'),
     props: {

@@ -1,6 +1,6 @@
 import {Profile} from "./profile";
 import {CommandId} from "../../Command";
-import {ViewEvent} from "../../libs";
+import {ViewEvent} from "../../const";
 // import {CommandId} from "../../../../event/Command";
 var $ = require('jquery');
 declare var jQurey;

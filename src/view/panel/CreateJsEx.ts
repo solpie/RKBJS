@@ -1,4 +1,4 @@
-import {ViewConst} from "../libs";
+import {ViewConst} from "../const";
 export class CreateJsEx {
     static newBtn(func, text?) {
         var ctn = new createjs.Container();

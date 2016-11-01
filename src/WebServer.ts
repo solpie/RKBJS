@@ -1,31 +1,30 @@
-// import {adminRouter} from "./router/AdminRouter";
-// import {initDB} from "./model/DbInfo";
-import {ServerConf} from "./Env";
 import {adminRouter} from "./router/AdminRouter";
-// import {dbRouter} from "./router/DbRouter";
-// import {SocketIOSrv} from "./SocketIOSrv";
+import {ServerConf} from "./Env";
 import {panelRouter} from "./router/PanelRouter";
+import {PanelId, ScParam} from "./view/const";
 import {CommandId} from "./view/Command";
-import {PanelId, ScParam} from "./view/libs";
-// import {mobileRouter} from "./router/MobileRouter";
-// import {dmkRouter} from "./router/DmkRouter";
-// import {startRtmpServer} from "./utils/rtmpServer/rtmpServer2";
 /**
  * WebServer
  */
-export class WebServer {
-    // _path: any;
-    serverConf: any;
-    // socketIO: SocketIOSrv;
+// export module RKB {
+    export default class WebServer {
 
-    constructor(callback?: any) {
-        this.initEnv(callback);
-        // this.initGlobalFunc();
-        // this.initNedb();
-        this.test();
-    }
+        // _path: any;
+        serverConf: any;
+        // socketIO: SocketIOSrv;
+//
+        constructor(callback?: any) {
+            this.initEnv(callback);
+            // // this.initGlobalFunc();
+            // // this.initNedb();
+            // this.test();
+            console.log('wbs b');
+        }
 
+//
     test() {
+        // var nodeLibs = require('./WebServer.min');
+        // console.log("nodeLibs", nodeLibs, nodeLibs.express);
     }
 
     //
@@ -53,14 +52,14 @@ export class WebServer {
 
     initServer() {
         // var ejsss = require('ejs');
-        var express: any = require('express');
+        // var express: any = require('express');
         var app = express();
 
         // template engine setup
         app.set('views', "./resources/app/view");
         // app.set('view engine', 'ejs');
 
-        var mustacheExpress = require('mustache-express');
+        // var mustacheExpress = require('mustache-express');
 
 // Register '.mustache' extension with The Mustache Express
         app.engine('mustache', mustacheExpress());
@@ -77,7 +76,7 @@ export class WebServer {
         //     extended: false
         //     , limit: '55mb'
         // });
-        var bodyParser = require('body-parser');
+        // var bodyParser = require('body-parser');
         app.use(bodyParser.urlencoded({extended: false, limit: '55mb'}));// create application/x-www-form-urlencoded parser
         app.use(bodyParser.json({limit: '50mb'}));
 
@@ -107,7 +106,9 @@ export class WebServer {
         // app.use('/dmk', dmkRouter);
 
         var server = require('http').createServer(app);
-        var io = require('socket.io')(server);
+        var io = new SocketIO(server);
+
+        // var io = require('socket.io')(server);
         io.on('connection', function(){ /* … */ });
         io = io.of(`/${PanelId.rkbPanel}`);
         io
@@ -130,19 +131,23 @@ export class WebServer {
     }
 
     initSocketIO(app) {
-        var io = require('socket.io')(app);
-        io = io.of(`/${PanelId.rkbPanel}`);
-        io
-            .on("connect", (socket) => {
-                console.log('connect');
-                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
-            })
-            .on('disconnect', function (socket) {
-                console.log('disconnect');
-            });
+
+        // var io = require('socket.io')(app);
+        // io = io.of(`/${PanelId.rkbPanel}`);
+        // io
+        //     .on("connect", (socket) => {
+        //         console.log('connect');
+        //         socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
+        //     })
+        //     .on('disconnect', function (socket) {
+        //         console.log('disconnect');
+        //     });
         // this.socketIO = new SocketIOSrv();
     }
 }
-export var serverConf = ServerConf;
+
+// export var createWebServer = (express, SocketIO)=> {
+//     console.log(express, SocketIO);
+// }; //new WebServer();
 export var webServer = new WebServer();
 

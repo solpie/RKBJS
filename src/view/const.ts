@@ -1,4 +1,3 @@
-export var $ = require("jquery");
 export const PanelId = {
     stagePanel: 'stage',
     stage1v1Panel: 'stage1v1',

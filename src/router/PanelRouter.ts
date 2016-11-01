@@ -1,7 +1,8 @@
 import {ServerConf} from "../Env";
-import {PanelId, ScParam} from "../view/libs";
+import {PanelId, ScParam} from "../view/const";
 import {CommandId} from "../view/Command";
-export var panelRouter = require('express').Router();
+    declare var express;
+export var panelRouter = express.Router();
 
 panelRouter.get('/', function (req, res) {
     console.log('get panel:');
@@ -12,7 +13,7 @@ panelRouter.get('/screen', function (req, res) {
     console.log('get screen:');
     res.render('screen/index', {host: ServerConf.host, wsPort: ServerConf.wsPort, hupuWsUrl: ServerConf.hupuWsUrl});
 });
-var unirest = require('unirest');
+declare var unirest;
 
 panelRouter.get('/auto/bracket/:game_id', function (req, res) {
     console.log('get /auto/bracket', req.params.game_id);

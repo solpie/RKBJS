@@ -1,4 +1,4 @@
-import {ViewConst} from "../libs";
+import {ViewConst} from "../const";
 import Stage = createjs.Stage;
 import Container = createjs.Container;
 declare var $;
