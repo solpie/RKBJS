@@ -3,8 +3,8 @@ import commonjs from "rollup-plugin-commonjs";
 import nodeResolve from "rollup-plugin-node-resolve";
 export default {
     entry: 'src/libsES6.js',
-    // dest: 'resources/app/WebServer.min.js',
-    dest: 'RKB-win32-x64/resources/app/libsES6.min.js',
+    dest: 'resources/app/libsES6.min.js',
+    // dest: 'RKB-win32-x64/resources/app/libsES6.min.js',
     format: 'cjs',
     sourceMap: 'inline',
     plugins: [json(),

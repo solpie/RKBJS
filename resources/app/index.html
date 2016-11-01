@@ -40,8 +40,13 @@
     </div>
 </div>
 <script>
-    var webServer = require('./WebServer.min.js');
-//    var webServer = require('./WebServer.js');
+    var nodeLibs = require('./libsES6.min.js');
+    var express = nodeLibs.express;
+    var bodyParser = nodeLibs.bodyParser;
+    var mustacheExpress = nodeLibs.mustacheExpress;
+    var SocketIO = nodeLibs.SocketIO;
+    var rest = nodeLibs.rest;
+    var WebServer = require('./WebServer.js');
 </script>
 </body>
 </html>

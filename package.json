@@ -9,7 +9,7 @@
     "mustache-express": "^1.2.2",
     "nedb": "^1.8.0",
     "socket.io": "^1.5.1",
-    "unirest": "^0.5.1"
+    "rest": "^2.0.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^4.0.0",
@@ -27,8 +27,8 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "app": "npm run build && electron resources/app --enable-logging",
-    "build": "npm run server-build",
+    "app": "npm run build && electron resources/app",
+    "build": "rollup -c&&npm run server-build",
     "view": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
     "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
     "pack64": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=x64 --overwrite",

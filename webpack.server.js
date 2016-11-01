@@ -8,8 +8,8 @@ module.exports = {
     target: "electron",
     externals: [],
     output: {
-        path: './RKB-win32-x64/resources/app',
-        // path: './resources/app',
+        // path: './RKB-win32-x64/resources/app',
+        path: './resources/app',
         filename: "[name]"
     },
     resolve: {

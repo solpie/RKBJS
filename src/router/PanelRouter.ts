@@ -1,7 +1,8 @@
 import {ServerConf} from "../Env";
 import {PanelId, ScParam} from "../view/const";
 import {CommandId} from "../view/Command";
-    declare var express;
+declare var express;
+declare var got;
 export var panelRouter = express.Router();
 
 panelRouter.get('/', function (req, res) {
@@ -13,9 +14,7 @@ panelRouter.get('/screen', function (req, res) {
     console.log('get screen:');
     res.render('screen/index', {host: ServerConf.host, wsPort: ServerConf.wsPort, hupuWsUrl: ServerConf.hupuWsUrl});
 });
-// declare var unirest;
 
-// var unirest = require('unirest');
 panelRouter.get('/auto/bracket/:game_id', function (req, res) {
     console.log('get /auto/bracket', req.params.game_id);
     var game_id = req.params.game_id;
@@ -26,16 +25,16 @@ panelRouter.get('/auto/bracket/:game_id', function (req, res) {
     //         res.send(response.body);
     //     });
 });
-
+declare var rest;
 panelRouter.get('/auto/player/:game_id', function (req, res) {
-    console.log('get /auto/player');
     var game_id = req.params.game_id;
+    console.log('get /auto/player 212', game_id);
     var api1 = 'http://api.liangle.com/api/passerbyking/game/players/' + game_id;
-    // unirest.get(api1)
-    //     .end(function (response) {
-    //         console.log(response.body);
-    //         res.send(response.body);
-    //     });
+
+    rest(api1).then(function(response) {
+        res.send(response.entity);
+        // console.log('response: ', response);
+    });
 });
 
 panelRouter.initWs = (io)=> {
