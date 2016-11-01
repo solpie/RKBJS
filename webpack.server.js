@@ -6,7 +6,7 @@ module.exports = {
         "WebServer.js": "./src/WebServer.ts"
     },
     target: "electron",
-    externals: [nodeExternals({})],
+    externals: [],
     output: {
         path: './RKB-win32-x64/resources/app',
         // path: './resources/app',

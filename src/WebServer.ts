@@ -51,13 +51,11 @@ import {CommandId} from "./view/Command";
     }
 
     initServer() {
-        // var ejsss = require('ejs');
         // var express: any = require('express');
         var app = express();
 
         // template engine setup
         app.set('views', "./resources/app/view");
-        // app.set('view engine', 'ejs');
 
         // var mustacheExpress = require('mustache-express');
 
@@ -108,7 +106,6 @@ import {CommandId} from "./view/Command";
         var server = require('http').createServer(app);
         var io = new SocketIO(server);
 
-        // var io = require('socket.io')(server);
         io.on('connection', function(){ /* … */ });
         io = io.of(`/${PanelId.rkbPanel}`);
         io
