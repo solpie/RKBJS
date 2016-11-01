@@ -2,6 +2,7 @@ import {PanelId} from "./view/libsES6";
 import express, {Router} from "express";
 import mustacheExpress from "mustache-express";
 import bodyParser from "body-parser";
+import SocketIO from "socket.io";
 import {description} from "../resources/app/package.json";
 class WebServerES6 {
     init() {
@@ -64,7 +65,7 @@ class WebServerES6 {
 
         // var server = require('http').createServer(app);
         var server = require('http').Server(app);
-        var SocketIO = require('socket.io');
+        // var SocketIO = require('socket.io');
         var io = new SocketIO(server);
         // var io = require('socket.io')(server);
         io.on('connection', function () { /* … */
@@ -85,8 +86,6 @@ class WebServerES6 {
     constructor() {
         // var ejsss = require('ejs');
         console.log('hello');
-
-
     }
 }
 var webServer = new WebServerES6();
