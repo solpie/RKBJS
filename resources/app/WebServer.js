@@ -53,7 +53,7 @@
 	var WebServer = (function () {
 	    function WebServer(callback) {
 	        this.initEnv(callback);
-	        console.log('wbs b');
+	        this.test();
 	    }
 	    WebServer.prototype.test = function () {
 	    };
@@ -76,6 +76,7 @@
 	        });
 	    };
 	    WebServer.prototype.initServer = function () {
+	        var _this = this;
 	        var app = express();
 	        app.set('views', "./resources/app/view");
 	        app.engine('mustache', mustacheExpress());
@@ -84,6 +85,7 @@
 	        app.use(bodyParser.urlencoded({ extended: false, limit: '55mb' }));
 	        app.use(bodyParser.json({ limit: '50mb' }));
 	        app.all("*", function (req, res, next) {
+	            var start = new Date;
 	            res.header('Access-Control-Allow-Origin', '*');
 	            res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
 	            res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -92,6 +94,8 @@
 	            }
 	            else {
 	                next();
+	                var ms = new Date - start;
+	                console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
 	            }
 	        });
 	        app.get('/', function (req, res) {
@@ -100,8 +104,15 @@
 	        app.use('/admin', AdminRouter_1.adminRouter);
 	        app.use('/panel', PanelRouter_1.panelRouter);
 	        var server = __webpack_require__(9).createServer(app);
+	        server.listen(Env_1.ServerConf.port, function () {
+	            _this.initSocketIO(server);
+	            console.log("server on:", Env_1.ServerConf.port);
+	        });
+	    };
+	    WebServer.prototype.initSocketIO = function (server) {
 	        var io = new SocketIO(server);
-	        io.on('connection', function () { });
+	        io.on('connection', function () {
+	        });
 	        io = io.of("/" + const_1.PanelId.rkbPanel);
 	        io
 	            .on("connect", function (socket) {
@@ -111,9 +122,6 @@
 	            .on('disconnect', function (socket) {
 	            console.log('disconnect');
 	        });
-	        server.listen(Env_1.ServerConf.port);
-	    };
-	    WebServer.prototype.initSocketIO = function (app) {
 	    };
 	    return WebServer;
 	}());
@@ -158,10 +166,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var _this = this;
 	var Env_1 = __webpack_require__(2);
-	var const_1 = __webpack_require__(5);
-	var Command_1 = __webpack_require__(6);
 	exports.panelRouter = express.Router();
 	exports.panelRouter.get('/', function (req, res) {
 	    console.log('get panel:');
@@ -175,27 +180,17 @@
 	    console.log('get /auto/bracket', req.params.game_id);
 	    var game_id = req.params.game_id;
 	    var api1 = 'http://api.liangle.com/api/passerbyking/game/top8Match/' + game_id;
+	    rest(api1).then(function (response) {
+	        res.send(JSON.parse(response.entity));
+	    });
 	});
 	exports.panelRouter.get('/auto/player/:game_id', function (req, res) {
 	    var game_id = req.params.game_id;
-	    console.log('get /auto/player', game_id);
 	    var api1 = 'http://api.liangle.com/api/passerbyking/game/players/' + game_id;
 	    rest(api1).then(function (response) {
-	        res.send(response.entity);
+	        res.send(JSON.parse(response.entity));
 	    });
 	});
-	exports.panelRouter.initWs = function (io) {
-	    console.log('initWs');
-	    io = io.of("/" + const_1.PanelId.rkbPanel);
-	    io
-	        .on("connect", function (socket) {
-	        console.log('connect');
-	        socket.emit("" + Command_1.CommandId.initPanel, const_1.ScParam({ gameInfo: _this.gameInfo, isDev: Env_1.ServerConf.isDev }));
-	    })
-	        .on('disconnect', function (socket) {
-	        console.log('disconnect');
-	    });
-	};
 
 
 /***/ },

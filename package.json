@@ -12,14 +12,16 @@
     "rest": "^2.0.0"
   },
   "devDependencies": {
+    "asar": "^0.12.3",
     "copy-webpack-plugin": "^4.0.0",
     "createjs": "^0.0.1",
     "electron-packager": "^8.1.0",
     "electron-prebuilt": "^1.4.4",
-    "hogan-express": "^0.5.2",
     "html-loader": "^0.4.4",
     "jquery": "^3.1.1",
     "json-loader": "^0.5.4",
+    "rollup": "^0.36.3",
+    "rollup-plugin-uglify": "^1.0.1",
     "source-map-loader": "^0.1.5",
     "ts-loader": "^0.9.5",
     "tsd": "^0.6.5",

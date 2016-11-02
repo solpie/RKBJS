@@ -1,6 +1,7 @@
 import json from "rollup-plugin-json";
 import commonjs from "rollup-plugin-commonjs";
 import nodeResolve from "rollup-plugin-node-resolve";
+import uglify from "rollup-plugin-uglify";
 export default {
     entry: 'src/libsES6.js',
     dest: 'resources/app/libsES6.min.js',
@@ -40,12 +41,12 @@ export default {
             // local ones with the same names
             preferBuiltins: false  // Default: true
 
-        }), commonjs({
+        }),
+        commonjs({
             // non-CommonJS modules will be ignored, but you can also
             // specifically include/exclude files
             include: 'node_modules/**',  // Default: undefined
             exclude: ['node_modules/foo/**',
-                'node_modules/socket.io-client',
                 'node_modules/bar/**'],  // Default: undefined
 
             // search for files other than .js files (must already
@@ -61,6 +62,8 @@ export default {
             // explicitly specify unresolvable named exports
             // (see below for more details)
             namedExports: {'./module.js': ['foo', 'bar']}  // Default: undefined
-        })
+        }),
+        uglify()
+
     ],
 };

@@ -6,20 +6,16 @@ import {CommandId} from "./view/Command";
 /**
  * WebServer
  */
-// export module RKB {
-    export default class WebServer {
+export default class WebServer {
 
-        // _path: any;
-        serverConf: any;
-        // socketIO: SocketIOSrv;
+    serverConf: any;
 //
-        constructor(callback?: any) {
-            this.initEnv(callback);
-            // // this.initGlobalFunc();
-            // // this.initNedb();
-            // this.test();
-            console.log('wbs b');
-        }
+    constructor(callback?: any) {
+        this.initEnv(callback);
+        // // this.initGlobalFunc();
+        // // this.initNedb();
+        this.test();
+    }
 
 //
     test() {
@@ -80,6 +76,8 @@ import {CommandId} from "./view/Command";
 
 
         app.all("*", function (req: any, res: any, next: any) {
+            var start = new Date;
+
             res.header('Access-Control-Allow-Origin', '*');
             res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
             res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -87,6 +85,8 @@ import {CommandId} from "./view/Command";
                 res.send(200);
             } else {
                 next();
+                var ms = new Date - start;
+                console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
             }
         });
 
@@ -104,9 +104,19 @@ import {CommandId} from "./view/Command";
         // app.use('/dmk', dmkRouter);
 
         var server = require('http').createServer(app);
+        //
+        server.listen(ServerConf.port, () => {
+            this.initSocketIO(server);
+            //and... we're live
+            console.log("server on:", ServerConf.port);
+        });
+    }
+
+    initSocketIO(server) {
         var io = new SocketIO(server);
 
-        io.on('connection', function(){ /* … */ });
+        io.on('connection', function () { /* … */
+        });
         io = io.of(`/${PanelId.rkbPanel}`);
         io
             .on("connect", (socket) => {
@@ -116,35 +126,8 @@ import {CommandId} from "./view/Command";
             .on('disconnect', function (socket) {
                 console.log('disconnect');
             });
-
-        server.listen(ServerConf.port);
-        //
-        // app.listen(ServerConf.port, () => {
-        //     this.initSocketIO(app);
-        //     // this.initRtmpServer();
-        //     //and... we're live
-        //     console.log("server on:  ws port:");
-        // });
-    }
-
-    initSocketIO(app) {
-
-        // var io = require('socket.io')(app);
-        // io = io.of(`/${PanelId.rkbPanel}`);
-        // io
-        //     .on("connect", (socket) => {
-        //         console.log('connect');
-        //         socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
-        //     })
-        //     .on('disconnect', function (socket) {
-        //         console.log('disconnect');
-        //     });
-        // this.socketIO = new SocketIOSrv();
     }
 }
 
-// export var createWebServer = (express, SocketIO)=> {
-//     console.log(express, SocketIO);
-// }; //new WebServer();
 export var webServer = new WebServer();
 
