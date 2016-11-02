@@ -10,6 +10,7 @@ export class BasePanelView {
     opReq: (cmdId: string, param: any, callback?: any)=>void;
 
     constructor(pid) {
+        this.initCanvas();
         this.opReq = (cmdId: string, param: any, callback?: any)=> {
             $.post(`/panel/${pid}/${cmdId}`,
                 param,

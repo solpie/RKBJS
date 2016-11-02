@@ -4,7 +4,7 @@ declare var rest;
 
 panelRouter.get('/', function (req, res) {
     console.log('get panel:');
-    res.render('panel.mustache', {host: ServerConf.host, wsPort: ServerConf.wsPort, hupuWsUrl: ServerConf.hupuWsUrl});
+    res.render('panel', {host: ServerConf.host, wsPort: ServerConf.wsPort, hupuWsUrl: ServerConf.hupuWsUrl});
 });
 
 panelRouter.get('/screen', function (req, res) {

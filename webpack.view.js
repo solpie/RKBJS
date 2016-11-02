@@ -2,6 +2,10 @@
 var webpack = require('webpack');
 module.exports = {
     entry: {
+        // "view/admin": [
+        //     "./resources/app/static/js/vue/vue.min.js",
+        //     "./resources/app/static/js/vue/vue-router.min.js",
+        //     "./src/view/admin/index.ts"],
         "view/admin": "./src/view/admin/index.ts",
         // "view/lib": ["./static/js/vue/vue.min.js", "./static/js/vue/vue-router.min.js"],
         "view/panel": "./src/view/panel/index.ts"
@@ -21,7 +25,7 @@ module.exports = {
         loaders: [
             {test: /\.tsx?$/, loader: "ts-loader"},
             {test: /\.html$/, loader: "html-loader?minimize=false"},
-            { test: /\.css$/, loader: "style-loader!css-loader?root=." }
+            {test: /\.css$/, loader: "style-loader!css-loader?root=."}
         ]
     },
     resolve: {

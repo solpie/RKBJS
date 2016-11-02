@@ -1,6 +1,6 @@
-import {PlayerInfo} from "../../model/PlayerInfo";
 import {mapToArr, descendingProp} from "../../utils/JsFunc";
 import {getEloRank} from "./elo";
+import {PlayerInfo} from "../../../model/PlayerInfo";
 // import {$} from "../../libs";
 declare var $;
 // var $ = require('jquery');

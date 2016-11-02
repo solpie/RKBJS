@@ -10,7 +10,7 @@ export const PanelId = {
 };
 export const ServerConst = {
     SEND_ASYNC: true,
-    DEF_AVATAR: '/img/panel/stage/blue.png'
+    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
 };
 export const ViewConst = {
     STAGE_WIDTH: 1920,

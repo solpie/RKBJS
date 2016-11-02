@@ -1,22 +1,31 @@
-<div class="row">
-    <div class="ui bulleted list col s2" style="position: absolute;left: 30px">
-        <div class="item">
-            <div>Player</div>
-            <div class="list">
-                <a class="item" href="#">添加Player</a>
-                <a class="item" href="#">同步数据</a>
-            </div>
-        </div>
-        <div class="item">Inviting Friends</div>
-        <div class="item">
-            <div>Benefits</div>
-            <div class="list">
-                <a class="item" href="#">Link to somewhere</a>
-                <div class="item">Rebates</div>
-                <div class="item">Discounts</div>
-            </div>
-        </div>
-    </div>
+<aside class="menu">
+    <p class="menu-label">
+        Player
+    </p>
+    <ul class="menu-list">
+        <ul>
+            <li><a href="#">添加Player</a></li>
+            <li><a href="#">同步数据</a></li>
+        </ul>
+    </ul>
+    <!--<div class="ui bulleted list col s2" style="position: absolute;left: 30px">-->
+        <!--<div class="item">-->
+            <!--<div>Player</div>-->
+            <!--<div class="list">-->
+                <!--<a class="item" href="#">添加Player</a>-->
+                <!--<a class="item" href="#">同步数据</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="item">Inviting Friends</div>-->
+        <!--<div class="item">-->
+            <!--<div>Benefits</div>-->
+            <!--<div class="list">-->
+                <!--<a class="item" href="#">Link to somewhere</a>-->
+                <!--<div class="item">Rebates</div>-->
+                <!--<div class="item">Discounts</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <div id="player-grid" class="col s10" style="position: relative;left: 290px">
         <div class="row" v-for="player in playerArr" style="display: inline-block;margin: 0">
             <div class="col s12">
@@ -52,6 +61,6 @@
             </div>
         </div>
     </div>
-</div>
+</aside>
 
 

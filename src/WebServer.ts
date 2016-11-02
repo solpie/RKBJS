@@ -1,8 +1,7 @@
 import {adminRouter} from "./router/AdminRouter";
 import {ServerConf} from "./Env";
 import {panelRouter} from "./router/PanelRouter";
-import {PanelId, ScParam} from "./view/const";
-import {CommandId} from "./view/Command";
+import {RkbModel} from "./model/RkbModel";
 declare var ejs;
 /**
  * WebServer
@@ -82,7 +81,10 @@ export default class WebServer {
             } else {
                 next();
                 var ms: number = new Date().getTime() - start;
-                console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
+                if (req.url.search('.png') > -1) {
+                }
+                else
+                    console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
             }
         });
 
@@ -110,18 +112,7 @@ export default class WebServer {
 
     initSocketIO(server) {
         var io = new SocketIO(server);
-
-        io.on('connection', function () { /* … */
-        });
-        io = io.of(`/${PanelId.rkbPanel}`);
-        io
-            .on("connect", (socket) => {
-                console.log('connect');
-                socket.emit(`${CommandId.initPanel}`, ScParam({gameInfo: "", isDev: ServerConf.isDev}));
-            })
-            .on('disconnect', function (socket) {
-                console.log('disconnect');
-            });
+        var rkbModel = new RkbModel(io);
     }
 }
 

@@ -6,6 +6,10 @@ var routes = [
     {
         path: '/', name: 'panel',
         components: {default: RKBOPView}
+    },
+    {
+        path: '/stage1v1/auto/:game_id',
+        components: {default:RKBOPView}
     }
 ];
 
