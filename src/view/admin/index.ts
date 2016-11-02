@@ -7,7 +7,9 @@ import {PlayerView} from "./player/player";
 import {RankView} from "./rank/rank";
 //////////////
 ///////////////////
-
+require('../../../static/css/bulma.min.css');
+// window['VueRouter'] = require('../../../resources/app/static/js/vue/vue-router.min.js');
+// window['Vue'] = require('../../../resources/app/static/js/vue/vue.min.js');
 var routes = [
     {
         path: '/', name: 'home',

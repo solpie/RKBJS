@@ -20,7 +20,8 @@ module.exports = {
         ],
         loaders: [
             {test: /\.tsx?$/, loader: "ts-loader"},
-            {test: /\.html$/, loader: "html-loader?minimize=false"}
+            {test: /\.html$/, loader: "html-loader?minimize=false"},
+            { test: /\.css$/, loader: "style-loader!css-loader?root=." }
         ]
     },
     resolve: {
