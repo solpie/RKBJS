@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RKB 路人王 ver {{version}}</title>
+    <title>RKB 路人王 ver <%= version %> </title>
     <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
 </head>
 <body>
@@ -19,8 +19,7 @@
 <script src="/js/vue/vue-resource.min.js"></script>
 <script src="/js/vue/vue-router.min.js"></script>
 <script>
-    var opUrlArr =  {{&opUrlArr}}
-    //            '<%= opUrlArr %>'.split(",");
+    var opUrlArr = '<%= opUrlArr %>'.split(',')
 </script>
 <script src="/view/admin.js"></script>
 </body>

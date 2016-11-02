@@ -53,13 +53,8 @@ export default class WebServer {
         // template engine setup
         app.set('views', "./resources/app/view");
 
-        // var mustacheExpress = require('mustache-express');
-
-// Register '.mustache' extension with The Mustache Express
-        app.engine('mustache', mustacheExpress());
-
-        app.set('view engine', 'mustache');
-        // app.set('views', __dirname + '/views');
+        app.engine('ejs', ejs.renderFile);
+        app.set('view engine', 'ejs');
 
 
         ///

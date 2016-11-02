@@ -1,11 +1,11 @@
 import express from "express";
-import mustacheExpress from "mustache-express";
+import ejs from "ejs";
 import bodyParser from "body-parser";
 import SocketIO from "socket.io";
 import rest from "rest";
 var nodeLibs = {
     express: express,
-    mustacheExpress: mustacheExpress,
+    ejs: ejs,
     bodyParser: bodyParser,
     SocketIO: SocketIO,
     rest: rest,

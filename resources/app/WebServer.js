@@ -79,8 +79,8 @@
 	        var _this = this;
 	        var app = express();
 	        app.set('views', "./resources/app/view");
-	        app.engine('mustache', mustacheExpress());
-	        app.set('view engine', 'mustache');
+	        app.engine('ejs', ejs.renderFile);
+	        app.set('view engine', 'ejs');
 	        app.use(express.static("./resources/app/static"));
 	        app.use(bodyParser.urlencoded({ extended: false, limit: '55mb' }));
 	        app.use(bodyParser.json({ limit: '50mb' }));
@@ -137,7 +137,7 @@
 	"use strict";
 	exports.adminRouter = express.Router();
 	exports.adminRouter.get('/', function (req, res) {
-	    res.render('admin/index.mustache', { version: 0.5, opUrlArr: "['http://123', '21']" });
+	    res.render('admin', { version: 0.5, opUrlArr: ['http://123', '21'].toString() });
 	});
 
 
