@@ -1,10 +1,16 @@
-<div class="ui relaxed divided list center">
-    <h4>直播面板op入口</h4>
-    <div class="item" v-for="link in links">
-        <i class="pointing up icon"></i>
-        <div class="content">
-            <a class="header" :href="link.url" v-text="link.url"></a>
-            <div class="description">{{link.title}}</div>
-        </div>
-    </div>
+<div class="container">
+    <nav class="panel">
+        <p class="panel-heading">
+            直播面板op入口
+        </p>
+        <vue v-for="link in links">
+            <a class="panel-block" :href="link.url">
+                <span class="panel-icon">
+            <i class="fa fa-book"></i>
+            </span> {{link.url}}
+                <br>
+                    {{link.title}}
+            </a>
+        </vue>
+    </nav>
 </div>

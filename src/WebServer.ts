@@ -3,6 +3,7 @@ import {ServerConf} from "./Env";
 import {panelRouter} from "./router/PanelRouter";
 import {PanelId, ScParam} from "./view/const";
 import {CommandId} from "./view/Command";
+declare var ejs;
 /**
  * WebServer
  */
@@ -71,7 +72,7 @@ export default class WebServer {
 
 
         app.all("*", function (req: any, res: any, next: any) {
-            var start = new Date;
+            var start: number = new Date().getTime();
 
             res.header('Access-Control-Allow-Origin', '*');
             res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
@@ -80,7 +81,7 @@ export default class WebServer {
                 res.send(200);
             } else {
                 next();
-                var ms = new Date - start;
+                var ms: number = new Date().getTime() - start;
                 console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
             }
         });

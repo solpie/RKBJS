@@ -85,7 +85,7 @@
 	        app.use(bodyParser.urlencoded({ extended: false, limit: '55mb' }));
 	        app.use(bodyParser.json({ limit: '50mb' }));
 	        app.all("*", function (req, res, next) {
-	            var start = new Date;
+	            var start = new Date().getTime();
 	            res.header('Access-Control-Allow-Origin', '*');
 	            res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
 	            res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -94,7 +94,7 @@
 	            }
 	            else {
 	                next();
-	                var ms = new Date - start;
+	                var ms = new Date().getTime() - start;
 	                console.log('%c%s %s - %s ms', "color: Green;font-weight:bold; background-color: LimeGreen;", req.method, req.url, ms);
 	            }
 	        });
