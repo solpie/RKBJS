@@ -345,8 +345,6 @@ export class EventPanel {
                 bgPath += "Blue";
             else
                 bgPath += "Red";
-            if (p.isMvp)
-                bgPath += "Mvp";
             bgPath += '.png';
             var bg = new createjs.Bitmap(bgPath);
             if (p.isMvp) {

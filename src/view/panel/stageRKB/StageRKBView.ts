@@ -18,6 +18,7 @@ export class StageRKBView extends BasePanelView {
     eventPanel;
     countDownRender;
     isScorePanelVisible;
+
     constructor($opView) {
         super(PanelId.rkbPanel);
         this.$opView = $opView;
@@ -59,6 +60,7 @@ export class StageRKBView extends BasePanelView {
             leftPlayerInfo.playerData.playerNum = leftPlayer.playerNum;
             leftPlayerInfo.playerData.curFtScore = leftPlayer.roundScore;
             this.playerPanel.setPlayer(0, leftPlayerInfo.playerData);
+
             var rightPlayerInfo = new PlayerInfo();
             playerData = rightPlayer;
             rightPlayerInfo.name(playerData.name);
@@ -85,7 +87,7 @@ export class StageRKBView extends BasePanelView {
             console.log('event:', event, data);
 
             eventMap['init'] = ()=> {
-                console.log('init', data);
+                console.log('init', data, "visible", this.isScorePanelVisible);
                 this.scorePanel.ctn.visible = this.isScorePanelVisible;
                 this.scorePanel.set35ScoreLight(data.winScore);
                 this.scorePanel.setGameIdx(data.gameIdx);
@@ -99,7 +101,8 @@ export class StageRKBView extends BasePanelView {
                     this.scorePanel.toggleTimer1(TimerState.RUNNING);
                 }
                 //test
-                // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player);
+                // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
+                this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
 
                 // this.scorePanel.resetTimer();
                 // this.scorePanel.toggleTimer1(TimerState.RUNNING);

@@ -21,8 +21,7 @@ export class PlayerDoc {
     playerNum: number = 0;//送礼物编号
     curFtScore: number = 0;
     intro:string;
-    location: string = '上海'
-
+    location: string = '上海';
 }
 export var PlayerState1v1 = {
     FIGHTING: ' ',

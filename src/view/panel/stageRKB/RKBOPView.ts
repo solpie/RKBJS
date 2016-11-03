@@ -9,12 +9,12 @@ export var RKBOPView = {
         test: "hello",
     },
     created() {
-        var stageRKBView = new StageRKBView(this);
         console.log('op created!')
     },
 
     mounted() {
         // this.test = "hello";
+        var stageRKBView = new StageRKBView(this);
         console.log('op mounted!');
     }
 };

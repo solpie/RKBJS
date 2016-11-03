@@ -59,16 +59,18 @@ export function loadImg(path1, callback) {
 
 export function loadImgArr(pathArr, callback) {
     var count = pathArr.length;
+    var imgArr = [];
 
     function onLoadImg() {
         count--;
         if (count === 0)
-            callback();
+            callback(imgArr);
     }
 
     for (var i = 0; i < pathArr.length; i++) {
         var p = pathArr[i];
         var img = new Image();
+        imgArr.push(img);
         img.onload = onLoadImg;
         img.src = p;
     }

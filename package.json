@@ -33,7 +33,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "app": "npm run build && electron resources/app",
+    "app": "electron resources/app",
     "build": "rollup -c&&npm run server-build",
     "view": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
     "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",

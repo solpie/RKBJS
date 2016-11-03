@@ -276,7 +276,7 @@ export class ScorePanel {
         var pxLeft;
         var pxRight;
         var invert;
-        var pathBigCircle = 'stage';
+        var pathBigCircle = 'stage1v1/mini';
         if (count == 3) {
             pxLeft = 780;
             pxRight = 1110;

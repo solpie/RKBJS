@@ -10,12 +10,12 @@ export var HomeView = {
     },
     created: function () {
         this.links = [
-            {title: "战团排行", url: "/panel/#!/stage1v1/auto/35?score=0"},
+            {title: "战团排行", url: "/panel/#/stage1v1/auto/35?score=0"},
             {title: "八强对阵", url: "/panel/#!/bracket/auto/22"},
-            {title: "stage1v1 op/:game_id", url: "/panel/#!/stage1v1/op"},
-            {title: "bracket1v1 ob", url: "/panel/#!/bracket/ob"},
-            {title: "stage1v1 auto", url: "/panel/#!/stage1v1/auto"},
-            {title: "screen1v1 ob", url: "/panel/#!/screen1v1/ob"},
+            {title: "stage1v1 op/:game_id", url: "/panel/#/stage1v1/op"},
+            {title: "bracket1v1 ob", url: "/panel/#/bracket/ob"},
+            {title: "stage1v1 auto", url: "/panel/#/stage1v1/auto"},
+            {title: "screen1v1 ob", url: "/panel/#/screen1v1/ob"},
         ];
         console.log('post /admin/');
         // this.$http.post('/admin/', JParam({cmd: "opUrl"})).then((res)=> {
