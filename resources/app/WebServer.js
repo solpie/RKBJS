@@ -477,6 +477,7 @@
 	    stage1v1Panel: 'stage1v1',
 	    rkbPanel: 'rkb',
 	    bracketPanel: 'bracket',
+	    rankPanel: 'rankPanel',
 	    onlinePanel: 'online',
 	    winPanel: 'win',
 	    actPanel: 'act',

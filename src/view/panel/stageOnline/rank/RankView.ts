@@ -14,11 +14,11 @@ export class RankView extends BasePanelView {
 
     constructor($opView, stage) {
         super(PanelId.onlinePanel);
+        this.name = PanelId.rankPanel;
         this.$opView = $opView;
         this.ctn = new createjs.Container();
         stage.addChild(this.ctn);
         this.stage = stage;
-
 
         console.log('new rankView');
     }

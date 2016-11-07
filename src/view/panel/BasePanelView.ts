@@ -4,6 +4,7 @@ import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
 declare var $;
 export class BasePanelView {
+    name:string;
     stageWidth;
     stageHeight;
     ctn;
@@ -55,6 +56,11 @@ export class BasePanelView {
             this.stage = stage;
             console.log('initCanvas');
         }
+    }
+
+    show() {
+        var ctn = this.ctn;
+        createjs.Tween.get(ctn).to({alpha: 1}, 100);
     }
 
     hide() {
