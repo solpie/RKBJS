@@ -91,9 +91,16 @@ export default class WebServer {
 
         app.get('/', function (req: any, res: any) {
             // res.send('hello' + new Date().getDate());
-
             res.redirect('/admin');
         });
+
+        app.get('/get', function (req: any, res: any) {
+            var url = req.query.url;
+            rest(url).then((response)=> {
+                res.send(response)
+            });
+        });
+
 
         app.use('/admin', adminRouter);
         app.use('/panel', panelRouter);

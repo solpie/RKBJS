@@ -34,6 +34,7 @@ export var RankView = {
             left: {name: "player3", score: 1},
             right: {name: "player1", score: 2}
         }];
+        // http://api.liangle.com/api/passerbyking/game/list
         var gameIdArr = [23, 21, 22, 29, 39, 52];
         var gameDataArr = [];
         var gameId;

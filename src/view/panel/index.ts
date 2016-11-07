@@ -1,4 +1,5 @@
 import {RKBOPView} from "./stageRKB/RKBOPView";
+import {StageOnlineView} from "./stageOnline/StageOnlineView";
 //////////////
 ///////////////////
 
@@ -8,8 +9,12 @@ var routes = [
         components: {default: RKBOPView}
     },
     {
-        path: '/stage1v1/auto/:game_id',
-        components: {default:RKBOPView}
+        path: '/rkb/:op/:game_id',
+        components: {default: RKBOPView}
+    },
+    {
+        path: '/ol/:op/:game_id',
+        components: {default: StageOnlineView}
     }
 ];
 

@@ -21,24 +21,12 @@ export class StageRKBView extends BasePanelView {
 
     constructor($opView) {
         super(PanelId.rkbPanel);
+        this.initCanvas();
+
         this.$opView = $opView;
 
         this.isScorePanelVisible = true;
 
-
-        $opView.test = "test";
-        // RKBOPView.props.test = "dsfsd";
-        console.log("StageRKBView");
-        var localWs = io.connect(`http://${window.location.hostname}/${PanelId.rkbPanel}`);
-        localWs.on('connect', function (msg) {
-            console.log('connect', window.location.hostname);
-            localWs.emit("opUrl", JParam({opUrl: window.location.hostname}));
-        });
-        this.initAuto();
-    }
-
-    initAuto() {
-        var remoteIO = io.connect(hupuWsUrl);
         this.scorePanel = new ScorePanel(this, true);
         // this.scorePanel.init(gameDoc);
         this.playerPanel = new PlayerPanel(this, true);
@@ -47,8 +35,30 @@ export class StageRKBView extends BasePanelView {
         this.eventPanel = new EventPanel(this);
         // this.$parent['eventPanel'] = this.eventPanel;
         // this.$parent['gameId'] = Number(this.$route.params.game_id);
-
         this.countDownRender = new CountDownPanel(this.stage);
+
+
+
+
+        // $opView.test = "test";
+        console.log('StageRKBView router', this.$opView.$route.params, this.$opView.$route.query);
+        var op = this.$opView.$route.params.op;
+        if (op == "op")
+            this.initOp();
+        this.initAuto();
+    }
+
+    initOp() {
+        var localWs = io.connect(`http://${window.location.hostname}/${PanelId.rkbPanel}`);
+        localWs.on('connect', function (msg) {
+            console.log('connect', window.location.hostname);
+            localWs.emit("opUrl", JParam({opUrl: window.location.hostname}));
+        });
+    }
+
+    initAuto() {
+        var remoteIO = io.connect(hupuWsUrl);
+
         var setPlayer = (leftPlayer, rightPlayer)=> {
             var leftPlayerInfo = new PlayerInfo();
             var playerData = leftPlayer;
@@ -102,7 +112,8 @@ export class StageRKBView extends BasePanelView {
                 }
                 //test
                 // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
-                this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
+
+                // this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
 
                 // this.scorePanel.resetTimer();
                 // this.scorePanel.toggleTimer1(TimerState.RUNNING);

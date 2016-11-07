@@ -3,6 +3,7 @@ export const PanelId = {
     stage1v1Panel: 'stage1v1',
     rkbPanel: 'rkb',
     bracketPanel: 'bracket',
+    onlinePanel: 'online',
     winPanel: 'win',
     actPanel: 'act',
     screenPanel: 'screen',

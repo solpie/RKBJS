@@ -103,6 +103,12 @@
 	        app.get('/', function (req, res) {
 	            res.redirect('/admin');
 	        });
+	        app.get('/get', function (req, res) {
+	            var url = req.query.url;
+	            rest(url).then(function (response) {
+	                res.send(response);
+	            });
+	        });
 	        app.use('/admin', AdminRouter_1.adminRouter);
 	        app.use('/panel', PanelRouter_1.panelRouter);
 	        var server = __webpack_require__(13).createServer(app);
@@ -471,6 +477,7 @@
 	    stage1v1Panel: 'stage1v1',
 	    rkbPanel: 'rkb',
 	    bracketPanel: 'bracket',
+	    onlinePanel: 'online',
 	    winPanel: 'win',
 	    actPanel: 'act',
 	    screenPanel: 'screen',

@@ -2,6 +2,7 @@ import {StageRKBView} from "./StageRKBView";
 /**
  * Created by toramisu on 2016/10/31.
  */
+var stageRKBView: StageRKBView;
 export var RKBOPView = {
     template: require('./RKBOP.html'),
     props: {
@@ -14,7 +15,8 @@ export var RKBOPView = {
 
     mounted() {
         // this.test = "hello";
-        var stageRKBView = new StageRKBView(this);
+        if (!stageRKBView)
+            stageRKBView = new StageRKBView(this);
         console.log('op mounted!');
     }
 };
