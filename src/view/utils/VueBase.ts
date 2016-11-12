@@ -1,25 +1,31 @@
 export class VueBase {
-    static PROP: any = {$: null};
-    static Number: any = {v: 0};
+    static PROP: any = {v: null, _: null};
+    static Number: any = {v: 0, _: null};
+    static String: any = {v: "", _: null};
     props = {};
     template;
     $route;
-    constructor() {
-        console.log("VueBase");
-        for (var p in this) {
-            if (this[p] == VueBase.PROP) {
+
+    // constructor() {
+    //     super();
+    //     VueBase.initProps(this);
+    // }
+    // put above in subClass
+
+    static initProps(subClassObj) {
+        for (var p in subClassObj) {
+            var o = subClassObj[p];
+            if (o.hasOwnProperty("v")
+                && o.hasOwnProperty("_")) {
                 //create props
-                this["props"][p] = null
-            }
-            if (this[p] == VueBase.Number) {
-                //create props
-                this["props"][p] = VueBase.Number.v
+                console.log("init value", p);
+                subClassObj["props"][p] = o.v;
             }
         }
     }
 
     created() {
-
+        VueBase.initProps(this);
     }
 
     mounted() {

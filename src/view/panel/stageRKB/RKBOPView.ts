@@ -7,17 +7,19 @@ import {VueBase} from "../../utils/VueBase";
 var stageRKBView: StageRKBView;
 export class RKBView extends VueBase {
     template = require('./RKBOP.html');
-
     links = VueBase.PROP;
     isOp = VueBase.PROP;
     gameId = VueBase.PROP;
-    liveTime = VueBase.PROP;//现场时间 服务器时间
-    panelTime = VueBase.PROP;//线上画面时间
+    liveTime = VueBase.String;//现场时间 服务器时间
+    panelTime = VueBase.String;//线上画面时间
     test = VueBase.PROP;
 
+    constructor() {
+        super();
+        VueBase.initProps(this);
+    }
+
     created() {
-        this.liveTime = "2016";
-        this.panelTime = 0;
         console.log('RKBView created!');
 
         this.isOp = this.$route.params.op == "op";
