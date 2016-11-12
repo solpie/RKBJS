@@ -12,13 +12,12 @@ export class RKBView extends VueBase {
     links = VueBase.PROP;
     isOp = VueBase.PROP;
     gameId = VueBase.PROP;
-
-
     panelTime = VueBase.String;//线上画面时间(毫秒)
     liveTime = VueBase.String;//现场时间
     delayTime = VueBase.Number;// 秒
-
     test = VueBase.PROP;
+
+
     srvTime = 0;//服务器时间(毫秒)
     isTimerRunning = false;
     delayTimeMS = 0;
@@ -72,23 +71,5 @@ export class RKBView extends VueBase {
             }, 1000);
         }
     }
-
-    // onTick = _method(()=> {
-    //     console.log("onTick");
-    //     this.srvTime += 1000;
-    //     this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
-    //     this.panelTime = DateFormat(new Date(this.srvTime + this.delayTimeMS), "hh:mm:ss");
-    // });
-    //
-    // setSrvTime: (t: number)=>void = _method((t)=> {
-    //     console.log("isRunning:", this.isTimerRunning, t);
-    //     this.srvTime = t;
-    //     if (!this.isTimerRunning) {
-    //         this.isTimerRunning = true;
-    //         setInterval(()=> {
-    //             this.onTick();
-    //         }, 1000);
-    //     }
-    // })
 }
 export var rkbView = new RKBView();
