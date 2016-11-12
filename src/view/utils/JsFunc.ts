@@ -110,38 +110,6 @@ export function getLength(str) {
     }
     return realLength;
 }
-// export function cnWrap(str, len, start = 0) {
-//     var str_length = 0;
-//     var str_len;
-//     var str_cut = new String();
-//     str_len = str.length;
-//     var isCn;
-//     for (var i = start; i < str_len; i++) {
-//         var a = str.charAt(i);
-//         str_length++;
-//         isCn = false;
-//         if (escape(a).length > 4) {
-//             //中文字符的长度经编码之后大于4
-//             str_length++;
-//             isCn = true;
-//         }
-//         str_cut = str_cut.concat(a);
-//         if (str_length >= len) {
-//             var nextStart = i;
-//             if (isCn)
-//                 nextStart = i + 1;
-//             console.log('next', str_cut, str, len, nextStart);
-//             str_cut = str_cut.concat('\n').concat(cnWrap(str, len, nextStart));
-//             return str_cut;
-//         }
-//     }
-//     //如果给定字符串小于指定长度，则返回源字符串；
-//     if (start == 0 && str_length < len) {
-//         console.log('str', str);
-//         return str;
-//     }
-//     return "";
-// }
 export function cnWrap(str, len, start = 0) {
     var str_line_length = 0;
     var str_len = str.length;

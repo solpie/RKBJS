@@ -1,29 +1,8 @@
 import {RankView} from "./rank/RankView";
 import {BasePanelView} from "../BasePanelView";
 import {Bracket} from "./bracket/Bracket";
-var dynamicLoading = {
-    css: function (path) {
-        if (!path || path.length === 0) {
-            throw new Error('argument "path" is required !');
-        }
-        var head = document.getElementsByTagName('head')[0];
-        var link = document.createElement('link');
-        link.href = path;
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        head.appendChild(link);
-    },
-    js: function (path) {
-        if (!path || path.length === 0) {
-            throw new Error('argument "path" is required !');
-        }
-        var head = document.getElementsByTagName('head')[0];
-        var script = document.createElement('script');
-        script.src = path;
-        script.type = 'text/javascript';
-        head.appendChild(script);
-    }
-};
+import {dynamicLoading} from "../../utils/WebJsFunc";
+
 
 var rankView: RankView;
 var bracketView: Bracket;

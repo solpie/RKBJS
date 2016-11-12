@@ -38,8 +38,6 @@ export class StageRKBView extends BasePanelView {
         this.countDownRender = new CountDownPanel(this.stage);
 
 
-
-
         // $opView.test = "test";
         console.log('StageRKBView router', this.$opView.$route.params, this.$opView.$route.query);
         var op = this.$opView.$route.params.op;
@@ -49,10 +47,10 @@ export class StageRKBView extends BasePanelView {
     }
 
     initOp() {
-        var localWs = io.connect(`http://${window.location.hostname}/${PanelId.rkbPanel}`);
+        var localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
         localWs.on('connect', function (msg) {
-            console.log('connect', window.location.hostname);
-            localWs.emit("opUrl", JParam({opUrl: window.location.hostname}));
+            console.log('connect', window.location.host);
+            localWs.emit("opUrl", JParam({opUrl: window.location.host}));
         });
     }
 
@@ -110,17 +108,17 @@ export class StageRKBView extends BasePanelView {
                     this.scorePanel.resetTimer();
                     this.scorePanel.toggleTimer1(TimerState.RUNNING);
                 }
+
                 //test
                 // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
-
                 // this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
-
                 // this.scorePanel.resetTimer();
                 // this.scorePanel.toggleTimer1(TimerState.RUNNING);
                 // Tween.get(this).wait(3000).call(()=> {
                 //     this.scorePanel.toggleTimer1(TimerState.PAUSE);
                 // });
             };
+
             eventMap['updateScore'] = ()=> {
                 console.log('updateScore', data);
                 if (data.leftScore != null) {

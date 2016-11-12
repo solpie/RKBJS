@@ -34,24 +34,26 @@ export var RankView = {
             left: {name: "player3", score: 1},
             right: {name: "player1", score: 2}
         }];
-        // http://api.liangle.com/api/passerbyking/game/list
-        var gameIdArr = [23, 21, 22, 29, 39, 52];
+        var gameIdArr = [];
         var gameDataArr = [];
         var gameId;
         var getGameData = (i)=> {
             if (i < gameIdArr.length) {
                 gameId = gameIdArr[i];
-                $.get('/api/passerbyking/game/match/' + gameId, (data)=> {
+                var apiGame = 'http://api.liangle.com/api/passerbyking/game/match/' + gameId;
+                $.get(`http://${window.location.host}/get?url=${apiGame}`, (res1)=> {
+                    var data = JSON.parse(res1.entity);
                     // $.get('/db/elo', {gameIdArr: [23, 21, 22, 29, 39]}, (data)=> {
-                    // console.log(data);
+                    console.log(data);
                     data.round = gameId;
                     gameDataArr.push(data);
                     // this.playerDocArr = rank;
                     var p = Math.floor((i + 1) / gameIdArr.length * 100);
                     console.log('progress', p);
-                    $('#progress1')['progress']({
-                        percent: p
-                    });
+                    $('#progress1').val(p);
+                    //     ['progress']({
+                    //     percent: p
+                    // });
                     getGameData(i + 1);
                 });
             }
@@ -62,13 +64,23 @@ export var RankView = {
                 // console.log('player map', playerMap);
                 setInterval(()=> {
                     $('#progress1').hide();
-
                     this.playerDocArr = mapToArr(playerMap).sort(descendingProp('eloScore'));
 
                 }, 500);
             }
         };
-        getGameData(0)
+
+        var apiList = 'http://api.liangle.com/api/passerbyking/game/list';
+        $.get(`http://${window.location.host}/get?url=${apiList}`, (res2)=> {
+            var data = JSON.parse(res2.entity).data;
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i];
+                gameIdArr.push(obj.id)
+            }
+            getGameData(0)
+        });
+
     },
     methods: {
         onSortWinPercent() {

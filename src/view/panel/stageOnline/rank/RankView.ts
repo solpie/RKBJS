@@ -28,7 +28,7 @@ export class RankView extends BasePanelView {
         console.log('get /api/passerbyking/game/players/', game_id);
         var api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
         // api1 = 'http://api.liangle.com/api/passerbyking/game/list'
-        $.get('http://' + window.location.hostname + '/get?url=' + api1, (respone)=> {
+        $.get('http://' + window.location.host + '/get?url=' + api1, (respone)=> {
             var data = JSON.parse(respone.entity);
             var mixRankData = data.data;
 

@@ -1,15 +1,25 @@
 <div class="container">
+
+
     <nav class="panel">
         <p class="panel-heading">
-            直播面板op入口
+            直播面板op入口 Game ID: {{ selected }}
+            <span class="select">
+                <select v-model="selected">
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+
+            </span>
         </p>
         <vue v-for="link in links">
-            <a class="panel-block" :href="link.url">
+            <a class="panel-block" :href="link.url" target="_blank">
                 <span class="panel-icon">
             <i class="fa fa-book"></i>
             </span> {{link.url}}
                 <br>
-                    {{link.title}}
+                {{link.title}}
             </a>
         </vue>
     </nav>

@@ -4,10 +4,14 @@ import {ServerConf} from "../Env";
 import {GameRkbInfo} from "./GameRkbInfo";
 import {panelRouter} from "../router/PanelRouter";
 declare var rest;
-
+declare var io;
 export class RkbModel {
     gameInfo: GameRkbInfo;
     emit: (cmd: string, param?: Object)=>void;
+
+    //websocket
+    remoteIO: any;
+    panelWsMap = {};
 
     constructor(io) {
         this.gameInfo = new GameRkbInfo();
@@ -37,6 +41,30 @@ export class RkbModel {
             if (a && a.length) {
                 ServerConf.hupuWsUrl = a[0];
             }
+        });
+    }
+
+    syncGame(gameId) {
+        var remoteIO;
+        if (!this.panelWsMap[gameId]) {
+            remoteIO = this.panelWsMap[gameId] = io.connect(ServerConf.hupuWsUrl);
+            remoteIO.on('connect', ()=> {
+                console.log('hupuAuto socket connected');
+                remoteIO.emit('passerbyking', {
+                    game_id: gameId,
+                    page: 'score'
+                })
+            });
+            remoteIO.on('wall', (data: any)=> {
+                var event = data.et;
+                var eventMap = {};
+                console.log('event:', event, data);
+            });
+        }
+        remoteIO = this.panelWsMap[gameId];
+        remoteIO.emit('passerbyking', {
+            game_id: gameId,
+            page: "tsync"
         });
     }
 

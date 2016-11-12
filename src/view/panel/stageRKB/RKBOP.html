@@ -1,8 +1,18 @@
 <div>
     <div v-if="isOp" id="opPanel" style="position: absolute;left: 100px;top:60px;width: 1000px">
         <h1>game id:{{gameId}}</h1>
-        <a class="button is-primary">重置时间</a>
-        <a class="button is-primary">八强对阵</a>
-        <a class="button is-primary">隐藏</a>
+        <label class="label">设置延时时间(秒)</label>
+
+        <p class="control">
+            <input class="input" type="text"
+                   onkeypress='var c = event.charCode;
+                   return c >= 48 && c <= 57 ||c==46'
+                   placeholder="" style="width: 50px;">
+            <button class="button is-primary">确定</button>
+        </p>
+        <label class="label">现场时间</label>
+        <label class="label">面板时间</label>
+
+        <button class="button is-primary">重置比赛时间</button>
     </div>
 </div>

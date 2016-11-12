@@ -38,6 +38,7 @@ export class GameRkbInfo {
     time: number = 0;
     loserPlayerInfo: PlayerInfo;
     _startDate;
+
     //淘汰统计
     infoText:string;
     deadPlayerArr: Array<string>;

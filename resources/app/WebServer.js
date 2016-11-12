@@ -137,6 +137,10 @@
 	exports.adminRouter.get('/', function (req, res) {
 	    res.render('admin', { version: 0.5, opUrlArr: ['http://123', '21'].toString() });
 	});
+	exports.adminRouter.get('/sync/:gameId', function (req, res) {
+	    var gameId = req.params.gameId;
+	    res.send("同步面板时间 Game Id：" + gameId);
+	});
 
 
 /***/ },
@@ -204,6 +208,7 @@
 	var RkbModel = (function () {
 	    function RkbModel(io) {
 	        var _this = this;
+	        this.panelWsMap = {};
 	        this.gameInfo = new GameRkbInfo_1.GameRkbInfo();
 	        io.on('connection', function () {
 	        });
@@ -228,6 +233,29 @@
 	            if (a && a.length) {
 	                Env_1.ServerConf.hupuWsUrl = a[0];
 	            }
+	        });
+	    };
+	    RkbModel.prototype.syncGame = function (gameId) {
+	        var remoteIO;
+	        if (!this.panelWsMap[gameId]) {
+	            remoteIO = this.panelWsMap[gameId] = io.connect(Env_1.ServerConf.hupuWsUrl);
+	            remoteIO.on('connect', function () {
+	                console.log('hupuAuto socket connected');
+	                remoteIO.emit('passerbyking', {
+	                    game_id: gameId,
+	                    page: 'score'
+	                });
+	            });
+	            remoteIO.on('wall', function (data) {
+	                var event = data.et;
+	                var eventMap = {};
+	                console.log('event:', event, data);
+	            });
+	        }
+	        remoteIO = this.panelWsMap[gameId];
+	        remoteIO.emit('passerbyking', {
+	            game_id: gameId,
+	            page: "tsync"
 	        });
 	    };
 	    RkbModel.prototype.initOp = function () {

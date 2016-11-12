@@ -1,0 +1,32 @@
+<div>
+    <span class="select">
+        <select v-model="selected">
+            <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+            </option>
+        </select>
+        Game ID: {{ selected }}
+        <button class="button is-primary" @click="onClkSync">同步</button>
+    </span>
+
+    <div class="card" v-for="(player,index) in playerArr">
+        <div class="card-image">
+            <figure class="image is-4by4">
+                <img src="{{player.avatar}}">
+            </figure>
+        </div>
+        <div class="card-content">
+            <div class="media">
+                <div class="media-left">
+                    <figure class="image is-32x32">
+                        <img src="http://placehold.it/64x64" alt="Image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <p class="title is-5">{{player.name}}</p>
+                    <p class="subtitle is-6">@johnsmith</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

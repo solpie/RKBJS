@@ -5,6 +5,7 @@ import {Navbar} from "./navbar/Navbar";
 import {HomeView} from "./home/home";
 import {PlayerView} from "./player/player";
 import {RankView} from "./rank/rank";
+import {PanelView} from "./panel/panel";
 //////////////
 ///////////////////
 require('../../../resources/app/static/css/bulma.min.css');
@@ -18,6 +19,10 @@ var routes = [
     {
         path: '/player', name: 'player',
         components: {content: PlayerView, Navbar: Navbar},
+    },
+    {
+        path: '/panel', name: 'panel',
+        components: {content: PanelView, Navbar: Navbar},
     },
     {
         path: '/rank', name: 'rank',
