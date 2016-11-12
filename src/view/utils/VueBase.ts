@@ -12,23 +12,20 @@ export class VueBase {
     // }
     // put above in subClass
 
-    static initProps(subClassObj) {
+    static initProps(subClassObj: VueBase) {
         for (var p in subClassObj) {
             var o = subClassObj[p];
             if (o.hasOwnProperty("v")
                 && o.hasOwnProperty("_")) {
                 //create props
-                console.log("init value", p);
-                subClassObj["props"][p] = o.v;
+                subClassObj.props[p] = o.v;
             }
         }
     }
 
-    created() {
-        VueBase.initProps(this);
+    protected created() {
     }
 
-    mounted() {
-
+    protected mounted() {
     }
 }
