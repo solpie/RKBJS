@@ -7,9 +7,11 @@
             <input class="input" type="text"
                    onkeypress='var c = event.charCode;
                    return c >= 48 && c <= 57 ||c==46'
-                   placeholder="" style="width: 50px;">
-            <button class="button is-primary">确定</button>
+                   placeholder="" style="width: 50px;"
+                   v-model="delayTime">
+            <button class="button is-primary" @click="onClkSetDelay">确定</button>
         </p>
+
         <label class="label">现场时间:{{liveTime}}</label>
         <label class="label">面板时间:{{panelTime}}</label>
 

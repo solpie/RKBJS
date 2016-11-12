@@ -6,20 +6,25 @@ import {ScorePanel} from "./ScorePanel";
 import {PlayerPanel} from "./PlayerPanel";
 import {EventPanel} from "./EventPanel";
 import {CountDownPanel} from "./CountDownPanel";
+import {RKBView} from "./RKBOPView";
+import {DateFormat} from "../../utils/JsFunc";
 /**
  * Created by toramisu on 2016/10/24.
  */
 declare var io;
 declare var hupuWsUrl;
 export class StageRKBView extends BasePanelView {
-    $opView;
+    $opView: RKBView;
     scorePanel;
     playerPanel;
     eventPanel;
     countDownRender;
     isScorePanelVisible;
 
-    constructor($opView) {
+    srvTime;
+    isTimerRunning = false;
+
+    constructor($opView: RKBView) {
         super(PanelId.rkbPanel);
         this.initCanvas();
 
@@ -53,6 +58,8 @@ export class StageRKBView extends BasePanelView {
             localWs.emit("opUrl", JParam({opUrl: window.location.host}));
         });
     }
+
+
 
     initAuto() {
         var remoteIO = io.connect(hupuWsUrl);
@@ -108,6 +115,14 @@ export class StageRKBView extends BasePanelView {
                     this.scorePanel.resetTimer();
                     this.scorePanel.toggleTimer1(TimerState.RUNNING);
                 }
+
+
+                //setup timer
+                // this.srvTime = data.t;
+                console.log('$opView', this.$opView);
+                this.$opView.setSrvTime(data.t);
+                // this.$opView.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
+
 
                 //test
                 // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
