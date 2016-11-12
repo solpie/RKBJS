@@ -1,32 +1,36 @@
 import {StageRKBView} from "./StageRKBView";
 import {dynamicLoading} from "../../utils/WebJsFunc";
+import {VueBase} from "../../utils/VueBase";
 /**
  * Created by toramisu on 2016/10/31.
  */
 var stageRKBView: StageRKBView;
-export var RKBOPView = {
-    template: require('./RKBOP.html'),
-    props: {
-        links: null,
-        isOp: null,
-        gameId: null,
-        liveTime: null,//现场时间 服务器时间
-        panelTime: null,//线上画面时间
-        test: "hello",
-    },
+export class RKBView extends VueBase {
+    template = require('./RKBOP.html');
+
+    links = VueBase.PROP;
+    isOp = VueBase.PROP;
+    gameId = VueBase.PROP;
+    liveTime = VueBase.PROP;//现场时间 服务器时间
+    panelTime = VueBase.PROP;//线上画面时间
+    test = VueBase.PROP;
+
     created() {
-        console.log('op created!');
+        this.liveTime = "2016";
+        this.panelTime = 0;
+        console.log('RKBView created!');
+
         this.isOp = this.$route.params.op == "op";
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
         }
         this.gameId = this.$route.params.game_id;
-    },
+    }
 
     mounted() {
-        // this.test = "hello";
         if (!stageRKBView)
             stageRKBView = new StageRKBView(this);
         console.log('op mounted!');
     }
-};
+}
+export var rkbView = new RKBView();
