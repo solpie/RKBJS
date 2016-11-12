@@ -1,3 +1,4 @@
+//delay in ms
 export function delayCall(delay, callback) {
     createjs.Tween.get(this).wait(delay).call(callback);
     // setTimeout(callback, delay/1000);

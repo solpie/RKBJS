@@ -69,12 +69,12 @@ export class RkbModel {
     }
 
     initOp() {
-        //post /panel/stage/:cmd
-        panelRouter.post(`/stage1v1/:cmdId`, (req, res) => {
+        //post /panel/rkb/:cmdId
+        panelRouter.post(`/rkb/:cmdId`, (req, res) => {
             if (!req.body) return res.sendStatus(400);
             var cmdId = req.params.cmdId;
             var param = req.body;
-            console.log(`/stage1v1/${cmdId}`);
+            console.log(`/rkb/${cmdId}`, param);
             var cmdMap: any = {};
 
 
@@ -353,9 +353,17 @@ export class RkbModel {
             cmdMap[`${CommandId.cs_autoSaveGameRec}`] = (param)=> {
                 return this.cs_autoSaveGameRec(param);
             };
-            var isSend = cmdMap[cmdId](param);
-            if (!isSend)
+            if (param.hasOwnProperty("_")) {
+                //auto emit
+                var autoCmdId = cmdId.replace("cs_", "");
+                this.emit(autoCmdId, param);
                 res.sendStatus(200);
+            }
+            else {
+                var isSend = cmdMap[cmdId](param);
+                if (!isSend)
+                    res.sendStatus(200);
+            }
         });
     }
 

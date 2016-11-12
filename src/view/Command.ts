@@ -1,9 +1,5 @@
-export var JParam = (o)=> {
-    return {jstr:JSON.stringify(o)};
-};
-export enum CommandId{
+enum cmdEnum{
     dmkPush,
-    ShowConsoleWin = 100000,
         //
     toggleTracker,
     toggleBallRolling,
@@ -99,7 +95,8 @@ export enum CommandId{
     cs_setScorePanelVisible,//隐藏记分面板
     setScorePanelVisible,//隐藏记分面板
     cs_autoSaveGameRec,//hupu 记录比赛
-
+    cs_setDelayTime,//
+    setDelayTime,//
         //---------------- player panel
 
     cs_startingLine,
@@ -180,27 +177,7 @@ export enum CommandId{
     cs_combo,
     combo
 }
-class CommandItem {
-    id: number;
-    name: string;
-    desc: string;
-
-    constructor(id) {
-        this.id = id;
-    }
+export var CommandId:any = {};
+for (var k in cmdEnum) {
+    CommandId[k] = k;
 }
-export class Command {
-    cmdArr: Array<CommandItem>;
-
-    constructor() {
-        // super();
-        this.cmdArr = [];
-        // for (var k in CommandId) {
-        //     CommandId[k] = k;
-        // }
-        console.log("CommandId", CommandId);
-        ////test cmd
-    }
-
-}
-

@@ -2,10 +2,19 @@ import {StageRKBView} from "./StageRKBView";
 import {dynamicLoading} from "../../utils/WebJsFunc";
 import {VueBase} from "../../utils/VueBase";
 import {DateFormat} from "../../utils/JsFunc";
+import {PanelId} from "../../const";
+import {CommandId} from "../../Command";
 /**
  * Created by toramisu on 2016/10/31.
  */
 var stageRKBView: StageRKBView;
+declare var $;
+
+var opReq = (cmdId: string, param: any, callback: any)=> {
+    $.post(`/panel/${PanelId.rkbPanel}/${cmdId}`,
+        param,
+        callback);
+};
 export class RKBView extends VueBase {
     template = require('./RKBOP.html');
 
@@ -22,9 +31,13 @@ export class RKBView extends VueBase {
     isTimerRunning = false;
     delayTimeMS = 0;
 
+
+    opReq: (cmdId: string, param?: any, callback?: any)=>void;
+
     constructor() {
         super();
         VueBase.initProps(this);
+
     }
 
     created() {
@@ -49,8 +62,12 @@ export class RKBView extends VueBase {
             console.log("onClkSetDelay", this, this.delayTime);
             // this.panelTime = this.liveTime
             var dt = Number(this.delayTime);
-            if (dt > 0)
+            if (dt >= 0) {
                 this.delayTimeMS = dt * 1000;
+                opReq(`${CommandId.cs_setDelayTime}`, {delayTimeMS: this.delayTimeMS, _: null}, ()=> {
+
+                })
+            }
         }
     };
 

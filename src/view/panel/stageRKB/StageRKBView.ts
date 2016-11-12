@@ -1,4 +1,3 @@
-import {JParam} from "../../Command";
 import {BasePanelView} from "../BasePanelView";
 import {PanelId, TimerState} from "../../const";
 import {PlayerInfo} from "../../../model/PlayerInfo";
@@ -7,7 +6,9 @@ import {PlayerPanel} from "./PlayerPanel";
 import {EventPanel} from "./EventPanel";
 import {CountDownPanel} from "./CountDownPanel";
 import {RKBView} from "./RKBOPView";
-import {DateFormat} from "../../utils/JsFunc";
+import {delayCall} from "../../utils/Fx";
+import {CommandId} from "../../Command";
+import Tween = createjs.Tween;
 /**
  * Created by toramisu on 2016/10/24.
  */
@@ -21,8 +22,7 @@ export class StageRKBView extends BasePanelView {
     countDownRender;
     isScorePanelVisible;
 
-    srvTime;
-    isTimerRunning = false;
+    delayTimeMS = 0;//
 
     constructor($opView: RKBView) {
         super(PanelId.rkbPanel);
@@ -46,8 +46,8 @@ export class StageRKBView extends BasePanelView {
         // $opView.test = "test";
         console.log('StageRKBView router', this.$opView.$route.params, this.$opView.$route.query);
         var op = this.$opView.$route.params.op;
-        if (op == "op")
-            this.initOp();
+        // if (op == "op")
+        this.initOp();
         this.initAuto();
     }
 
@@ -55,10 +55,13 @@ export class StageRKBView extends BasePanelView {
         var localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
         localWs.on('connect', function (msg) {
             console.log('connect', window.location.host);
-            localWs.emit("opUrl", JParam({opUrl: window.location.host}));
-        });
+            localWs.emit("opUrl", {opUrl: window.location.host});
+        })
+            .on(`${CommandId.setDelayTime}`, (data)=> {
+                console.log("CommandId.setDelayTime", data);
+                this.delayTimeMS = data.delayTimeMS;
+            })
     }
-
 
 
     initAuto() {
@@ -86,7 +89,6 @@ export class StageRKBView extends BasePanelView {
             rightPlayerInfo.playerData.playerNum = rightPlayer.playerNum;
             rightPlayerInfo.playerData.curFtScore = rightPlayer.roundScore;
             this.playerPanel.setPlayer(1, rightPlayerInfo.playerData);
-
             this.scorePanel.setPlayerName([leftPlayer.name, rightPlayer.name])
         };
         remoteIO.on('connect', ()=> {
@@ -180,8 +182,12 @@ export class StageRKBView extends BasePanelView {
                 this.countDownRender.fadeOut();
                 console.log('fadeOutCountDown', data);
             };
-            if (eventMap[event])
-                eventMap[event]();
+            if (eventMap[event]) {
+
+                delayCall(this.delayTimeMS, ()=> {
+                    eventMap[event]();
+                });
+            }
         });
     }
 }
