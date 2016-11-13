@@ -3,7 +3,6 @@ import {dynamicLoading} from "../../utils/WebJsFunc";
  * Created by toramisu on 2016/10/24.
  */
 declare var $;
-require("script!./../../../../clientLibs/qrcode.min.js");
 declare var QRCode;
 export var HomeView = {
     template: require('./home.html'),

@@ -2,12 +2,7 @@
 var webpack = require('webpack');
 module.exports = {
     entry: {
-        // "view/admin": [
-        //     "./resources/app/static/js/vue/vue.min.js",
-        //     "./resources/app/static/js/vue/vue-router.min.js",
-        //     "./src/view/admin/index.ts"],
         "view/admin": "./src/view/admin/index.ts",
-        // "view/lib": ["./static/js/vue/vue.min.js", "./static/js/vue/vue-router.min.js"],
         "view/panel": "./src/view/panel/index.ts"
     },
     output: {

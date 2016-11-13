@@ -79,7 +79,9 @@ function openWin(serverConf?: any) {
         webaudio: false
     });
     win.setMenuBarVisibility(false);
+
     win.loadURL(`file://${__dirname}resources/app/index.html`);
+    // win.loadURL(`file://${__dirname}resources/app/static/index.js`);
     win.toggleDevTools({mode: 'detach'});
     win.on('closed', function () {
         win = null;
