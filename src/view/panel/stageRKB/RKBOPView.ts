@@ -37,7 +37,6 @@ export class RKBView extends VueBase {
     constructor() {
         super();
         VueBase.initProps(this);
-
     }
 
     created() {

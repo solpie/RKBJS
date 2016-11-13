@@ -9,7 +9,7 @@ require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
 
 import {Navbar} from "./navbar/Navbar";
-import {HomeView} from "./home/home";
+import {homeView} from "./home/home";
 import {PlayerView} from "./player/player";
 import {RankView} from "./rank/rank";
 import {PanelView} from "./panel/panel";
@@ -17,7 +17,7 @@ import {PanelView} from "./panel/panel";
 var routes = [
     {
         path: '/', name: 'home',
-        components: {content: HomeView, Navbar: Navbar}
+        components: {content: homeView, Navbar: Navbar}
     },
     {
         path: '/player', name: 'player',
