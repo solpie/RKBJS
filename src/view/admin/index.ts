@@ -1,16 +1,19 @@
 /**
  * Created by toramisu on 2016/10/22.
  */
+
+require('../../../resources/app/static/css/bulma.min.css');
+require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
+
 import {Navbar} from "./navbar/Navbar";
 import {HomeView} from "./home/home";
 import {PlayerView} from "./player/player";
 import {RankView} from "./rank/rank";
 import {PanelView} from "./panel/panel";
 //////////////
-///////////////////
-require('../../../resources/app/static/css/bulma.min.css');
-// window['VueRouter'] = require('../../../resources/app/static/js/vue/vue-router.min.js');
-// window['Vue'] = require('../../../resources/app/static/js/vue/vue.min.js');
 var routes = [
     {
         path: '/', name: 'home',

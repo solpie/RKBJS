@@ -1,7 +1,10 @@
+import {dynamicLoading} from "../../utils/WebJsFunc";
 /**
  * Created by toramisu on 2016/10/24.
  */
 declare var $;
+require("script!./../../../../clientLibs/qrcode.min.js");
+declare var QRCode;
 export var HomeView = {
     template: require('./home.html'),
     props: {
@@ -15,7 +18,7 @@ export var HomeView = {
     },
     created: function () {
         console.log('post /admin/');
-
+        // dynamicLoading.js('/js/qrcode.min.js');
         var apiGame = 'http://api.liangle.com/api/passerbyking/game/list';
         $.get(`http://${window.location.host}/get?url=${apiGame}`, (res1)=> {
             var data = JSON.parse(res1.entity);
@@ -50,7 +53,15 @@ export var HomeView = {
             this.updateLinks(gameId);
             $.get(`http://${window.location.host}/admin/sync/${this.selected}`, (res)=> {
                 console.log(res)
-            })
+            });
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: "http://jindo.dev.naver.com/collie",
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
         }
     }
 };

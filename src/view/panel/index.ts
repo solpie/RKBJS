@@ -1,7 +1,17 @@
+require(`script!D:/projects/RKBJS/clientLibs/createjs/createjs.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/createjs/easeljs.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/createjs/tweenjs.min.js`);
+
+require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);
+
+require(`script!D:/projects/RKBJS/clientLibs/socket.io-1.4.5.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
+
 import {rkbView} from "./stageRKB/RKBOPView";
 import {StageOnlineView} from "./stageOnline/StageOnlineView";
 //////////////
-///////////////////
 
 var routes = [
     {
@@ -18,8 +28,6 @@ var routes = [
     }
 ];
 
-// require('./../../../static/js/vue/vue.min.js');
-// require('./../../../static/js/vue/vue-router.min.js');
 declare var VueRouter;
 declare var Vue;
 var router = new VueRouter({
