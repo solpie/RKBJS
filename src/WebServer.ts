@@ -27,8 +27,6 @@ export default class WebServer {
     // initNedb() {
     //     initDB();
     // }
-
-
     initEnv(callback: any) {
         var process = require("process");
         ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);

@@ -15,7 +15,6 @@ class HomeView extends VueBase {
     iosParam = VueBase.Dict;
     rmtpUrl = VueBase.String;
 
-
     constructor() {
         super();
         VueBase.initProps(this);
@@ -28,14 +27,57 @@ class HomeView extends VueBase {
             var data = JSON.parse(res1.entity);
             console.log(data);
             var gameDataArr = data.data;
-            this.gameDataArr = gameDataArr;
+            this.gameDataArr = [];
             for (var i = 0; i < gameDataArr.length; i++) {
-                var gameData = gameDataArr[i];
+                // var gameData = gameDataArr[i];
+                var gameData = gameDataArr[gameDataArr.length - 1 - i];
                 gameData.text = "[" + gameData.id + "]:" + gameData.title;
                 gameData.value = gameData.id;
+                this.gameDataArr.push(gameData);
             }
             this.options = gameDataArr;
         });
+        // try {
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "http://www.liangle.com/passerbyking/game/info/84",
+        //         dataType: 'jsonp',
+        //         success: function (res) {
+        //             console.log(res);
+        //         }
+        //     });
+        // }
+        // catch (e) {
+        //     console.log(e);
+        // }
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "http://www.liangle.com/passerbyking/game/info/84?callbackparam=success_jsonpCallback",
+            dataType: "jsonp",
+            jsonp: "callbackparam",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(默认为:callback)
+            jsonpCallback: "success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+            success: function (json) {
+                alert(json);
+                alert(json[0].name);
+            },
+            error: function (e) {
+                console.log(e, this)
+            }
+        });
+        // dynamicLoading.js("http://www.liangle.com/passerbyking/game/info/84");
+        // $.ajax({
+        //     type: 'GET',
+        //     url: "http://www.liangle.com/passerbyking/game/info/84",
+        //     contentType: "application/json",
+        //     dataType: 'jsonp',
+        //     success: function (json) {
+        //         alert(json);
+        //     },
+        //     error: function (e) {
+        //         console.log(e.message);
+        //     }
+        // });
     }
 
     mounted() {
@@ -69,8 +111,6 @@ class HomeView extends VueBase {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
         });
-        // this.qrcode.clear(); // clear the code.
-        // this.qrcode.makeCode(JSON.stringify(this.iosParam )); // make another code.
     }
 
     methods = {
@@ -81,6 +121,10 @@ class HomeView extends VueBase {
             });
         },
         onClkQRCode(){
+            // var $s = $($('script')[0])
+            // console.log($s);
+
+
             this.genQRCode()
         }
     };
