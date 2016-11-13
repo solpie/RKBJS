@@ -74,7 +74,7 @@ export class RKBView extends VueBase {
         console.log("onTick");
         this.srvTime += 1000;
         this.liveTime = DateFormat(new Date(this.srvTime), "hh:mm:ss");
-        this.panelTime = DateFormat(new Date(this.srvTime + this.delayTimeMS), "hh:mm:ss");
+        this.panelTime = DateFormat(new Date(this.srvTime - this.delayTimeMS), "hh:mm:ss");
     }
 
     setSrvTime(t) {

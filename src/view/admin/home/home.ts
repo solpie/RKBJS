@@ -12,10 +12,15 @@ class HomeView extends VueBase {
     selected = VueBase.PROP;
     options = VueBase.PROP;
     gameDataArr = VueBase.PROP;
+    iosParam = VueBase.Dict;
+    rmtpUrl = VueBase.String;
+
+
     constructor() {
         super();
         VueBase.initProps(this);
     }
+
     created() {
         console.log('post /admin/');
         var apiGame = 'http://api.liangle.com/api/passerbyking/game/list';
@@ -35,7 +40,6 @@ class HomeView extends VueBase {
 
     mounted() {
         this.updateLinks(1);
-
     }
 
     updateLinks(gameId) {
@@ -55,20 +59,29 @@ class HomeView extends VueBase {
         selected: "onSelGameID"
     };
 
+    genQRCode() {
+        this.iosParam = {"rtmp": this.rmtpUrl, gameId: this.selected + ""};
+        new QRCode(document.getElementById("qrcode"), {
+            text: JSON.stringify(this.iosParam),
+            width: 256,
+            height: 256,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        // this.qrcode.clear(); // clear the code.
+        // this.qrcode.makeCode(JSON.stringify(this.iosParam )); // make another code.
+    }
+
     methods = {
         onSelGameID(gameId){
             this.updateLinks(gameId);
             $.get(`http://${window.location.host}/admin/sync/${this.selected}`, (res)=> {
                 console.log(res)
             });
-            var qrcode = new QRCode(document.getElementById("qrcode"), {
-                text: "http://jindo.dev.naver.com/collie",
-                width: 128,
-                height: 128,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+        },
+        onClkQRCode(){
+            this.genQRCode()
         }
     };
 }

@@ -20,7 +20,9 @@
             </a>
         </vue>
     </nav>
-
-
+    推流地址:<input type="text" v-model="rmtpUrl" style="width: 1000px">
+    <p>
+    <button class="button is-primary" @click="onClkQRCode">生成IOS二维码</button>
+    {{iosParam | json}}
     <div id="qrcode"></div>
 </div>

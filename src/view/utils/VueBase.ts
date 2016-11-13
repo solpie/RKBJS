@@ -4,6 +4,7 @@
 
 export class VueBase {
     static PROP: any = {v: null, _: null};
+    static Dict: any = {v: {}, _: null};
     static Number: any = {v: 0, _: null};
     static String: any = {v: "", _: null};
     props = {};
