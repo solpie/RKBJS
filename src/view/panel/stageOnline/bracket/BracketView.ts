@@ -1,5 +1,5 @@
 import {BasePanelView} from "../../BasePanelView";
-import {MatchSvg} from "../../../../model/MatchSvg";
+import {BracketGroup} from "./BracketGroup";
 import {PanelId} from "../../../const";
 declare var io;
 var $ = require('jquery');
@@ -15,8 +15,8 @@ export class BracketView extends BasePanelView {
     init() {
         this.matchArr = [];
         for (var i = 0; i < 14; i++) {
-            var ms: MatchSvg = new MatchSvg();// new MatchSvg();
-            ms.idx = i + 1;
+            var ms: BracketGroup = new BracketGroup(i + 1);// new BracketGroup();
+            // ms.idx = i + 1;
             this.matchArr.push(ms);
         }
         var matchArr = this.matchArr;
@@ -26,7 +26,7 @@ export class BracketView extends BasePanelView {
         };
 
         var i: number;
-        var ms: MatchSvg;
+        var ms: BracketGroup;
         for (i = 0; i < 4; i++) {
             ms = matchArr[i];
             ms.x = 0;
@@ -109,48 +109,48 @@ export class BracketView extends BasePanelView {
     }
 
     onBracketData(res) {
-        var matchArr = [];
-        var playerHintMap = {
-            '5': ['  第1场败者', '  第2场败者'],
-            '6': ['  第3场败者', '  第4场败者'],
-            '9': ['  第7场败者', ''],
-            '13': ['  第11场败者', ''],
-            '10': ['  第8场败者', ''],
-            '14': ['', '  第13场胜者']
-        };
-        for (var gameIdx in res.data) {
-            var dataObj = res.data[gameIdx];
-            var match: MatchSvg = new MatchSvg();
-
-            match.idx = Number(gameIdx);
-            if (dataObj.left.score || dataObj.right.score) {
-                if (dataObj.left.score > dataObj.right.score)
-                    match.playerSvgArr[0].isWin = true;
-                else
-                    match.playerSvgArr[1].isWin = true;
-            }
-
-            if (!dataObj.left.name) {
-                match.playerSvgArr[0].isHint = true
-            }
-            if (!dataObj.right.name) {
-                match.playerSvgArr[1].isHint = true
-            }
-            var hintName = playerHintMap[gameIdx];
-            match.playerSvgArr[0].name = dataObj.left.name ? dataObj.left.name : (hintName ? hintName[0] : '');
-            match.playerSvgArr[0].score = dataObj.left.score;
-
-            match.playerSvgArr[1].name = dataObj.right.name ? dataObj.right.name : (hintName ? hintName[1] : '');
-            match.playerSvgArr[1].score = dataObj.right.score;
-            matchArr.push(match);
-        }
-        this.updateBracket(matchArr)
+        // var matchArr = [];
+        // var playerHintMap = {
+        //     '5': ['  第1场败者', '  第2场败者'],
+        //     '6': ['  第3场败者', '  第4场败者'],
+        //     '9': ['  第7场败者', ''],
+        //     '13': ['  第11场败者', ''],
+        //     '10': ['  第8场败者', ''],
+        //     '14': ['', '  第13场胜者']
+        // };
+        // for (var gameIdx in res.data) {
+        //     var dataObj = res.data[gameIdx];
+        //     var match: BracketGroup = new BracketGroup();
+        //
+        //     match.idx = Number(gameIdx);
+        //     if (dataObj.left.score || dataObj.right.score) {
+        //         if (dataObj.left.score > dataObj.right.score)
+        //             match.playerArr[0].isWin = true;
+        //         else
+        //             match.playerArr[1].isWin = true;
+        //     }
+        //
+        //     if (!dataObj.left.name) {
+        //         match.playerArr[0].isHint = true
+        //     }
+        //     if (!dataObj.right.name) {
+        //         match.playerArr[1].isHint = true
+        //     }
+        //     var hintName = playerHintMap[gameIdx];
+        //     match.playerArr[0].name = dataObj.left.name ? dataObj.left.name : (hintName ? hintName[0] : '');
+        //     match.playerArr[0].score = dataObj.left.score;
+        //
+        //     match.playerArr[1].name = dataObj.right.name ? dataObj.right.name : (hintName ? hintName[1] : '');
+        //     match.playerArr[1].score = dataObj.right.score;
+        //     matchArr.push(match);
+        // }
+        // this.updateBracket(matchArr)
     }
 
     updateBracket(matchArr) {
 
         for (var j = 0; j < 14; j++) {
-            var match: MatchSvg = matchArr[j];
+            var match: BracketGroup = matchArr[j];
             var isOverMatch =
                 match.idx == 5
                 || match.idx == 6
@@ -160,7 +160,7 @@ export class BracketView extends BasePanelView {
                 || match.idx == 13
                 || match.idx == 14
             for (var k = 0; k < 2; k++) {
-                var playerSvg = match.playerSvgArr[k];
+                var playerSvg = match.playerArr[k];
                 var $playerSvg = $('#playerName' + (j * 2 + k));
                 $playerSvg.text(playerSvg.name);
                 if (playerSvg.isHint) {

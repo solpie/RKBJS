@@ -2,6 +2,9 @@ require(`script!D:/projects/RKBJS/clientLibs/createjs/createjs.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/createjs/easeljs.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/createjs/tweenjs.min.js`);
 
+//http://www.pixijs.com/
+require(`script!D:/projects/RKBJS/clientLibs/pixi.min.js`);
+
 require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);
 
@@ -10,7 +13,7 @@ require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
 
 import {rkbView} from "./stageRKB/RKBOPView";
-import {StageOnlineView} from "./stageOnline/StageOnlineView";
+import {stageOnlineView} from "./stageOnline/StageOnlineView";
 //////////////
 
 var routes = [
@@ -24,7 +27,7 @@ var routes = [
     },
     {
         path: '/ol/:op/:game_id',
-        components: {default: StageOnlineView}
+        components: {default: stageOnlineView}
     }
 ];
 

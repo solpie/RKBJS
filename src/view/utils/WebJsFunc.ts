@@ -21,3 +21,6 @@ export var dynamicLoading = {
         head.appendChild(script);
     }
 };
+export var proxy = (url)=> {
+    return "/proxy?url=" + url;
+};

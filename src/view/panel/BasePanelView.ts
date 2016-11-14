@@ -3,8 +3,9 @@ import Stage = createjs.Stage;
 import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
 declare var $;
+declare var PIXI;
 export class BasePanelView {
-    name:string;
+    name: string;
     stageWidth;
     stageHeight;
     ctn;
@@ -17,6 +18,20 @@ export class BasePanelView {
                 param,
                 callback);
         };
+    }
+
+    static initPixi() {
+        var renderer = new PIXI.autoDetectRenderer(ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT,
+            {antialias: false, transparent: true, resolution: 1});
+        document.body.insertBefore(renderer.view, document.getElementById("panel"));
+        renderer.stage = new PIXI.Container();
+        //Loop this function 60 times per second
+        renderer.renderStage = ()=> {
+            requestAnimationFrame(renderer.renderStage);
+            renderer.render(renderer.stage);
+        };
+        renderer.renderStage();
+        return renderer.stage;
     }
 
     static initStage() {

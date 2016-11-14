@@ -49,6 +49,9 @@
 	var Env_1 = __webpack_require__(2);
 	var PanelRouter_1 = __webpack_require__(4);
 	var RkbModel_1 = __webpack_require__(5);
+	var fs1 = __webpack_require__(11);
+	var path = __webpack_require__(3);
+	var os = __webpack_require__(17);
 	var WebServer = (function () {
 	    function WebServer(callback) {
 	        this.initEnv(callback);
@@ -58,10 +61,10 @@
 	    };
 	    WebServer.prototype.initEnv = function (callback) {
 	        var _this = this;
-	        var process = __webpack_require__(11);
+	        var process = __webpack_require__(12);
 	        Env_1.ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
 	        console.log(process.execPath, Env_1.ServerConf.isDev);
-	        var fs = __webpack_require__(12);
+	        var fs = __webpack_require__(11);
 	        fs.readFile('resources/app/package.json', function (err, data) {
 	            if (err)
 	                throw err;
@@ -77,7 +80,7 @@
 	    WebServer.prototype.initServer = function () {
 	        var _this = this;
 	        var app = express();
-	        app.set('views', "./resources/app/view");
+	        app.set('views', "./resources/app/ejs");
 	        app.engine('ejs', ejs.renderFile);
 	        app.set('view engine', 'ejs');
 	        app.use(express.static("./resources/app/static"));
@@ -107,6 +110,15 @@
 	            var url = req.query.url;
 	            rest(url).then(function (response) {
 	                res.send(response);
+	            });
+	        });
+	        app.get('/proxy', function (req, res) {
+	            var url = req.query.url;
+	            request.get({ url: url, encoding: null }, function (error, response, body) {
+	                if (!error && response.statusCode == 200) {
+	                    var data = "data:image/png;base64," + body.toString('base64');
+	                    res.send(data);
+	                }
 	            });
 	        });
 	        app.use('/admin', AdminRouter_1.adminRouter);
@@ -1126,19 +1138,28 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = require("process");
+	module.exports = require("fs");
 
 /***/ },
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = require("fs");
+	module.exports = require("process");
 
 /***/ },
 /* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("http");
+
+/***/ },
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */
+/***/ function(module, exports) {
+
+	module.exports = require("os");
 
 /***/ }
 /******/ ]);

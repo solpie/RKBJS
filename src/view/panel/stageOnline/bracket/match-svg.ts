@@ -26,7 +26,7 @@ export var matchsvg ={
     },
     // playerArr: Array<any>;
     // idx: number;
-    // match: MatchSvg;
+    // match: BracketGroup;
     // x: number;
     // y: number;
     methods:{
@@ -43,7 +43,7 @@ export var matchsvg ={
         this.x = this.match.x;
         this.y = this.match.y;
         this.idx = this.match.idx;
-        this.playerArr = this.match.playerSvgArr;
+        this.playerArr = this.match.playerArr;
         if (this.playerArr[0].score && this.playerArr[1].score) {
             if (this.playerArr[0].score > this.playerArr[1].score)
                 this.playerArr[0].isWin = true;

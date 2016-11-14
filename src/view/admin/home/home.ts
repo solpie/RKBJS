@@ -50,21 +50,21 @@ class HomeView extends VueBase {
         // catch (e) {
         //     console.log(e);
         // }
-        $.ajax({
-            type: "get",
-            async: false,
-            url: "http://www.liangle.com/passerbyking/game/info/84?callbackparam=success_jsonpCallback",
-            dataType: "jsonp",
-            jsonp: "callbackparam",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(默认为:callback)
-            jsonpCallback: "success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
-            success: function (json) {
-                alert(json);
-                alert(json[0].name);
-            },
-            error: function (e) {
-                console.log(e, this)
-            }
-        });
+        // $.ajax({
+        //     type: "get",
+        //     async: false,
+        //     url: "http://www.liangle.com/passerbyking/game/info/84?callbackparam=success_jsonpCallback",
+        //     dataType: "jsonp",
+        //     jsonp: "callbackparam",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(默认为:callback)
+        //     jsonpCallback: "success_jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+        //     success: function (json) {
+        //         alert(json);
+        //         alert(json[0].name);
+        //     },
+        //     error: function (e) {
+        //         console.log(e, this)
+        //     }
+        // });
         // dynamicLoading.js("http://www.liangle.com/passerbyking/game/info/84");
         // $.ajax({
         //     type: 'GET',
@@ -81,7 +81,8 @@ class HomeView extends VueBase {
     }
 
     mounted() {
-        this.updateLinks(1);
+        this.updateLinks(78);
+        // this.selected = 78
     }
 
     updateLinks(gameId) {

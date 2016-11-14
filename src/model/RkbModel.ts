@@ -878,38 +878,38 @@ export class RkbModel {
         //     '14': ['', '  第13场胜者']
         // };
         // for (var i = 0; i < 15; i++) {
-        //     var ms: MatchSvg = new MatchSvg(0, 0, i + 1);
+        //     var ms: BracketGroup = new BracketGroup(0, 0, i + 1);
         //     var bracketDoc = actDoc.bracket[ms.idx];
         //
         //     if (bracketDoc) {
         //         if (bracketDoc.gameInfoArr[0]) {
-        //             ms.playerSvgArr[0].name = bracketDoc.gameInfoArr[0].name;
-        //             ms.playerSvgArr[0].avatar = bracketDoc.gameInfoArr[0].avatar;
-        //             ms.playerSvgArr[0].score = bracketDoc.gameInfoArr[0].score;
+        //             ms.playerArr[0].name = bracketDoc.gameInfoArr[0].name;
+        //             ms.playerArr[0].avatar = bracketDoc.gameInfoArr[0].avatar;
+        //             ms.playerArr[0].score = bracketDoc.gameInfoArr[0].score;
         //         }
         //         if (bracketDoc.gameInfoArr[1]) {
-        //             ms.playerSvgArr[1].name = bracketDoc.gameInfoArr[1].name;
-        //             ms.playerSvgArr[1].avatar = bracketDoc.gameInfoArr[1].avatar;
-        //             ms.playerSvgArr[1].score = bracketDoc.gameInfoArr[1].score;
+        //             ms.playerArr[1].name = bracketDoc.gameInfoArr[1].name;
+        //             ms.playerArr[1].avatar = bracketDoc.gameInfoArr[1].avatar;
+        //             ms.playerArr[1].score = bracketDoc.gameInfoArr[1].score;
         //         }
         //
-        //         if (ms.playerSvgArr[0].score || ms.playerSvgArr[1].score) {
-        //             if (ms.playerSvgArr[0].score > ms.playerSvgArr[1].score) {
-        //                 ms.playerSvgArr[0].isWin = true;
+        //         if (ms.playerArr[0].score || ms.playerArr[1].score) {
+        //             if (ms.playerArr[0].score > ms.playerArr[1].score) {
+        //                 ms.playerArr[0].isWin = true;
         //             }
         //             else {
-        //                 ms.playerSvgArr[1].isWin = true;
+        //                 ms.playerArr[1].isWin = true;
         //             }
         //         }
         //     }
         //
-        //     if (!ms.playerSvgArr[0].name && playerHintMap[ms.idx]) {
-        //         ms.playerSvgArr[0].name = playerHintMap[ms.idx][0];
-        //         ms.playerSvgArr[0].isHint = true;
+        //     if (!ms.playerArr[0].name && playerHintMap[ms.idx]) {
+        //         ms.playerArr[0].name = playerHintMap[ms.idx][0];
+        //         ms.playerArr[0].isHint = true;
         //     }
-        //     if (!ms.playerSvgArr[1].name && playerHintMap[ms.idx]) {
-        //         ms.playerSvgArr[1].name = playerHintMap[ms.idx][1];
-        //         ms.playerSvgArr[1].isHint = true;
+        //     if (!ms.playerArr[1].name && playerHintMap[ms.idx]) {
+        //         ms.playerArr[1].name = playerHintMap[ms.idx][1];
+        //         ms.playerArr[1].isHint = true;
         //     }
         //     matchArr.push(ms);
         // }

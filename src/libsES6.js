@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import SocketIO from "socket.io";
 import rest from "rest";
 import nedb from "nedb";
+var request = require('request');
+
 var nodeLibs = {
     express: express,
     ejs: ejs,
@@ -11,6 +13,7 @@ var nodeLibs = {
     SocketIO: SocketIO,
     rest: rest,
     nedb: nedb,
+    request: request,
 };
 
 export default nodeLibs;

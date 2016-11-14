@@ -1,13 +1,15 @@
 import Bitmap = createjs.Bitmap;
 import Container = createjs.Container;
 import {PlayerDoc} from "../../../../model/PlayerInfo";
-import {loadImg} from "../../../utils/JsFunc";
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
+import {proxy} from "../../../utils/WebJsFunc";
+import {loadTexture} from "../../../utils/PixiEx";
 import Shape = createjs.Shape;
 import Text = createjs.Text;
 declare var $;
+declare var PIXI;
 
 export class RankView extends BasePanelView {
     $opView;
@@ -16,7 +18,7 @@ export class RankView extends BasePanelView {
         super(PanelId.onlinePanel);
         this.name = PanelId.rankPanel;
         this.$opView = $opView;
-        this.ctn = new createjs.Container();
+        this.ctn = new PIXI.Container();
         stage.addChild(this.ctn);
         this.stage = stage;
 
@@ -65,63 +67,73 @@ export class RankView extends BasePanelView {
     }
 
     static getPlayerItem(playerDoc: PlayerDoc, ftMap, rank12?) {
-        var ctn = new Container();
-        var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankPlayer.jpg');
-        ctn.addChild(itemBg);
-
-        var avtCtn = new Container();
-        ctn.addChild(avtCtn);
-        loadImg(playerDoc.avatar, (img)=> {
-            var avatar = new Bitmap(playerDoc.avatar);
+        var ctn = new PIXI.Container();
+        loadTexture($, proxy(playerDoc.avatar), (tex)=> {
+            var resources = PIXI.loader.resources;
+            var bg = new PIXI.Sprite(resources['itemBg'].texture);
+            console.log(bg.x, bg.y, bg.width, bg.height);
+            ctn.addChild(bg);
+            var avatar = new PIXI.Sprite(tex);
+            var bfWidth = avatar.width;
             avatar.y = 18;
-            // console.log('aw ', img.width);
-            avatar.scaleX = avatar.scaleY = 119 / img.height;
-            // console.log('aw ', img.width);
-            avatar.x = 18 + (130 - img.width * avatar.scaleX) / 2;
-            avtCtn.addChild(avatar);
-
-            var m = new Shape();
-            m.graphics.beginFill('#000').dr(0, 0, 130, 130);
-            m.x = m.y = 18;
-            avatar.mask = m;
+            avatar.scale.x = avatar.scale.y = 119 / avatar.height;
+            avatar.x = 18 + (130 - bfWidth * avatar.scale.x) / 2;
+            ctn.addChild(avatar);
+            //todo mask
         });
 
-        if (rank12) {
-            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
-            icon.x = -20;
-            icon.y = -30;
-            ctn.addChild(icon);
-        }
+        // ctn.addChild(avtCtn);
+        // loadImg(playerDoc.avatar, (img)=> {
+        //     var avatar = new Bitmap(playerDoc.avatar);
+        //     avatar.y = 18;
+        //     // console.log('aw ', img.width);
+        //     avatar.scaleX = avatar.scaleY = 119 / img.height;
+        //     // console.log('aw ', img.width);
+        //     avatar.x = 18 + (130 - img.width * avatar.scaleX) / 2;
+        //     avtCtn.addChild(avatar);
+        //
+        //     var m = new Shape();
+        //     m.graphics.beginFill('#000').dr(0, 0, 130, 130);
+        //     m.x = m.y = 18;
+        //     avatar.mask = m;
+        // });
 
-        var nameText = new Text(playerDoc.name, "bold 40px Arial", "#fff");
-        nameText.x = 160;
-        nameText.y = 40;
-        ctn.addChild(nameText);
-        var ftName;
-        if (playerDoc['ftName']) {
-            ftName = playerDoc['ftName'];
-        }
-        else {
-            var ftInfo = ftMap[playerDoc.ftId];
-            ftName = ftInfo ? ftInfo.name : '无';
-        }
-
-        var ftText = new Text(ftName, "22px Arial", "#fff");
-        ftText.x = 268;
-        ftText.y = 95;
-        ctn.addChild(ftText);
-
-        var curScoreText = new Text((playerDoc.curFtScore ? playerDoc.curFtScore : 0) + '', "22px Arial", "#fff");
-        curScoreText.textAlign = 'right';
-        curScoreText.x = 620;
-        curScoreText.y = 95;
-        ctn.addChild(curScoreText);
-
-        var totalScoreText = new Text((playerDoc.ftScore ? playerDoc.ftScore : 0) + '', "22px Arial", "#fff");
-        totalScoreText.textAlign = 'right';
-        totalScoreText.x = 780;
-        totalScoreText.y = 95;
-        ctn.addChild(totalScoreText);
+        // if (rank12) {
+        //     var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
+        //     icon.x = -20;
+        //     icon.y = -30;
+        //     ctn.addChild(icon);
+        // }
+        //
+        // var nameText = new Text(playerDoc.name, "bold 40px Arial", "#fff");
+        // nameText.x = 160;
+        // nameText.y = 40;
+        // ctn.addChild(nameText);
+        // var ftName;
+        // if (playerDoc['ftName']) {
+        //     ftName = playerDoc['ftName'];
+        // }
+        // else {
+        //     var ftInfo = ftMap[playerDoc.ftId];
+        //     ftName = ftInfo ? ftInfo.name : '无';
+        // }
+        //
+        // var ftText = new Text(ftName, "22px Arial", "#fff");
+        // ftText.x = 268;
+        // ftText.y = 95;
+        // ctn.addChild(ftText);
+        //
+        // var curScoreText = new Text((playerDoc.curFtScore ? playerDoc.curFtScore : 0) + '', "22px Arial", "#fff");
+        // curScoreText.textAlign = 'right';
+        // curScoreText.x = 620;
+        // curScoreText.y = 95;
+        // ctn.addChild(curScoreText);
+        //
+        // var totalScoreText = new Text((playerDoc.ftScore ? playerDoc.ftScore : 0) + '', "22px Arial", "#fff");
+        // totalScoreText.textAlign = 'right';
+        // totalScoreText.x = 780;
+        // totalScoreText.y = 95;
+        // ctn.addChild(totalScoreText);
 
         return ctn;
     };
@@ -137,7 +149,7 @@ export class RankView extends BasePanelView {
         ctn.addChild(logo);
 
         if (rank12) {
-            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png')
+            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
             icon.x = -20;
             icon.y = -30;
             ctn.addChild(icon);
@@ -169,25 +181,82 @@ export class RankView extends BasePanelView {
     }
 
     fadeInMixRank(param) {
-        this.ctn.removeAllChildren();
+        // $.get('http://127.0.0.1/proxy?url=http://w3.hoopchina.com.cn/0c/8d/c8/0c8dc864267d2e33ae4c591a7413d19f002.png', (res)=> {
+        //     console.log(res);
+        //     loadImg(res,(img)=>{
+        //         var base = new PIXI.BaseTexture(img);
+        //         var texture = new PIXI.Texture(base);
+        //         var avatar = new PIXI.Sprite(texture);
+        //         this.ctn.addChild(avatar);
+        //     })
+        // });
 
-        var bg = new Bitmap('/img/panel/stage1v1/ft/ftRankBg2.jpg');
-        this.ctn.addChild(bg);
 
+        // this.ctn.removeAllChildren();
+        var imgArr = [];
+        imgArr.push({name: 'bg', url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'});
+        imgArr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
+        // var imgArr2 = [];
+        // var imgArr3 = [];
+        // var imgArr4 = [];
+        // for (var i = 0; i < 5; i++) {
+        //     var filename = getUrlFilename(param.totalPlayerDocArr[i].avatar);
+        //     // var avtUrl = proxy(param.totalPlayerDocArr[i].avatar);
+        //     imgArr.push({name: param.totalPlayerDocArr[i].name, url: param.totalPlayerDocArr[i].avatar});
+        //     // imgArr.push({name: param.totalPlayerDocArr[i].name, url: "http://127.0.0.1/" + filename});
+        //     imgArr2.push(proxy(param.totalPlayerDocArr[i].avatar));
+        //     // imgArr4.push(param.totalPlayerDocArr[i].avatar);
+        //     // imgArr3.push("http://127.0.0.1/" + filename);
+        //     // imgArr.push({name: param.totalPlayerDocArr[i].name, url: "/img/panel/bracket/avt.png"});
+        // }
 
-        for (var i = 0; i < 5; i++) {
-            var curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-            curItem.x = 45;
-            curItem.y = 140 + i * 185;
-            this.ctn.addChild(curItem);
-
-            if (param.totalFtDocArr[i]) {
-                var totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
-                totalItem.x = 1005;
-                totalItem.y = curItem.y;
-                this.ctn.addChild(totalItem);
-            }
+        for (var i = 0; i < imgArr.length; i++) {
+            var obj = imgArr[i];
+            PIXI.loader.add(obj.name, obj.url, {crossOrigin: true});
         }
+
+        PIXI.loader.load((loader, resources)=> {
+            var bg = new PIXI.Sprite(resources.bg.texture);
+            this.ctn.addChild(bg);
+
+            for (var i = 0; i < 5; i++) {
+                var curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+                curItem.x = 45;
+                curItem.y = 140 + i * 185;
+                this.ctn.addChild(curItem);
+                // if (param.totalFtDocArr[i]) {
+                //     var totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
+                //     totalItem.x = 1005;
+                //     totalItem.y = curItem.y;
+                //     this.ctn.addChild(totalItem);
+                // }
+            }
+        });
+
+        // PIXI.loader.add('bg', '/img/panel/stage1v1/ft/ftRankBg2.jpg').load((loader, resources)=> {
+        //     var bg = new PIXI.Sprite(resources.bg.texture);
+        //     this.ctn.addChild(bg);
+        //
+        //
+        // });
+        // PIXI.loader.add('itemBg', '/img/panel/stage1v1/ft/ftRankPlayer.jpg')
+        //     .load((loader, resources)=> {
+        //         for (var i = 0; i < 5; i++) {
+        //             var curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+        //             curItem.x = 45;
+        //             curItem.y = 140 + i * 185;
+        //             this.ctn.addChild(curItem);
+        //
+        //             // if (param.totalFtDocArr[i]) {
+        //             //     var totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
+        //             //     totalItem.x = 1005;
+        //             //     totalItem.y = curItem.y;
+        //             //     this.ctn.addChild(totalItem);
+        //             // }
+        //         }
+        //     });
+
+
     }
 
 }

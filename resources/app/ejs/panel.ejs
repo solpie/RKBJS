@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel</title>
+    <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            margin: 0;
+            background-color: transparent;
+        }
+
+        #op {
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="panel">
+    <canvas id="stage"></canvas>
+    <div id="op">
+        <router-view></router-view>
+    </div>
+</div>
+<script type="text/javascript">
+    var hupuWsUrl = '<%=hupuWsUrl%>';
+    console.log('hupuWsUrl', hupuWsUrl);
+</script>
+<script src="/view/panel.js"></script>
+</body>
+</html>

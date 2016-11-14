@@ -7,22 +7,19 @@ import {dynamicLoading} from "../../utils/WebJsFunc";
 var rankView: RankView;
 var bracketView: Bracket;
 var canvasStage;
-export var StageOnlineView = {
+class StageOnlineView {
+    template = require('./stage-online.html')
+
+}
+export var stageOnlineView = {
     template: require('./stage-online.html'),
-    // props: {
-    //     gameId: 1,
-    // },
     bracket: null,
     basePanelArr: null,
     components: {},
     props: {
-        matchArr: {},
         gameId: null,
         isOp: null,
         stage: ""
-    },
-    watch: {
-        matchArr: 'onMatchArrChanged'
     },
     created() {
         this.basePanelArr = [];
@@ -30,10 +27,10 @@ export var StageOnlineView = {
         if (this.isOp) {
             dynamicLoading.css('/css/bulma.min.css')
         }
-        console.log('StageOnlineView created!');
+        console.log('stageOnlineView created!');
     },
     mounted() {
-        canvasStage = BasePanelView.initStage();
+        canvasStage = BasePanelView.initPixi();
         // this.bracket = new BracketView();
         // this.bracket.gameId = this.$route.params.game_id;
         this.gameId = this.$route.params.game_id;
@@ -42,7 +39,7 @@ export var StageOnlineView = {
             rankView.reqRank(this.gameId);
             this.basePanelArr.push(rankView);
         }
-        console.log('StageOnlineView mounted!');
+        console.log('stageOnlineView mounted!');
     },
     methods: {
         showOnly(bpName: string){

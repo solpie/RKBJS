@@ -3,11 +3,15 @@ import {ServerConf} from "./Env";
 import {panelRouter} from "./router/PanelRouter";
 import {RkbModel} from "./model/RkbModel";
 declare var ejs;
+declare var request;
+var fs1 = require('fs');
+var path = require('path');
+var os = require('os');
+// var base64 = require('node-base64-image');
 /**
  * WebServer
  */
 export default class WebServer {
-
     serverConf: any;
 //
     constructor(callback?: any) {
@@ -49,11 +53,10 @@ export default class WebServer {
         var app = express();
 
         // template engine setup
-        app.set('views', "./resources/app/view");
+        app.set('views', "./resources/app/ejs");
 
         app.engine('ejs', ejs.renderFile);
         app.set('view engine', 'ejs');
-
 
         ///
         app.use(express.static("./resources/app/static"));//
@@ -94,11 +97,34 @@ export default class WebServer {
 
         app.get('/get', function (req: any, res: any) {
             var url = req.query.url;
+            //todo: no rest
             rest(url).then((response)=> {
                 res.send(response)
             });
         });
 
+        app.get('/proxy', function (req, res) {
+            // var url = req.query.url;
+            // request(url).pipe(res);
+
+            // var url = req.query.url;
+            // var filename = getUrlFilename(url);
+            // request(url).pipe(fs1.createWriteStream('./cache/' + filename).on("close", ()=> {
+            //     console.log("cache img:", filename);
+            //     res.sendFile(path.resolve('./cache/' + filename))
+            // }));
+
+            // request.get(url).pipe(request.put('http://127.0.0.1/'+filename))
+
+            var url = req.query.url;
+            // request.defaults({encoding: null});
+            request.get({url: url, encoding: null}, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data = "data:image/png;base64," + body.toString('base64');
+                    res.send(data);
+                }
+            });
+        });
 
         app.use('/admin', adminRouter);
         app.use('/panel', panelRouter);
