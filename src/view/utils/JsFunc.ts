@@ -78,20 +78,40 @@ export function loadRes($, pathArr, callback) {
 
 export function loadImgArr(pathArr, callback) {
     var count = pathArr.length;
-    var imgArr = [];
+    var imgCollection;
+    var isArr;
 
     function onLoadImg() {
         count--;
         if (count === 0)
-            callback(imgArr);
+            callback(imgCollection);
     }
 
+    if (pathArr[0].length && pathArr[0].hasOwnProperty('name') && pathArr[0].hasOwnProperty('url')) {
+        isArr = false;
+        imgCollection = {};
+    }
+    else {
+        isArr = true;
+        imgCollection = [];
+    }
+
+    var img;
+    var url;
     for (var i = 0; i < pathArr.length; i++) {
         var p = pathArr[i];
-        var img = new Image();
-        imgArr.push(img);
+        if (isArr) {
+            img = new Image();
+            imgCollection[p.name] = img;
+            url = p.url;
+        }
+        else {
+            img = new Image();
+            imgCollection.push(img);
+            url = p;
+        }
         img.onload = onLoadImg;
-        img.src = p;
+        img.src = url;
     }
 }
 export function combineArr(arr, num) {

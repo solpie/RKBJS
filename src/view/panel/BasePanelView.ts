@@ -74,15 +74,15 @@ export class BasePanelView {
     }
 
     show() {
-        var ctn = this.ctn;
-        createjs.Tween.get(ctn).to({alpha: 1}, 100);
+        // var ctn = this.ctn;
+        // createjs.Tween.get(ctn).to({alpha: 1}, 100);
     }
 
     hide() {
-        var ctn = this.ctn;
-        createjs.Tween.get(ctn).to({alpha: 0}, 100).call(function () {
-            ctn.alpha = 1;
-            ctn.removeAllChildren();
-        });
+        // var ctn = this.ctn;
+        // createjs.Tween.get(ctn).to({alpha: 0}, 100).call(function () {
+        //     ctn.alpha = 1;
+        //     ctn.removeAllChildren();
+        // });
     }
 }
