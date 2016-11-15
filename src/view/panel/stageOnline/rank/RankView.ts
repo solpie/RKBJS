@@ -4,13 +4,12 @@ import {PlayerDoc} from "../../../../model/PlayerInfo";
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
-import {proxy} from "../../../utils/WebJsFunc";
-import {loadTexture, imgToTexture, newBitmap} from "../../../utils/PixiEx";
+import {imgToTexture, newBitmap} from "../../../utils/PixiEx";
 import {loadImgArr} from "../../../utils/JsFunc";
 import Shape = createjs.Shape;
 import Text = createjs.Text;
-declare var $;
-declare var PIXI;
+declare let $;
+declare let PIXI;
 
 export class RankView extends BasePanelView {
     $opView;
@@ -27,18 +26,18 @@ export class RankView extends BasePanelView {
     }
 
     reqRank(gameId) {
-        var game_id = gameId;
+        let game_id = gameId;
         console.log('get /api/passerbyking/game/players/', game_id);
-        var api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
+        let api1 = 'http://api.liangle.com/api/passerbyking/game/rank/' + game_id;
         // api1 = 'http://api.liangle.com/api/passerbyking/game/list'
-        $.get('http://' + window.location.host + '/get?url=' + api1, (respone)=> {
-            var data = JSON.parse(respone.entity);
-            var mixRankData = data.data;
+        $.get('http://' + window.location.host + '/get?url=' + api1, (respone) => {
+            let data = JSON.parse(respone.entity);
+            let mixRankData = data.data;
 
-            var rankPlayerDocArr = [];
-            for (var i = 0; i < mixRankData.player_rank.length; i++) {
-                var player_rank = mixRankData.player_rank[i];
-                var rankPlayerDoc = new PlayerDoc();
+            let rankPlayerDocArr = [];
+            for (let i = 0; i < mixRankData.player_rank.length; i++) {
+                let player_rank = mixRankData.player_rank[i];
+                let rankPlayerDoc = new PlayerDoc();
                 rankPlayerDoc.name = player_rank.name;
                 rankPlayerDoc.avatar = player_rank.avatar;
                 rankPlayerDoc['ftName'] = player_rank.group;
@@ -47,10 +46,10 @@ export class RankView extends BasePanelView {
                 rankPlayerDocArr.push(rankPlayerDoc);
             }
 
-            var rankFtDocArr = [];
-            for (var j = 0; j < mixRankData.group_rank.length; j++) {
-                var group_rank = mixRankData.group_rank[j];
-                var ftDoc = new FTInfo();
+            let rankFtDocArr = [];
+            for (let j = 0; j < mixRankData.group_rank.length; j++) {
+                let group_rank = mixRankData.group_rank[j];
+                let ftDoc = new FTInfo();
                 ftDoc.name = group_rank.name;
                 ftDoc.fullName = group_rank.full_name;
                 ftDoc.logo = group_rank.logo;
@@ -68,96 +67,98 @@ export class RankView extends BasePanelView {
     }
 
     static getPlayerItem(playerDoc: PlayerDoc, ftMap, rank12?) {
-        var ctn = new PIXI.Container();
-        loadTexture($, proxy(playerDoc.avatar), (tex)=> {
-            var avatar = new PIXI.Sprite(tex);
-            var bfWidth = avatar.width;
+        let ctn = new PIXI.Container();
+        // loadTexture($, proxy(playerDoc.avatar), (tex) => {
+        let avatar = newBitmap(playerDoc.avatar, true, () => {
+            let bfWidth = avatar.width;
             avatar.y = 18;
             avatar.scale.x = avatar.scale.y = 119 / avatar.height;
             avatar.x = 18 + (130 - bfWidth * avatar.scale.x) / 2;
-            ctn.addChild(avatar);
-
-            var m = new PIXI.Graphics();
-            m.beginFill(0xff0000);
-            m.drawRect(0, 0, 130, 130);
-            m.x = m.y = 18;
-            ctn.addChild(m);
-            avatar.mask = m;
-
-            if (rank12) {
-                var icon = newBitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
-                icon.x = -20;
-                icon.y = -30;
-                ctn.addChild(icon);
-            }
-
-            var style = {
-                fontFamily: 'Arial',
-                fontSize: '40px',
-                fontStyle: 'normal',
-                fontWeight: 'bold',
-                fill: '#F7EDCA',
-                stroke: '#4a1850',
-                strokeThickness: 5,
-                dropShadow: false,
-                dropShadowColor: '#000000',
-                dropShadowAngle: Math.PI / 6,
-                dropShadowDistance: 6,
-                wordWrap: true,
-                wordWrapWidth: 500
-            };
-
-            var nameText = new PIXI.Text(playerDoc.name, style);
-            nameText.x = 160;
-            nameText.y = 30;
-            ctn.addChild(nameText);
-
-
-            var ftName;
-            if (playerDoc['ftName']) {
-                ftName = playerDoc['ftName'];
-            }
-            else {
-                var ftInfo = ftMap[playerDoc.ftId];
-                ftName = ftInfo ? ftInfo.name : '无';
-            }
-            style.fontSize = '22px';
-            style.dropShadow = true;
-            style.fontStyle = 'italic';
-
-            // var ftText = new PIXI.Text(ftName, {
-            //     font: 'bold italic 22px Arvo',
-            //     fill: '#3e1707',
-            //     stroke: '#a4410e',
-            //     strokeThickness: 1
-            // });
-            var ftText = new PIXI.Text(ftName, style);
-            ftText.x = 268;
-            ftText.y = 90;
-            ctn.addChild(ftText);
-
-
-            var curScoreText = new PIXI.Text(String(playerDoc.curFtScore ? playerDoc.curFtScore : 0), {
-                align: 'right',
-                fill: '#ffffff'
-            });
-            curScoreText.style.font.fontsize(22);
-            curScoreText.style.align = "right";
-            curScoreText.x = 620;
-            curScoreText.y = 90;
-            ctn.addChild(curScoreText);
-
-            var totalScoreText = new PIXI.Text(String(playerDoc.ftScore ? playerDoc.ftScore : 0), {
-                align: 'right',
-                fill: '#ffffff'
-            });
-            totalScoreText.style.font.fontsize(22);
-            totalScoreText.style.align = "right";
-            totalScoreText.x = 770;
-            totalScoreText.y = 90;
-            ctn.addChild(totalScoreText);
-
         });
+
+        let m = new PIXI.Graphics();
+        m.beginFill(0xff0000);
+        m.drawRect(0, 0, 130, 130);
+        m.x = m.y = 18;
+        ctn.addChild(m);
+        avatar.mask = m;
+        ctn.addChild(avatar);
+
+
+        if (rank12) {
+            let icon = newBitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
+            icon.x = -20;
+            icon.y = -30;
+            ctn.addChild(icon);
+        }
+
+        let style = {
+            fontFamily: 'Arial',
+            fontSize: '40px',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            fill: '#F7EDCA',
+            stroke: '#4a1850',
+            strokeThickness: 5,
+            dropShadow: false,
+            dropShadowColor: '#000000',
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 6,
+            wordWrap: true,
+            wordWrapWidth: 500
+        };
+
+        let nameText = new PIXI.Text(playerDoc.name, style);
+        nameText.x = 160;
+        nameText.y = 30;
+        ctn.addChild(nameText);
+
+
+        let ftName;
+        if (playerDoc['ftName']) {
+            ftName = playerDoc['ftName'];
+        }
+        else {
+            let ftInfo = ftMap[playerDoc.ftId];
+            ftName = ftInfo ? ftInfo.name : '无';
+        }
+        style.fontSize = '22px';
+        style.dropShadow = true;
+        style.fontStyle = 'italic';
+
+        // var ftText = new PIXI.Text(ftName, {
+        //     font: 'bold italic 22px Arvo',
+        //     fill: '#3e1707',
+        //     stroke: '#a4410e',
+        //     strokeThickness: 1
+        // });
+        let ftText = new PIXI.Text(ftName, style);
+        ftText.x = 268;
+        ftText.y = 90;
+        ctn.addChild(ftText);
+
+
+        let curScoreText = new PIXI.Text(String(playerDoc.curFtScore ? playerDoc.curFtScore : 0), {
+            align: 'right',
+            fill: '#ffffff'
+        });
+        curScoreText.style.font.fontsize(22);
+        curScoreText.style.align = "right";
+        curScoreText.x = 620;
+        curScoreText.y = 90;
+        ctn.addChild(curScoreText);
+
+        let totalScoreText = new PIXI.Text(String(playerDoc.ftScore ? playerDoc.ftScore : 0), {
+            align: 'right',
+            fill: '#ffffff'
+        });
+        totalScoreText.style.font.fontsize(22);
+        totalScoreText.style.align = "right";
+        totalScoreText.x = 770;
+        totalScoreText.y = 90;
+        ctn.addChild(totalScoreText);
+
+        // });
         return ctn;
     };
 
@@ -170,39 +171,44 @@ export class RankView extends BasePanelView {
     }
 
     static getFtItem(ftDoc, rank12?) {
-        var ctn = new Container();
-        var itemBg = new Bitmap('/img/panel/stage1v1/ft/ftRankTeam.jpg');
+        let ctn = new PIXI.Container();
+        let itemBg = newBitmap('/img/panel/stage1v1/ft/ftRankTeam.jpg');
         ctn.addChild(itemBg);
 
-        var logo = new Bitmap(ftDoc.logo);
+        let logo = newBitmap(ftDoc.logo, true);
         logo.x = 18;
         logo.y = 18;
         ctn.addChild(logo);
 
         if (rank12) {
-            var icon = new Bitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
+            let icon = newBitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
             icon.x = -20;
             icon.y = -30;
             ctn.addChild(icon);
         }
-
-        var nameText = new Text(ftDoc.name, "bold 40px Arial", "#fff");
+        let s = {
+            font: 'bold 40px Arial',
+            align: 'right',
+            fill: '#ffffff'
+        };
+        let nameText = new PIXI.Text(ftDoc.name, s);
         nameText.x = 160;
         nameText.y = 40;
         ctn.addChild(nameText);
 
-        var ftIntroText = new Text(ftDoc.fullName + '', "22px Arial", "#fff");
+        s.font = 'bold 22px Arial';
+        let ftIntroText = new PIXI.Text(ftDoc.fullName + '', s);
         ftIntroText.x = 160;
         ftIntroText.y = 90;
         ctn.addChild(ftIntroText);
 
-        var curScoreText = new Text((ftDoc.curScore ? ftDoc.curScore : 0) + '', "22px Arial", "#fff");
+        let curScoreText = new PIXI.Text((ftDoc.curScore ? ftDoc.curScore : 0) + '', s);
         curScoreText.textAlign = 'right';
         curScoreText.x = 620;
         curScoreText.y = 95;
         ctn.addChild(curScoreText);
 
-        var totalScoreText = new Text((ftDoc.score ? ftDoc.score : 0) + '', "22px Arial", "#fff");
+        let totalScoreText = new PIXI.Text((ftDoc.score ? ftDoc.score : 0) + '', s);
         totalScoreText.textAlign = 'right';
         totalScoreText.x = 780;
         totalScoreText.y = 95;
@@ -213,39 +219,40 @@ export class RankView extends BasePanelView {
 
     fadeInMixRank(param) {
         // this.ctn.removeAllChildren();
-        var imgArr = [];
+
+        let imgArr = [];
         imgArr.push({name: 'bg', url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'});
         imgArr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
 
-        loadImgArr(imgArr, (imgCol)=> {
-            var bg = new PIXI.Sprite(imgToTexture(imgCol['bg']));
+        loadImgArr(imgArr, (imgCol) => {
+            let bg = new PIXI.Sprite(imgToTexture(imgCol['bg']));
             this.ctn.addChild(bg);
 
-            for (var i = 0; i < 5; i++) {
-                var curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+            for (let i = 0; i < 5; i++) {
+                let curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
                 curItem.x = 45;
                 curItem.y = 140 + i * 185;
-                var itemBg = new PIXI.Sprite(imgToTexture(imgCol['itemBg']));
+                let itemBg = new PIXI.Sprite(imgToTexture(imgCol['itemBg']));
                 curItem.addChildAt(itemBg, 0);
                 this.ctn.addChild(curItem);
-                // if (param.totalFtDocArr[i]) {
-                //     var totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
-                //     totalItem.x = 1005;
-                //     totalItem.y = curItem.y;
-                //     this.ctn.addChild(totalItem);
-                // }
+                if (param.totalFtDocArr[i]) {
+                    let totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
+                    totalItem.x = 1005;
+                    totalItem.y = curItem.y;
+                    this.ctn.addChild(totalItem);
+                }
             }
         });
 
-
-        for (var i = 0; i < imgArr.length; i++) {
-            var obj = imgArr[i];
-            PIXI.loader.add(obj.name, obj.url, {crossOrigin: true});
-        }
-
-        PIXI.loader.load((loader, resources)=> {
-
-        });
+        //
+        // for (let i = 0; i < imgArr.length; i++) {
+        //     let obj = imgArr[i];
+        //     PIXI.loader.add(obj.name, obj.url, {crossOrigin: true});
+        // }
+        //
+        // PIXI.loader.load((loader, resources)=> {
+        //
+        // });
 
         // PIXI.loader.add('bg', '/img/panel/stage1v1/ft/ftRankBg2.jpg').load((loader, resources)=> {
         //     var bg = new PIXI.Sprite(resources.bg.texture);

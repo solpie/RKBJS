@@ -51,29 +51,10 @@ export function arrUniqueFilter(el, i, a): boolean {
 
 export function loadImg(path1, callback) {
     var img = new Image();
-    img.onload = ()=> {
+    img.onload = () => {
         callback(img);
     };
     img.src = path1;
-}
-
-export function loadRes($, pathArr, callback) {
-    var count = pathArr.length;
-    var imgArr = [];
-
-    function onLoadImg(res) {
-        count--;
-        var img = new Image();
-        img.src = res;
-        imgArr.push(img);
-        if (count === 0)
-            callback(imgArr);
-    }
-
-    for (var i = 0; i < pathArr.length; i++) {
-        var p = pathArr[i];
-        $.get(p, onLoadImg)
-    }
 }
 
 export function loadImgArr(pathArr, callback) {
@@ -171,7 +152,7 @@ export function cnWrap(str, len, start = 0) {
     str_out += str_cut;
     return str_out;
 }
-export var getUrlFilename = (url)=> {
+export var getUrlFilename = (url) => {
     var a = url.split('/');
     var filename = a[a.length - 1];
     return filename;

@@ -4,14 +4,14 @@ import {Bracket} from "./bracket/Bracket";
 import {dynamicLoading} from "../../utils/WebJsFunc";
 
 
-var rankView: RankView;
-var bracketView: Bracket;
-var canvasStage;
+let rankView: RankView;
+let bracketView: Bracket;
+let canvasStage;
 class StageOnlineView {
     template = require('./stage-online.html')
 
 }
-export var stageOnlineView = {
+export let stageOnlineView = {
     template: require('./stage-online.html'),
     bracket: null,
     basePanelArr: null,
@@ -43,9 +43,9 @@ export var stageOnlineView = {
     },
     methods: {
         showOnly(bpName: string){
-            var showBp;
-            for (var i = 0; i < this.basePanelArr.length; i++) {
-                var bp: BasePanelView = this.basePanelArr[i];
+            let showBp;
+            for (let i = 0; i < this.basePanelArr.length; i++) {
+                let bp: BasePanelView = this.basePanelArr[i];
                 if (bpName != bp.name)
                     bp.hide();
                 else

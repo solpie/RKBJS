@@ -1,4 +1,4 @@
-var groupPosMap = {
+let groupPosMap = {
     "1": {x: 255, y: 95},
     "2": {x: 255, y: 95 + 145},
     "3": {x: 255, y: 95 + 145 * 2},

@@ -51,7 +51,7 @@
 	var RkbModel_1 = __webpack_require__(5);
 	var fs1 = __webpack_require__(11);
 	var path = __webpack_require__(3);
-	var os = __webpack_require__(17);
+	var os = __webpack_require__(12);
 	var WebServer = (function () {
 	    function WebServer(callback) {
 	        this.initEnv(callback);
@@ -61,7 +61,7 @@
 	    };
 	    WebServer.prototype.initEnv = function (callback) {
 	        var _this = this;
-	        var process = __webpack_require__(12);
+	        var process = __webpack_require__(13);
 	        Env_1.ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
 	        console.log(process.execPath, Env_1.ServerConf.isDev);
 	        var fs = __webpack_require__(11);
@@ -123,7 +123,7 @@
 	        });
 	        app.use('/admin', AdminRouter_1.adminRouter);
 	        app.use('/panel', PanelRouter_1.panelRouter);
-	        var server = __webpack_require__(13).createServer(app);
+	        var server = __webpack_require__(14).createServer(app);
 	        server.listen(Env_1.ServerConf.port, function () {
 	            _this.initSocketIO(server);
 	            console.log("server on:", Env_1.ServerConf.port);
@@ -1144,22 +1144,19 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = require("process");
+	module.exports = require("os");
 
 /***/ },
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = require("http");
+	module.exports = require("process");
 
 /***/ },
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 14 */
 /***/ function(module, exports) {
 
-	module.exports = require("os");
+	module.exports = require("http");
 
 /***/ }
 /******/ ]);

@@ -12,8 +12,8 @@ import Tween = createjs.Tween;
 /**
  * Created by toramisu on 2016/10/24.
  */
-declare var io;
-declare var hupuWsUrl;
+declare let io;
+declare let hupuWsUrl;
 export class StageRKBView extends BasePanelView {
     $opView: RKBView;
     scorePanel;
@@ -45,14 +45,14 @@ export class StageRKBView extends BasePanelView {
 
         // $opView.test = "test";
         console.log('StageRKBView router', this.$opView.$route.params, this.$opView.$route.query);
-        var op = this.$opView.$route.params.op;
+        let op = this.$opView.$route.params.op;
         // if (op == "op")
         this.initOp();
         this.initAuto();
     }
 
     initOp() {
-        var localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
+        let localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
         localWs.on('connect', function (msg) {
             console.log('connect', window.location.host);
             localWs.emit("opUrl", {opUrl: window.location.host});

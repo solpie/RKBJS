@@ -45,12 +45,12 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(__dirname) {var _a = __webpack_require__(14), app = _a.app, BrowserWindow = _a.BrowserWindow, ipcMain = _a.ipcMain;
+	/* WEBPACK VAR INJECTION */(function(__dirname) {var _a = __webpack_require__(15), app = _a.app, BrowserWindow = _a.BrowserWindow, ipcMain = _a.ipcMain;
 	var win;
 	function onReady() {
 	    openWin();
 	}
-	var spawn = __webpack_require__(15).spawn;
+	var spawn = __webpack_require__(16).spawn;
 	var watchView;
 	var watchServer;
 	var isWatch = false;
@@ -128,14 +128,14 @@
 
 /***/ },
 
-/***/ 14:
+/***/ 15:
 /***/ function(module, exports) {
 
 	module.exports = require("electron");
 
 /***/ },
 
-/***/ 15:
+/***/ 16:
 /***/ function(module, exports) {
 
 	module.exports = require("child_process");
