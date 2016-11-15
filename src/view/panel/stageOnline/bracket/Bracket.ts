@@ -63,8 +63,15 @@ export class Bracket extends BasePanelView {
                 label.y = group2.y + 8 + i * 48;
                 group2.labels.push(label);
                 ctn.addChild(label);
-                ctn.addChild(group2.scores[i]);
 
+                let msk = new PIXI.Graphics();
+                msk.y = label.y;
+                msk.x = label.x;
+                msk.beginFill(0x000000).drawRect(0, 0, 135, 50);
+                ctn.addChild(msk);
+                label.mask = msk;
+
+                ctn.addChild(group2.scores[i]);
                 group2.playerArr = [new PlayerSvg, new PlayerSvg]
             }
             if (gameIdx > 4) {
@@ -147,6 +154,7 @@ export class Bracket extends BasePanelView {
     }
 
     onBracketData(res) {
+        let s = {font: '25px', fill: '#e1e1e1', align: 'right'};
         for (let gameIdx in res.data) {
             let dataObj = res.data[gameIdx];
             let group1 = groupPosMap[gameIdx];
@@ -156,6 +164,12 @@ export class Bracket extends BasePanelView {
                     group1.playerArr[0].isWin = true;
                 else
                     group1.playerArr[1].isWin = true;
+            }
+            if (dataObj.left.name) {
+                (group1.labels[0] as PIXI.Text).style = s;
+            }
+            if (dataObj.right.name) {
+                (group1.labels[1] as PIXI.Text).style = s;
             }
             let hints = group1.hints;
             group1.labels[0].text = dataObj.left.name || (hints ? hints[0] : '');
