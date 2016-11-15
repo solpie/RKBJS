@@ -4,7 +4,7 @@ import {PlayerDoc} from "../../../../model/PlayerInfo";
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
-import {imgToTexture, newBitmap} from "../../../utils/PixiEx";
+import {imgToTex, newBitmap} from "../../../utils/PixiEx";
 import {loadImgArr} from "../../../utils/JsFunc";
 import Shape = createjs.Shape;
 import Text = createjs.Text;
@@ -69,11 +69,13 @@ export class RankView extends BasePanelView {
     static getPlayerItem(playerDoc: PlayerDoc, ftMap, rank12?) {
         let ctn = new PIXI.Container();
         // loadTexture($, proxy(playerDoc.avatar), (tex) => {
-        let avatar = newBitmap(playerDoc.avatar, true, () => {
-            let bfWidth = avatar.width;
-            avatar.y = 18;
-            avatar.scale.x = avatar.scale.y = 119 / avatar.height;
-            avatar.x = 18 + (130 - bfWidth * avatar.scale.x) / 2;
+        let avatar = newBitmap({
+            url: playerDoc.avatar, isCrossOrigin: true, callback: () => {
+                let bfWidth = avatar.width;
+                avatar.y = 18;
+                avatar.scale.x = avatar.scale.y = 119 / avatar.height;
+                avatar.x = 18 + (130 - bfWidth * avatar.scale.x) / 2;
+            }
         });
 
         let m = new PIXI.Graphics();
@@ -86,7 +88,7 @@ export class RankView extends BasePanelView {
 
 
         if (rank12) {
-            let icon = newBitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
+            let icon = newBitmap({url: '/img/panel/stage1v1/ft/rank' + rank12 + '.png'});
             icon.x = -20;
             icon.y = -30;
             ctn.addChild(icon);
@@ -172,16 +174,16 @@ export class RankView extends BasePanelView {
 
     static getFtItem(ftDoc, rank12?) {
         let ctn = new PIXI.Container();
-        let itemBg = newBitmap('/img/panel/stage1v1/ft/ftRankTeam.jpg');
+        let itemBg = newBitmap({url: '/img/panel/stage1v1/ft/ftRankTeam.jpg'});
         ctn.addChild(itemBg);
 
-        let logo = newBitmap(ftDoc.logo, true);
+        let logo = newBitmap({url: ftDoc.logo, isCrossOrigin: true});
         logo.x = 18;
         logo.y = 18;
         ctn.addChild(logo);
 
         if (rank12) {
-            let icon = newBitmap('/img/panel/stage1v1/ft/rank' + rank12 + '.png');
+            let icon = newBitmap({url: '/img/panel/stage1v1/ft/rank' + rank12 + '.png'});
             icon.x = -20;
             icon.y = -30;
             ctn.addChild(icon);
@@ -219,20 +221,20 @@ export class RankView extends BasePanelView {
 
     fadeInMixRank(param) {
         // this.ctn.removeAllChildren();
-
         let imgArr = [];
         imgArr.push({name: 'bg', url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'});
         imgArr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
 
         loadImgArr(imgArr, (imgCol) => {
-            let bg = new PIXI.Sprite(imgToTexture(imgCol['bg']));
+            let bg = new PIXI.Sprite(imgToTex(imgCol['bg']));
+            bg.alpha = 0.5;
             this.ctn.addChild(bg);
 
             for (let i = 0; i < 5; i++) {
                 let curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
                 curItem.x = 45;
                 curItem.y = 140 + i * 185;
-                let itemBg = new PIXI.Sprite(imgToTexture(imgCol['itemBg']));
+                let itemBg = new PIXI.Sprite(imgToTex(imgCol['itemBg']));
                 curItem.addChildAt(itemBg, 0);
                 this.ctn.addChild(curItem);
                 if (param.totalFtDocArr[i]) {
@@ -243,41 +245,6 @@ export class RankView extends BasePanelView {
                 }
             }
         });
-
-        //
-        // for (let i = 0; i < imgArr.length; i++) {
-        //     let obj = imgArr[i];
-        //     PIXI.loader.add(obj.name, obj.url, {crossOrigin: true});
-        // }
-        //
-        // PIXI.loader.load((loader, resources)=> {
-        //
-        // });
-
-        // PIXI.loader.add('bg', '/img/panel/stage1v1/ft/ftRankBg2.jpg').load((loader, resources)=> {
-        //     var bg = new PIXI.Sprite(resources.bg.texture);
-        //     this.ctn.addChild(bg);
-        //
-        //
-        // });
-        // PIXI.loader.add('itemBg', '/img/panel/stage1v1/ft/ftRankPlayer.jpg')
-        //     .load((loader, resources)=> {
-        //         for (var i = 0; i < 5; i++) {
-        //             var curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-        //             curItem.x = 45;
-        //             curItem.y = 140 + i * 185;
-        //             this.ctn.addChild(curItem);
-        //
-        //             // if (param.totalFtDocArr[i]) {
-        //             //     var totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
-        //             //     totalItem.x = 1005;
-        //             //     totalItem.y = curItem.y;
-        //             //     this.ctn.addChild(totalItem);
-        //             // }
-        //         }
-        //     });
-
-
     }
 
 }

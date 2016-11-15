@@ -21,10 +21,11 @@ export class BasePanelView {
     }
 
     static initPixi() {
-        var renderer = new PIXI.autoDetectRenderer(ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT,
+        let renderer = new PIXI.autoDetectRenderer(ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT,
             {antialias: false, transparent: true, resolution: 1});
         document.body.insertBefore(renderer.view, document.getElementById("panel"));
         renderer.stage = new PIXI.Container();
+        renderer.backgroundColor = 0x00000000;
         //Loop this function 60 times per second
         renderer.renderStage = ()=> {
             requestAnimationFrame(renderer.renderStage);

@@ -4,6 +4,7 @@ require(`script!D:/projects/RKBJS/clientLibs/createjs/tweenjs.min.js`);
 
 //http://www.pixijs.com/
 require(`script!D:/projects/RKBJS/clientLibs/pixi.min.js`);
+require(`script!D:/projects/RKBJS/clientLibs/TweenLite.min.js`);
 
 require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
 require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);

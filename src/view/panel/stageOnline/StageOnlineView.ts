@@ -34,12 +34,19 @@ export let stageOnlineView = {
         // this.bracket = new BracketView();
         // this.bracket.gameId = this.$route.params.game_id;
         this.gameId = this.$route.params.game_id;
-        if (!rankView) {
-            rankView = new RankView(this, canvasStage);
-            rankView.reqRank(this.gameId);
-            this.basePanelArr.push(rankView);
+        if (this.$route.query['panel'] && this.$route.query['panel'] == "bracket") {
+            //test
+            this.onClkBracket();
         }
-        console.log('stageOnlineView mounted!');
+        else {
+            if (!rankView) {
+                rankView = new RankView(this, canvasStage);
+                rankView.reqRank(this.gameId);
+                this.basePanelArr.push(rankView);
+            }
+            console.log('stageOnlineView mounted!');
+        }
+
     },
     methods: {
         showOnly(bpName: string){

@@ -16,7 +16,17 @@ export function blink(target, time = 80, loop = false) {
         .to({alpha: 0}, blink)
         .to({alpha: 1}, blink);
 }
-
+//time sec
+export function blink2(target, time = 0.008, loop = false) {
+    function to1(a) {
+        if (target.visible)
+            TweenLite.to(target, time, {alpha: a})
+                .eventCallback('onComplete', () => {
+                    to1(a ? 0 : 1);
+                })
+    }
+    to1(1);
+}
 
 export function fadeOutCtn(ctn) {
     console.log(this, "show fade Out WinPanel");

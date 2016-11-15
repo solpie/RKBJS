@@ -1,7 +1,7 @@
 //Array.sort(ascendingProp('prop'))
 //升序
 // import {escape} from "querystring";
-declare var escape;
+declare let escape;
 export function ascendingProp(prop) {
     return function (a, b) {
         return a[prop] - b[prop];
@@ -14,8 +14,8 @@ export function descendingProp(prop) {
     }
 }
 export function mapToSortArray(map, prop, sortFunc) {
-    var arr = [];
-    for (var k in map) {
+    let arr = [];
+    for (let k in map) {
         arr.push(map[k]);
     }
     arr.sort(sortFunc(prop));
@@ -24,8 +24,8 @@ export function mapToSortArray(map, prop, sortFunc) {
 //转换唯一数组
 
 export function mapToArr(map, clone?) {
-    var a = [];
-    for (var k in map) {
+    let a = [];
+    for (let k in map) {
         a.push(map[k])
     }
     if (clone)
@@ -34,9 +34,9 @@ export function mapToArr(map, clone?) {
 }
 //数组相同元素个数
 export function arrCountSame(arrA: Array<any>, arrB: Array<any>) {
-    var n = 0;
-    for (var i = 0; i < arrB.length; i++) {
-        var obj = arrB[i];
+    let n = 0;
+    for (let i = 0; i < arrB.length; i++) {
+        let obj = arrB[i];
         if (arrA.indexOf(obj) > -1) {
             n++;
         }
@@ -50,7 +50,7 @@ export function arrUniqueFilter(el, i, a): boolean {
 
 
 export function loadImg(path1, callback) {
-    var img = new Image();
+    let img = new Image();
     img.onload = () => {
         callback(img);
     };
@@ -58,9 +58,9 @@ export function loadImg(path1, callback) {
 }
 
 export function loadImgArr(pathArr, callback) {
-    var count = pathArr.length;
-    var imgCollection;
-    var isArr;
+    let count = pathArr.length;
+    let imgCollection;
+    let isArr;
 
     function onLoadImg() {
         count--;
@@ -77,10 +77,10 @@ export function loadImgArr(pathArr, callback) {
         imgCollection = [];
     }
 
-    var img;
-    var url;
-    for (var i = 0; i < pathArr.length; i++) {
-        var p = pathArr[i];
+    let img;
+    let url;
+    for (let i = 0; i < pathArr.length; i++) {
+        let p = pathArr[i];
         if (isArr) {
             img = new Image();
             imgCollection[p.name] = img;
@@ -96,22 +96,22 @@ export function loadImgArr(pathArr, callback) {
     }
 }
 export function combineArr(arr, num) {
-    var r = [];
+    let r = [];
     (function f(t, a, n) {
         if (n == 0) {
             return r.push(t);
         }
-        for (var i = 0, l = a.length; i <= l - n; i++) {
+        for (let i = 0, l = a.length; i <= l - n; i++) {
             f(t.concat(a[i]), a.slice(i + 1), n - 1);
         }
     })([], arr, num);
     return r;
 }
 export function formatSecond(sec, minStr = ":", secStr = "") {
-    var min = Math.floor(sec / 60);
-    var s = sec % 60;
-    var strMin = min + "";
-    var strSec = s + "";
+    let min = Math.floor(sec / 60);
+    let s = sec % 60;
+    let strMin = min + "";
+    let strSec = s + "";
     if (min < 10)
         strMin = "0" + strMin;
     if (s < 10)
@@ -122,8 +122,8 @@ export function formatSecond(sec, minStr = ":", secStr = "") {
 export function getLength(str) {
     ///<summary>获得字符串实际长度，中文2，英文1</summary>
     ///<param name="str">要获得长度的字符串</param>
-    var realLength = 0, len = str.length, charCode = -1;
-    for (var i = 0; i < len; i++) {
+    let realLength = 0, len = str.length, charCode = -1;
+    for (let i = 0; i < len; i++) {
         charCode = str.charCodeAt(i);
         if (charCode >= 0 && charCode <= 128) realLength += 1;
         else realLength += 2;
@@ -131,12 +131,12 @@ export function getLength(str) {
     return realLength;
 }
 export function cnWrap(str, len, start = 0) {
-    var str_line_length = 0;
-    var str_len = str.length;
-    var str_cut = new String();
-    var str_out = '';
-    for (var i = start; i < str_len; i++) {
-        var a = str.charAt(i);
+    let str_line_length = 0;
+    let str_len = str.length;
+    let str_cut = new String();
+    let str_out = '';
+    for (let i = start; i < str_len; i++) {
+        let a = str.charAt(i);
         str_line_length++;
         if (escape(a).length > 4) {
             //中文字符的长度经编码之后大于4
@@ -152,9 +152,9 @@ export function cnWrap(str, len, start = 0) {
     str_out += str_cut;
     return str_out;
 }
-export var getUrlFilename = (url) => {
-    var a = url.split('/');
-    var filename = a[a.length - 1];
+export let getUrlFilename = (url) => {
+    let a = url.split('/');
+    let filename = a[a.length - 1];
     return filename;
 }
 
@@ -164,8 +164,8 @@ export var getUrlFilename = (url) => {
 // 例子：
 // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
 // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
-export var DateFormat = function (date, fmt) { //author: meizz
-    var o = {
+export let DateFormat = function (date, fmt) { //author: meizz
+    let o = {
         "M+": date.getMonth() + 1,                 //月份
         "d+": date.getDate(),                    //日
         "h+": date.getHours(),                   //小时

@@ -1,14 +1,18 @@
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId, ViewConst} from "../../../const";
-import {BracketGroup} from "./BracketGroup";
-import {imgToTexture} from "../../../utils/PixiEx";
-import {loadImgArr} from "../../../utils/JsFunc";
+import {groupPosMap, PlayerSvg} from "./BracketGroup";
+import {newBitmap} from "../../../utils/PixiEx";
+import {drawLine1, drawLine2, drawLine4} from "./GroupLine";
+import {blink2} from "../../../utils/Fx";
 import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
-declare var $;
-declare var io;
-declare var hupuWsUrl;
+declare let $;
+declare let io;
+declare let hupuWsUrl;
+
 export class Bracket extends BasePanelView {
+    comingTitle: PIXI.Sprite;
+
     constructor(stage, gameId) {
         super(PanelId.onlinePanel);
         this.name = PanelId.bracketPanel;
@@ -22,22 +26,90 @@ export class Bracket extends BasePanelView {
     }
 
     initBg() {
-
-        loadImgArr(["/img/panel/bracket/bracketBg.png",
-            "/img/panel/bracket/group.png",
-            "/img/panel/bracket/title.png"], (imgArr)=> {
-            var imgBg = imgArr[0];
-            var imgGroup = imgArr[1];
-            var imgTitle = imgArr[2];
-
-            var ctn: PIXI.Container = this.ctn;
-            var tilingBg = new PIXI.extras.TilingSprite(imgToTexture(imgBg), ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT);
-            tilingBg.alpha = 0.8;
-            ctn.addChild(tilingBg);
-
-            var title = new PIXI.Sprite(imgToTexture(imgTitle));
-            ctn.addChild(title);
+        let ctn: PIXI.Container = this.ctn;
+        let bg = newBitmap({
+            url: "/img/panel/bracket/tile2.png",
+            isTiling: true,
+            width: ViewConst.STAGE_WIDTH,
+            height: ViewConst.STAGE_HEIGHT
         });
+        bg.alpha = 0.8;
+        ctn.addChild(bg);
+        ctn.addChild(newBitmap({url: "/img/panel/bracket/title.png"}));
+        let s = {font: '25px', fill: '#C1C1C1', align: 'right'};
+        let hintStyle = {font: '25px italic', fill: '#AFAFAF', align: 'right'};
+        for (let idx in groupPosMap) {
+            let group2 = groupPosMap[idx];
+            //todo 优化newBitmap options use tex
+            ctn.addChild(newBitmap({
+                url: "/img/panel/bracket/group.png",
+                x: group2.x, y: group2.y
+            }));
+            //game idx
+            let gameIdx = Number(idx);
+            let gameIdxText = new PIXI.Text(idx, s);
+            if (gameIdx > 9)
+                gameIdxText.x = group2.x - 50;
+            else
+                gameIdxText.x = group2.x - 30;
+            gameIdxText.y = group2.y + 5;
+            ctn.addChild(gameIdxText);
+
+            //hint
+            for (let i = 0; i < group2.hints.length; i++) {
+                let hint = group2.hints[i];
+                let label = new PIXI.Text(hint, hintStyle);
+                label.x = group2.x + 15;
+                label.y = group2.y + 8 + i * 48;
+                group2.labels.push(label);
+                ctn.addChild(label);
+                ctn.addChild(group2.scores[i]);
+
+                group2.playerArr = [new PlayerSvg, new PlayerSvg]
+            }
+            if (gameIdx > 4) {
+
+            }
+        }
+        ///group line
+        let ofsX = 213;
+        let ofsY = 48;
+        let g1 = groupPosMap[1];
+        ctn.addChild(drawLine1(g1.x + ofsX, g1.y + ofsY));
+        g1 = groupPosMap[3];
+        ctn.addChild(drawLine1(g1.x + ofsX, g1.y + ofsY));
+        g1 = groupPosMap[10];
+        ctn.addChild(drawLine1(g1.x + ofsX, g1.y + ofsY - 1));
+
+        g1 = groupPosMap[7];
+        ctn.addChild(drawLine1(g1.x + ofsX, g1.y + ofsY, 144));
+
+        g1 = groupPosMap[5];
+        ctn.addChild(drawLine2(g1.x + ofsX, g1.y - 5));
+        g1 = groupPosMap[6];
+        ctn.addChild(drawLine2(g1.x + ofsX, g1.y - 5));
+        g1 = groupPosMap[12];
+        ctn.addChild(drawLine2(g1.x + ofsX, g1.y - 24, 19));
+
+        g1 = groupPosMap[11];
+        ctn.addChild(drawLine4(g1.x + ofsX, g1.y + ofsY - 1));
+
+        this.comingTitle = newBitmap({url: '/img/panel/bracket/comingTitle.png'});
+        this.comingTitle.visible = false;
+        ctn.addChild(this.comingTitle);
+
+        //test
+        TweenLite.delayedCall(2, () => {
+            this.setComingIdx(1);
+        })
+    }
+
+    setComingIdx(idx) {
+        let g = groupPosMap[idx];
+        this.comingTitle.visible = true;
+        this.comingTitle.x = g.x - 4;
+        this.comingTitle.y = g.y - 36;
+        blink2(this.comingTitle, .6);
     }
 
     hide() {
@@ -49,8 +121,8 @@ export class Bracket extends BasePanelView {
     }
 
     initAuto(gameId) {
-        var remoteIO = io.connect(hupuWsUrl);
-        remoteIO.on('connect', ()=> {
+        let remoteIO = io.connect(hupuWsUrl);
+        remoteIO.on('connect', () => {
             console.log('hupuAuto socket connected GameId', gameId);
             remoteIO.emit('passerbyking', {
                 game_id: gameId,
@@ -58,12 +130,12 @@ export class Bracket extends BasePanelView {
             })
         });
 
-        remoteIO.on('wall', (data: any)=> {
-            var event = data.et;
-            var eventMap = {};
+        remoteIO.on('wall', (data: any) => {
+            let event = data.et;
+            let eventMap = {};
             console.log('event:', event, data);
 
-            eventMap['top8Match'] = ()=> {
+            eventMap['top8Match'] = () => {
                 console.log('top8Match', data);
                 data.data = data.list;
                 this.onBracketData(data);
@@ -75,87 +147,22 @@ export class Bracket extends BasePanelView {
     }
 
     onBracketData(res) {
-        var matchArr = [];
-        var playerHintMap = {
-            '5': ['  第1场败者', '  第2场败者'],
-            '6': ['  第3场败者', '  第4场败者'],
-            '9': ['  第7场败者', ''],
-            '13': ['  第11场败者', ''],
-            '10': ['  第8场败者', ''],
-            '14': ['', '  第13场胜者']
-        };
-
-        for (var gameIdx in res.data) {
-            var dataObj = res.data[gameIdx];
-            var match: BracketGroup = new BracketGroup(gameIdx);
-            match.idx = Number(gameIdx);
+        for (let gameIdx in res.data) {
+            let dataObj = res.data[gameIdx];
+            let group1 = groupPosMap[gameIdx];
+            group1.idx = Number(gameIdx);
             if (dataObj.left.score || dataObj.right.score) {
                 if (dataObj.left.score > dataObj.right.score)
-                    match.playerArr[0].isWin = true;
+                    group1.playerArr[0].isWin = true;
                 else
-                    match.playerArr[1].isWin = true;
+                    group1.playerArr[1].isWin = true;
             }
+            let hints = group1.hints;
+            group1.labels[0].text = dataObj.left.name || (hints ? hints[0] : '');
+            group1.scores[0].text = dataObj.left.score || "0";
 
-            if (!dataObj.left.name) {
-                match.playerArr[0].isHint = true
-            }
-            if (!dataObj.right.name) {
-                match.playerArr[1].isHint = true
-            }
-            var hintName = playerHintMap[gameIdx];
-            match.playerArr[0].name = dataObj.left.name ? dataObj.left.name : (hintName ? hintName[0] : '');
-            match.playerArr[0].score = dataObj.left.score;
-
-            match.playerArr[1].name = dataObj.right.name ? dataObj.right.name : (hintName ? hintName[1] : '');
-            match.playerArr[1].score = dataObj.right.score;
-            matchArr.push(match);
+            group1.labels[1].text = dataObj.right.name || (hints ? hints[1] : '');
+            group1.scores[1].text = dataObj.right.score || "0";
         }
-        this.render(matchArr);
-    }
-
-    render(groupArr) {
-        //todo: bg group cache
-        // loadTexture($, proxy('/img/panel/bracketBg.png'), (tex)=> {
-        //     var tilingSprite = new PIXI.extras.TilingSprite(tex, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT);
-        //     this.ctn.addChild(tilingSprite);
-        // });
-
-
-        // loadImgArr(["/img/panel/bracket/bracketBg.png",
-        //     "/img/panel/bracket/group.png",
-        //     "/img/panel/bracket/title.png"], (imgArr)=> {
-        //     var imgBg = imgArr[0];
-        //     var imgGroup = imgArr[1];
-        //     var imgTitle = imgArr[2];
-        //
-        //     var bg = new createjs.Shape();
-        //     bg.alpha = .8;
-        //     bg.graphics.beginBitmapFill(imgBg, "repeat")
-        //         .drawRect(0, 0, ViewConst.STAGE_WIDTH, ViewConst.STAGE_HEIGHT);
-        //
-        //     bg.graphics.endFill();
-        //     this.ctn.addChild(bg);
-        //
-        //
-        //     var groupShape = new createjs.Shape();
-        //     var m = new createjs.Matrix2D();
-        //     groupArr.length = 2;
-        //     for (var i = 0; i < groupArr.length; i++) {
-        //         var group = groupArr[i];
-        //         console.log(group);
-        //         // m.tx = group.x;
-        //         // m.ty = group.y;
-        //         m.translate(group.x, group.y);
-        //         groupShape.graphics.beginBitmapFill(imgGroup, "repeat", m)
-        //             .drawRect(group.x, group.y, imgGroup.width, imgGroup.height);
-        //         groupShape.graphics.endFill();
-        //     }
-        //
-        //     groupShape.graphics.beginBitmapFill(imgTitle)
-        //         .drawRect(0, 0, imgTitle.width, imgTitle.height);
-        //     groupShape.graphics.endFill();
-        //     this.ctn.addChild(groupShape);
-        // })
-
     }
 }

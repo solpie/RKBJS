@@ -1,20 +1,35 @@
-let groupPosMap = {
-    "1": {x: 255, y: 95},
-    "2": {x: 255, y: 95 + 145},
-    "3": {x: 255, y: 95 + 145 * 2},
-    "4": {x: 255, y: 95 + 145 * 3},
-    "5": {x: 255, y: 805},
-    "6": {x: 255, y: 805 + 145},
-    "7": {x: 655, y: 0},
-    "8": {x: 655, y: 0},
-    "9": {x: 655, y: 0},
-    "10": {x: 655, y: 0},
-    "11": {x: 1055, y: 0},
-    "12": {x: 1055, y: 0},
-    "13": {x: 1460, y: 0},
-    "14": {x: 1460, y: 0},
+// 18452736
+function _makeGroup(parameters) {
+    let x = parameters.x;
+    let y = parameters.y;
+    let hints = parameters.hints ? parameters.hints : ['', ''];
+    let s = {font: '25px', fill: '#C1C1C1', align: 'right'};
+    let s1 = new PIXI.Text('', s);
+    s1.y = y + 8;
+    let s2 = new PIXI.Text('', s);
+    s2.y = y + 8 + 50;
+    s1.x = s2.x = x + 175;
+    return {
+        x: x, y: y, labels: [], hints: hints,
+        scores: [s1, s2]
+    }
+}
+export let groupPosMap = {
+    "1": _makeGroup({x: 255, y: 95, hints: ['1号种子', "8号种子"]}),
+    "2": _makeGroup({x: 255, y: 95 + 145, hints: ['4号种子', "5号种子"]}),
+    "3": _makeGroup({x: 255, y: 95 + 145 * 2, hints: ['2号种子', "7号种子"]}),
+    "4": _makeGroup({x: 255, y: 95 + 145 * 3, hints: ['3号种子', "6号种子"]}),
+    "5": _makeGroup({x: 255, y: 805, hints: ['第1场败者', "第2场败者"]}),
+    "6": _makeGroup({x: 255, y: 805 + 145, hints: ['第3场败者', "第4场败者"]}),
+    "7": _makeGroup({x: 655, y: 168}),
+    "8": _makeGroup({x: 655, y: 457}),
+    "9": _makeGroup({x: 655, y: 900, hints: ['第7场败者', ""]}),
+    "10": _makeGroup({x: 655, y: 755, hints: ['第8场败者', ""]}),
+    "11": _makeGroup({x: 1055, y: 312}),
+    "12": _makeGroup({x: 1055, y: 825}),
+    "13": _makeGroup({x: 1460, y: 755, hints: ['第11场败者', ""]}),
+    "14": _makeGroup({x: 1460, y: 390, hints: ['', "第13场胜者"]}),
 };
-
 export class BracketGroup {
     x: number;
     y: number;
@@ -24,14 +39,14 @@ export class BracketGroup {
 
     constructor(idx) {
         this.idx = idx;
-        if (groupPosMap[idx]) {
-            this.x = groupPosMap[idx].x;
-            this.y = groupPosMap[idx].y;
-        }
+        // if (groupPosMap[idx]) {
+        //     this.x = groupPosMap[idx].x;
+        //     this.y = groupPosMap[idx].y;
+        // }
         this.playerArr = [new PlayerSvg, new PlayerSvg];
     }
 }
-class PlayerSvg {
+export class PlayerSvg {
     seed: number;//八强排位
     name: string;//
     avatar: string;//
