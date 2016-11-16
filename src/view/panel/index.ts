@@ -1,17 +1,17 @@
-require(`script!D:/projects/RKBJS/clientLibs/createjs/createjs.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/createjs/easeljs.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/createjs/tweenjs.min.js`);
+require(`script!./../../../clientLibs/createjs/createjs.min.js`);
+require(`script!./../../../clientLibs/createjs/easeljs.min.js`);
+require(`script!./../../../clientLibs/createjs/tweenjs.min.js`);
 
 //http://www.pixijs.com/
-require(`script!D:/projects/RKBJS/clientLibs/pixi.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/TweenLite.min.js`);
+require(`script!./../../../clientLibs/pixi.min.js`);
+require(`script!./../../../clientLibs/TweenLite.min.js`);
 
-require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);
+require(`script!./../../../clientLibs/jquery.min.js`);
+require(`script!./../../../clientLibs/qrcode.min.js`);
 
-require(`script!D:/projects/RKBJS/clientLibs/socket.io-1.4.5.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
+require(`script!./../../../clientLibs/socket.io-1.4.5.min.js`);
+require(`script!./../../../clientLibs/vue/vue.min.js`);
+require(`script!./../../../clientLibs/vue/vue-router.min.js`);
 
 import {rkbView} from "./stageRKB/RKBOPView";
 import {stageOnlineView} from "./stageOnline/StageOnlineView";

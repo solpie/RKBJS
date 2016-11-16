@@ -120,10 +120,11 @@ export class Bracket extends BasePanelView {
             blink2(this.comingTitle, .6);
         }
     }
-    hideComing()
-    {
+
+    hideComing() {
         this.comingTitle.visible = false;
     }
+
     hide() {
         this.ctn.visible = false;
     }
@@ -157,17 +158,16 @@ export class Bracket extends BasePanelView {
                 this.hideComing();
             };
 
+            eventMap['updateScore'] = () => {
+                this.hideComing();
+            };
+
             if (eventMap[event])
                 eventMap[event]();
         });
     }
 
     onBracketData(res) {
-        // let comingArr = [
-        //     {check: [{idx: 5, pos: 0}, {idx: 7, pos: 0}], comingIdx: 2},
-        //     {check: [{idx: 5, pos: 1}, {idx: 7, pos: 1}], comingIdx: 3},
-        //     {check: [{idx: 6, pos: 0}, {idx: 7, pos: 1}], comingIdx: 4},
-        // ];
         let closeGame = {};
         let s = {font: '25px', fill: '#e1e1e1', align: 'right'};
         for (let gameIdx in res.data) {
@@ -194,6 +194,7 @@ export class Bracket extends BasePanelView {
             group1.labels[1].text = dataObj.right.name || (hints ? hints[1] : '');
             group1.scores[1].text = dataObj.right.score || "0";
         }
+
         for (let i = 0; i < 14; i++) {
             let isClose = closeGame[14 - i];
             if (isClose) {
