@@ -106,19 +106,24 @@ export class Bracket extends BasePanelView {
         ctn.addChild(this.comingTitle);
 
         //test
-        TweenLite.delayedCall(2, () => {
-            this.setComingIdx(1);
-        })
+        // TweenLite.delayedCall(2, () => {
+        //     this.showComingIdx(1);
+        // })
     }
 
-    setComingIdx(idx) {
+    showComingIdx(idx) {
         let g = groupPosMap[idx];
-        this.comingTitle.visible = true;
-        this.comingTitle.x = g.x - 4;
-        this.comingTitle.y = g.y - 36;
-        blink2(this.comingTitle, .6);
+        if (g) {
+            this.comingTitle.visible = true;
+            this.comingTitle.x = g.x - 4;
+            this.comingTitle.y = g.y - 36;
+            blink2(this.comingTitle, .6);
+        }
     }
-
+    hideComing()
+    {
+        this.comingTitle.visible = false;
+    }
     hide() {
         this.ctn.visible = false;
     }
@@ -148,12 +153,22 @@ export class Bracket extends BasePanelView {
                 this.onBracketData(data);
             };
 
+            eventMap['startGame'] = () => {
+                this.hideComing();
+            };
+
             if (eventMap[event])
                 eventMap[event]();
         });
     }
 
     onBracketData(res) {
+        // let comingArr = [
+        //     {check: [{idx: 5, pos: 0}, {idx: 7, pos: 0}], comingIdx: 2},
+        //     {check: [{idx: 5, pos: 1}, {idx: 7, pos: 1}], comingIdx: 3},
+        //     {check: [{idx: 6, pos: 0}, {idx: 7, pos: 1}], comingIdx: 4},
+        // ];
+        let closeGame = {};
         let s = {font: '25px', fill: '#e1e1e1', align: 'right'};
         for (let gameIdx in res.data) {
             let dataObj = res.data[gameIdx];
@@ -164,6 +179,7 @@ export class Bracket extends BasePanelView {
                     group1.playerArr[0].isWin = true;
                 else
                     group1.playerArr[1].isWin = true;
+                closeGame[gameIdx] = true;
             }
             if (dataObj.left.name) {
                 (group1.labels[0] as PIXI.Text).style = s;
@@ -177,6 +193,13 @@ export class Bracket extends BasePanelView {
 
             group1.labels[1].text = dataObj.right.name || (hints ? hints[1] : '');
             group1.scores[1].text = dataObj.right.score || "0";
+        }
+        for (let i = 0; i < 14; i++) {
+            let isClose = closeGame[14 - i];
+            if (isClose) {
+                this.showComingIdx(14 - i + 1);
+                break;
+            }
         }
     }
 }

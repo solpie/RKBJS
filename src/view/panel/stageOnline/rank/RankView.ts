@@ -222,14 +222,10 @@ export class RankView extends BasePanelView {
     fadeInMixRank(param) {
         // this.ctn.removeAllChildren();
         let imgArr = [];
-        imgArr.push({name: 'bg', url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'});
         imgArr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
 
         loadImgArr(imgArr, (imgCol) => {
-            let bg = new PIXI.Sprite(imgToTex(imgCol['bg']));
-            bg.alpha = 0.5;
-            this.ctn.addChild(bg);
-
+            this.ctn.addChild(newBitmap({url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'}));
             for (let i = 0; i < 5; i++) {
                 let curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
                 curItem.x = 45;
