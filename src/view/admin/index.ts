@@ -3,10 +3,10 @@
  */
 
 require('../../../resources/app/static/css/bulma.min.css');
-require(`script!D:/projects/RKBJS/clientLibs/jquery.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/qrcode.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/vue/vue.min.js`);
-require(`script!D:/projects/RKBJS/clientLibs/vue/vue-router.min.js`);
+require(`script!./../../../clientLibs/jquery.min.js`);
+require(`script!./../../../clientLibs/qrcode.min.js`);
+require(`script!./../../../clientLibs/vue/vue.min.js`);
+require(`script!./../../../clientLibs/vue/vue-router.min.js`);
 
 import {Navbar} from "./navbar/Navbar";
 import {homeView} from "./home/home";

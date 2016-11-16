@@ -17,7 +17,7 @@ import {rkbView} from "./stageRKB/RKBOPView";
 import {stageOnlineView} from "./stageOnline/StageOnlineView";
 //////////////
 
-var routes = [
+let routes = [
     {
         path: '/', name: 'panel',
         components: {default: rkbView}
