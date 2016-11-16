@@ -7,10 +7,10 @@ import {CommandId} from "../../Command";
 /**
  * Created by toramisu on 2016/10/31.
  */
-var stageRKBView: StageRKBView;
-declare var $;
+let stageRKBView: StageRKBView;
+declare let $;
 
-var opReq = (cmdId: string, param: any, callback: any)=> {
+let opReq = (cmdId: string, param: any, callback: any)=> {
     $.post(`/panel/${PanelId.rkbPanel}/${cmdId}`,
         param,
         callback);
@@ -60,7 +60,7 @@ export class RKBView extends VueBase {
         onClkSetDelay(){
             console.log("onClkSetDelay", this, this.delayTime);
             // this.panelTime = this.liveTime
-            var dt = Number(this.delayTime);
+            let dt = Number(this.delayTime);
             if (dt >= 0) {
                 this.delayTimeMS = dt * 1000;
                 opReq(`${CommandId.cs_setDelayTime}`, {delayTimeMS: this.delayTimeMS, _: null}, ()=> {
@@ -88,4 +88,4 @@ export class RKBView extends VueBase {
         }
     }
 }
-export var rkbView = new RKBView();
+export let rkbView = new RKBView();

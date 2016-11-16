@@ -65,11 +65,11 @@ export class StageRKBView extends BasePanelView {
 
 
     initAuto() {
-        var remoteIO = io.connect(hupuWsUrl);
+        let remoteIO = io.connect(hupuWsUrl);
 
-        var setPlayer = (leftPlayer, rightPlayer)=> {
-            var leftPlayerInfo = new PlayerInfo();
-            var playerData = leftPlayer;
+        let setPlayer = (leftPlayer, rightPlayer)=> {
+            let leftPlayerInfo = new PlayerInfo();
+            let playerData = leftPlayer;
             leftPlayerInfo.name(playerData.name);
             leftPlayerInfo.avatar(playerData.avatar);
             leftPlayerInfo.winGameCount(playerData.winAmount);
@@ -79,7 +79,7 @@ export class StageRKBView extends BasePanelView {
             leftPlayerInfo.playerData.curFtScore = leftPlayer.roundScore;
             this.playerPanel.setPlayer(0, leftPlayerInfo.playerData);
 
-            var rightPlayerInfo = new PlayerInfo();
+            let rightPlayerInfo = new PlayerInfo();
             playerData = rightPlayer;
             rightPlayerInfo.name(playerData.name);
             rightPlayerInfo.avatar(playerData.avatar);
@@ -99,8 +99,8 @@ export class StageRKBView extends BasePanelView {
             })
         });
         remoteIO.on('wall', (data: any)=> {
-            var event = data.et;
-            var eventMap = {};
+            let event = data.et;
+            let eventMap = {};
             console.log('event:', event, data);
 
             eventMap['init'] = ()=> {
@@ -163,7 +163,7 @@ export class StageRKBView extends BasePanelView {
             };
             eventMap['commitGame'] = ()=> {
                 if (this.isScorePanelVisible) {
-                    var isBlue = data.idx == 0;
+                    let isBlue = data.idx == 0;
                     data.player.winGameCount = data.player.winAmount;
                     data.player.loseGameCount = data.player.loseAmount;
                     data.player.curFtScore = data.player.roundScore;
@@ -172,9 +172,9 @@ export class StageRKBView extends BasePanelView {
                 }
             };
             eventMap['fadeInCountDown'] = ()=> {
-                var text = data.text;
-                var cdSec = data.cdSec;
-                var type = data.type;
+                let text = data.text;
+                let cdSec = data.cdSec;
+                let type = data.type;
                 this.countDownRender.fadeInCountDown(cdSec, text);
                 console.log('fadeInCountDown', data);
             };
