@@ -33,17 +33,17 @@ var routes = [
     }
 ];
 
-declare var VueRouter;
-declare var Vue;
-var router = new VueRouter({
+declare let VueRouter;
+declare let Vue;
+let router = new VueRouter({
     routes // short for routes: routes
 });
 
 router.afterEach((to, from) => {
-    var toPath = to.path;
+    let toPath = to.path;
     router.app.active = toPath.split("/")[1];
 });
 
-var app = new Vue({
+let app = new Vue({
     router
 }).$mount('#app');

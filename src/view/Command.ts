@@ -97,6 +97,13 @@ enum cmdEnum{
     cs_autoSaveGameRec,//hupu 记录比赛
     cs_setDelayTime,//
     setDelayTime,//
+        //onlinePanel
+    cs_showRank,//
+    sc_showRank,//
+    cs_showBracket,//
+    sc_showBracket,//
+    cs_hideOnlinePanel,//
+    sc_hideOnlinePanel,//
         //---------------- player panel
 
     cs_startingLine,

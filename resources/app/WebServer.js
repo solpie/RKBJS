@@ -132,6 +132,7 @@
 	    WebServer.prototype.initSocketIO = function (server) {
 	        var io = new SocketIO(server);
 	        var rkbModel = new RkbModel_1.RkbModel(io);
+	        PanelRouter_1.initIO(io);
 	    };
 	    return WebServer;
 	}());
@@ -181,6 +182,7 @@
 
 	"use strict";
 	var Env_1 = __webpack_require__(2);
+	var const_1 = __webpack_require__(6);
 	exports.panelRouter = express.Router();
 	exports.panelRouter.get('/', function (req, res) {
 	    console.log('get panel:');
@@ -204,6 +206,35 @@
 	    rest(api1).then(function (response) {
 	        res.send(JSON.parse(response.entity));
 	    });
+	});
+	var onlineIO;
+	exports.initIO = function (io) {
+	    onlineIO = io.of("/" + const_1.PanelId.rkbPanel);
+	    onlineIO
+	        .on("connect", function (socket) {
+	        console.log('onlineIO connect');
+	    })
+	        .on('disconnect', function (socket) {
+	        console.log('onlineIO disconnect');
+	    });
+	};
+	exports.panelRouter.post("/" + const_1.PanelId.onlinePanel + "/:cmdId", function (req, res) {
+	    if (!req.body)
+	        return res.sendStatus(400);
+	    var cmdId = req.params.cmdId;
+	    var param = req.body;
+	    console.log("/" + const_1.PanelId.onlinePanel + "/" + cmdId, param);
+	    var cmdMap = {};
+	    if (param.hasOwnProperty("_")) {
+	        var autoCmdId = cmdId.replace("cs_", "sc_");
+	        onlineIO.emit(autoCmdId, param);
+	        res.sendStatus(200);
+	    }
+	    else {
+	        var isSend = cmdMap[cmdId](param);
+	        if (!isSend)
+	            res.sendStatus(200);
+	    }
 	});
 
 
@@ -652,62 +683,68 @@
 	    cmdEnum[cmdEnum["cs_autoSaveGameRec"] = 85] = "cs_autoSaveGameRec";
 	    cmdEnum[cmdEnum["cs_setDelayTime"] = 86] = "cs_setDelayTime";
 	    cmdEnum[cmdEnum["setDelayTime"] = 87] = "setDelayTime";
-	    cmdEnum[cmdEnum["cs_startingLine"] = 88] = "cs_startingLine";
-	    cmdEnum[cmdEnum["startingLine"] = 89] = "startingLine";
-	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 90] = "cs_hideStartingLine";
-	    cmdEnum[cmdEnum["hideStartingLine"] = 91] = "hideStartingLine";
-	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 92] = "cs_queryPlayerByPos";
-	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 93] = "fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 94] = "cs_fadeInPlayerPanel";
-	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 95] = "fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 96] = "cs_fadeOutPlayerPanel";
-	    cmdEnum[cmdEnum["movePlayerPanel"] = 97] = "movePlayerPanel";
-	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 98] = "cs_movePlayerPanel";
-	    cmdEnum[cmdEnum["straightScore3"] = 99] = "straightScore3";
-	    cmdEnum[cmdEnum["straightScore5"] = 100] = "straightScore5";
-	    cmdEnum[cmdEnum["initPanel"] = 101] = "initPanel";
-	    cmdEnum[cmdEnum["cs_fadeInActivityPanel"] = 102] = "cs_fadeInActivityPanel";
-	    cmdEnum[cmdEnum["fadeInActivityPanel"] = 103] = "fadeInActivityPanel";
-	    cmdEnum[cmdEnum["cs_fadeInNextActivity"] = 104] = "cs_fadeInNextActivity";
-	    cmdEnum[cmdEnum["fadeInNextActivity"] = 105] = "fadeInNextActivity";
-	    cmdEnum[cmdEnum["cs_fadeInActivityExGame"] = 106] = "cs_fadeInActivityExGame";
-	    cmdEnum[cmdEnum["fadeInActivityExGame"] = 107] = "fadeInActivityExGame";
-	    cmdEnum[cmdEnum["cs_fadeOutActivityPanel"] = 108] = "cs_fadeOutActivityPanel";
-	    cmdEnum[cmdEnum["fadeOutActivityPanel"] = 109] = "fadeOutActivityPanel";
-	    cmdEnum[cmdEnum["cs_startGame"] = 110] = "cs_startGame";
-	    cmdEnum[cmdEnum["cs_restartGame"] = 111] = "cs_restartGame";
-	    cmdEnum[cmdEnum["cs_fadeInRankPanel"] = 112] = "cs_fadeInRankPanel";
-	    cmdEnum[cmdEnum["fadeInRankPanel"] = 113] = "fadeInRankPanel";
-	    cmdEnum[cmdEnum["cs_fadeInNextRank"] = 114] = "cs_fadeInNextRank";
-	    cmdEnum[cmdEnum["fadeInNextRank"] = 115] = "fadeInNextRank";
-	    cmdEnum[cmdEnum["cs_setGameComing"] = 116] = "cs_setGameComing";
-	    cmdEnum[cmdEnum["setGameComing"] = 117] = "setGameComing";
-	    cmdEnum[cmdEnum["cs_fadeOutRankPanel"] = 118] = "cs_fadeOutRankPanel";
-	    cmdEnum[cmdEnum["fadeOutRankPanel"] = 119] = "fadeOutRankPanel";
-	    cmdEnum[cmdEnum["cs_fadeInCountDown"] = 120] = "cs_fadeInCountDown";
-	    cmdEnum[cmdEnum["fadeInCountDown"] = 121] = "fadeInCountDown";
-	    cmdEnum[cmdEnum["cs_fadeOutCountDown"] = 122] = "cs_fadeOutCountDown";
-	    cmdEnum[cmdEnum["fadeOutCountDown"] = 123] = "fadeOutCountDown";
-	    cmdEnum[cmdEnum["cs_inScreenScore"] = 124] = "cs_inScreenScore";
-	    cmdEnum[cmdEnum["inScreenScore"] = 125] = "inScreenScore";
-	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 126] = "cs_fadeInFTShow";
-	    cmdEnum[cmdEnum["fadeInFTShow"] = 127] = "fadeInFTShow";
-	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 128] = "cs_fadeOutFTShow";
-	    cmdEnum[cmdEnum["fadeOutFTShow"] = 129] = "fadeOutFTShow";
-	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 130] = "cs_fadeInPlayerRank";
-	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 131] = "fadeInPlayerRank";
-	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 132] = "cs_fadeInFtRank";
-	    cmdEnum[cmdEnum["fadeInFtRank"] = 133] = "fadeInFtRank";
-	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 134] = "cs_fadeInMixRank";
-	    cmdEnum[cmdEnum["fadeInMixRank"] = 135] = "fadeInMixRank";
-	    cmdEnum[cmdEnum["cs_findPlayerData"] = 136] = "cs_findPlayerData";
-	    cmdEnum[cmdEnum["cs_attack"] = 137] = "cs_attack";
-	    cmdEnum[cmdEnum["attack"] = 138] = "attack";
-	    cmdEnum[cmdEnum["cs_addHealth"] = 139] = "cs_addHealth";
-	    cmdEnum[cmdEnum["addHealth"] = 140] = "addHealth";
-	    cmdEnum[cmdEnum["fadeInOK"] = 141] = "fadeInOK";
-	    cmdEnum[cmdEnum["cs_combo"] = 142] = "cs_combo";
-	    cmdEnum[cmdEnum["combo"] = 143] = "combo";
+	    cmdEnum[cmdEnum["cs_showRank"] = 88] = "cs_showRank";
+	    cmdEnum[cmdEnum["sc_showRank"] = 89] = "sc_showRank";
+	    cmdEnum[cmdEnum["cs_showBracket"] = 90] = "cs_showBracket";
+	    cmdEnum[cmdEnum["sc_showBracket"] = 91] = "sc_showBracket";
+	    cmdEnum[cmdEnum["cs_hideOnlinePanel"] = 92] = "cs_hideOnlinePanel";
+	    cmdEnum[cmdEnum["sc_hideOnlinePanel"] = 93] = "sc_hideOnlinePanel";
+	    cmdEnum[cmdEnum["cs_startingLine"] = 94] = "cs_startingLine";
+	    cmdEnum[cmdEnum["startingLine"] = 95] = "startingLine";
+	    cmdEnum[cmdEnum["cs_hideStartingLine"] = 96] = "cs_hideStartingLine";
+	    cmdEnum[cmdEnum["hideStartingLine"] = 97] = "hideStartingLine";
+	    cmdEnum[cmdEnum["cs_queryPlayerByPos"] = 98] = "cs_queryPlayerByPos";
+	    cmdEnum[cmdEnum["fadeInPlayerPanel"] = 99] = "fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerPanel"] = 100] = "cs_fadeInPlayerPanel";
+	    cmdEnum[cmdEnum["fadeOutPlayerPanel"] = 101] = "fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["cs_fadeOutPlayerPanel"] = 102] = "cs_fadeOutPlayerPanel";
+	    cmdEnum[cmdEnum["movePlayerPanel"] = 103] = "movePlayerPanel";
+	    cmdEnum[cmdEnum["cs_movePlayerPanel"] = 104] = "cs_movePlayerPanel";
+	    cmdEnum[cmdEnum["straightScore3"] = 105] = "straightScore3";
+	    cmdEnum[cmdEnum["straightScore5"] = 106] = "straightScore5";
+	    cmdEnum[cmdEnum["initPanel"] = 107] = "initPanel";
+	    cmdEnum[cmdEnum["cs_fadeInActivityPanel"] = 108] = "cs_fadeInActivityPanel";
+	    cmdEnum[cmdEnum["fadeInActivityPanel"] = 109] = "fadeInActivityPanel";
+	    cmdEnum[cmdEnum["cs_fadeInNextActivity"] = 110] = "cs_fadeInNextActivity";
+	    cmdEnum[cmdEnum["fadeInNextActivity"] = 111] = "fadeInNextActivity";
+	    cmdEnum[cmdEnum["cs_fadeInActivityExGame"] = 112] = "cs_fadeInActivityExGame";
+	    cmdEnum[cmdEnum["fadeInActivityExGame"] = 113] = "fadeInActivityExGame";
+	    cmdEnum[cmdEnum["cs_fadeOutActivityPanel"] = 114] = "cs_fadeOutActivityPanel";
+	    cmdEnum[cmdEnum["fadeOutActivityPanel"] = 115] = "fadeOutActivityPanel";
+	    cmdEnum[cmdEnum["cs_startGame"] = 116] = "cs_startGame";
+	    cmdEnum[cmdEnum["cs_restartGame"] = 117] = "cs_restartGame";
+	    cmdEnum[cmdEnum["cs_fadeInRankPanel"] = 118] = "cs_fadeInRankPanel";
+	    cmdEnum[cmdEnum["fadeInRankPanel"] = 119] = "fadeInRankPanel";
+	    cmdEnum[cmdEnum["cs_fadeInNextRank"] = 120] = "cs_fadeInNextRank";
+	    cmdEnum[cmdEnum["fadeInNextRank"] = 121] = "fadeInNextRank";
+	    cmdEnum[cmdEnum["cs_setGameComing"] = 122] = "cs_setGameComing";
+	    cmdEnum[cmdEnum["setGameComing"] = 123] = "setGameComing";
+	    cmdEnum[cmdEnum["cs_fadeOutRankPanel"] = 124] = "cs_fadeOutRankPanel";
+	    cmdEnum[cmdEnum["fadeOutRankPanel"] = 125] = "fadeOutRankPanel";
+	    cmdEnum[cmdEnum["cs_fadeInCountDown"] = 126] = "cs_fadeInCountDown";
+	    cmdEnum[cmdEnum["fadeInCountDown"] = 127] = "fadeInCountDown";
+	    cmdEnum[cmdEnum["cs_fadeOutCountDown"] = 128] = "cs_fadeOutCountDown";
+	    cmdEnum[cmdEnum["fadeOutCountDown"] = 129] = "fadeOutCountDown";
+	    cmdEnum[cmdEnum["cs_inScreenScore"] = 130] = "cs_inScreenScore";
+	    cmdEnum[cmdEnum["inScreenScore"] = 131] = "inScreenScore";
+	    cmdEnum[cmdEnum["cs_fadeInFTShow"] = 132] = "cs_fadeInFTShow";
+	    cmdEnum[cmdEnum["fadeInFTShow"] = 133] = "fadeInFTShow";
+	    cmdEnum[cmdEnum["cs_fadeOutFTShow"] = 134] = "cs_fadeOutFTShow";
+	    cmdEnum[cmdEnum["fadeOutFTShow"] = 135] = "fadeOutFTShow";
+	    cmdEnum[cmdEnum["cs_fadeInPlayerRank"] = 136] = "cs_fadeInPlayerRank";
+	    cmdEnum[cmdEnum["fadeInPlayerRank"] = 137] = "fadeInPlayerRank";
+	    cmdEnum[cmdEnum["cs_fadeInFtRank"] = 138] = "cs_fadeInFtRank";
+	    cmdEnum[cmdEnum["fadeInFtRank"] = 139] = "fadeInFtRank";
+	    cmdEnum[cmdEnum["cs_fadeInMixRank"] = 140] = "cs_fadeInMixRank";
+	    cmdEnum[cmdEnum["fadeInMixRank"] = 141] = "fadeInMixRank";
+	    cmdEnum[cmdEnum["cs_findPlayerData"] = 142] = "cs_findPlayerData";
+	    cmdEnum[cmdEnum["cs_attack"] = 143] = "cs_attack";
+	    cmdEnum[cmdEnum["attack"] = 144] = "attack";
+	    cmdEnum[cmdEnum["cs_addHealth"] = 145] = "cs_addHealth";
+	    cmdEnum[cmdEnum["addHealth"] = 146] = "addHealth";
+	    cmdEnum[cmdEnum["fadeInOK"] = 147] = "fadeInOK";
+	    cmdEnum[cmdEnum["cs_combo"] = 148] = "cs_combo";
+	    cmdEnum[cmdEnum["combo"] = 149] = "combo";
 	})(cmdEnum || (cmdEnum = {}));
 	exports.CommandId = {};
 	for (var k in cmdEnum) {

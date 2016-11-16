@@ -1,6 +1,6 @@
 import {adminRouter} from "./router/AdminRouter";
 import {ServerConf} from "./Env";
-import {panelRouter} from "./router/PanelRouter";
+import {panelRouter, initIO} from "./router/PanelRouter";
 import {RkbModel} from "./model/RkbModel";
 declare var ejs;
 declare var request;
@@ -142,8 +142,9 @@ export default class WebServer {
     }
 
     initSocketIO(server) {
-        var io = new SocketIO(server);
-        var rkbModel = new RkbModel(io);
+        let io = new SocketIO(server);
+        let rkbModel = new RkbModel(io);
+        initIO(io);
     }
 }
 

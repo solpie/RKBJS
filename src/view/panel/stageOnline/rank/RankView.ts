@@ -86,7 +86,6 @@ export class RankView extends BasePanelView {
         avatar.mask = m;
         ctn.addChild(avatar);
 
-
         if (rank12) {
             let icon = newBitmap({url: '/img/panel/stage1v1/ft/rank' + rank12 + '.png'});
             icon.x = -20;
@@ -144,16 +143,19 @@ export class RankView extends BasePanelView {
             align: 'right',
             fill: '#ffffff'
         });
+        // curScoreText.width = 80;
         curScoreText.style.font.fontsize(22);
         curScoreText.style.align = "right";
         curScoreText.x = 620;
         curScoreText.y = 90;
         ctn.addChild(curScoreText);
+        curScoreText.updateText();
 
         let totalScoreText = new PIXI.Text(String(playerDoc.ftScore ? playerDoc.ftScore : 0), {
             align: 'right',
             fill: '#ffffff'
         });
+        // totalScoreText.width = 80;
         totalScoreText.style.font.fontsize(22);
         totalScoreText.style.align = "right";
         totalScoreText.x = 770;
@@ -239,6 +241,7 @@ export class RankView extends BasePanelView {
                     totalItem.y = curItem.y;
                     this.ctn.addChild(totalItem);
                 }
+
             }
         });
     }
