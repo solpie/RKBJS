@@ -4,3 +4,4 @@ declare var bodyParser;
 declare var SocketIO;
 declare var rest;
 declare var ejs;
+declare var request;

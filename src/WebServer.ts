@@ -3,7 +3,8 @@ import {ServerConf} from "./Env";
 import {panelRouter, initIO} from "./router/PanelRouter";
 import {RkbModel} from "./model/RkbModel";
 declare let ejs;
-declare let request;
+// declare let request1;
+let request = require('request');
 let fs1 = require('fs');
 let path = require('path');
 let os = require('os');
@@ -35,7 +36,7 @@ export default class WebServer {
         ServerConf.isDev = process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath);
         console.log(process.execPath, ServerConf.isDev);
         let fs = require('fs');
-        fs.readFile('resources/app/package.json', (err: any, data: any)=> {
+        fs.readFile('resources/app/package.json', (err: any, data: any) => {
             if (err) throw err;
             let dataObj = JSON.parse(data);
             ServerConf.port = dataObj.server.port;
@@ -97,7 +98,7 @@ export default class WebServer {
         app.get('/get', function (req: any, res: any) {
             let url = req.query.url;
             //todo: no rest
-            rest(url).then((response)=> {
+            rest(url).then((response) => {
                 res.send(response)
             });
         });
@@ -119,10 +120,31 @@ export default class WebServer {
             // request.defaults({encoding: null});
             request.get({url: url, encoding: null}, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
+                    console.log('body', body);
                     let data = "data:image/png;base64," + body.toString('base64');
                     res.send(data);
                 }
             });
+
+            // let url = req.query.url;
+            //todo: no rest
+            // let req2 = new XMLHttpRequest();
+            // req2.open('GET', url, true);
+            // req2.onload = function (res1) {
+            //     let r = res1.target['response'];
+            //     let buf = new Buffer(r);
+            //     console.log(buf);
+            //     let data = "data:image/png;base64," + buf.toString('base64');
+            //     res.send(data);
+            // };
+            // req2.send();
+            // rest(url).then((response) => {
+            //     console.log(response);
+            //     let buf = new Buffer(response.entity);
+            //     console.log('buf', buf);
+            //     let data = "data:image/png;base64," + buf.toString('base64');
+            //     res.send(data)
+            // });
         });
 
         app.use('/admin', adminRouter);

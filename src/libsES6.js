@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import SocketIO from "socket.io";
 import rest from "rest";
 import nedb from "nedb";
-import request from "request";
+// import request1 from "request";
 
 var nodeLibs = {
     express: express,
@@ -13,7 +13,7 @@ var nodeLibs = {
     SocketIO: SocketIO,
     rest: rest,
     nedb: nedb,
-    request: request,
+    // request1: request1,
 };
 
 export default nodeLibs;
