@@ -133,7 +133,7 @@ export class RankView extends BasePanelView {
         //     stroke: '#a4410e',
         //     strokeThickness: 1
         // });
-        let ftText = new PIXI.Text(ftName, style);
+        let ftText = new PIXI.Text(ftName+' ', style);
         ftText.x = 268;
         ftText.y = 90;
         ctn.addChild(ftText);
