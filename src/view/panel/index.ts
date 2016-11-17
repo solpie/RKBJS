@@ -13,6 +13,13 @@ require(`script!./../../../clientLibs/socket.io-1.4.5.min.js`);
 require(`script!./../../../clientLibs/vue/vue.min.js`);
 require(`script!./../../../clientLibs/vue/vue-router.min.js`);
 
+require(`script!./../../../clientLibs/webfontloader.js`);
+declare let WebFont;
+WebFont.load({
+    google: {
+        families: ['Droid Sans', 'Droid Serif']
+    }
+});
 import {rkbView} from "./stageRKB/RKBOPView";
 import {stageOnlineView} from "./stageOnline/StageOnlineView";
 //////////////

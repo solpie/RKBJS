@@ -1,5 +1,5 @@
 import {BasePanelView} from "../../BasePanelView";
-import {PanelId, ViewConst} from "../../../const";
+import {PanelId, ViewConst, FontName} from "../../../const";
 import {groupPosMap, PlayerSvg} from "./BracketGroup";
 import {newBitmap} from "../../../utils/PixiEx";
 import {drawLine1, drawLine2, drawLine4} from "./GroupLine";
@@ -37,7 +37,13 @@ export class Bracket extends BasePanelView {
         ctn.addChild(bg);
         ctn.addChild(newBitmap({url: "/img/panel/bracket/title.png"}));
         let s = {font: '25px', fill: '#C1C1C1', align: 'right'};
-        let hintStyle = {font: '25px italic', fill: '#AFAFAF', align: 'right'};
+        let hintStyle = {
+            fontFamily: FontName.MicrosoftYahei,
+            fontSize: '25px',
+            fontStyle: 'italic',
+            fill: '#C1C1C1',
+        };
+        // let hintStyle = {fontFamily: FontName.MicrosoftYahei, font: '25px italic', fill: '#AFAFAF', align: 'right'};
         for (let idx in groupPosMap) {
             let group2 = groupPosMap[idx];
             //todo 优化newBitmap options use tex

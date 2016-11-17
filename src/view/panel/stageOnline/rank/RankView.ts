@@ -2,7 +2,7 @@ import Bitmap = createjs.Bitmap;
 import Container = createjs.Container;
 import {PlayerDoc} from "../../../../model/PlayerInfo";
 import {BasePanelView} from "../../BasePanelView";
-import {PanelId} from "../../../const";
+import {PanelId, FontName} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
 import {newBitmap} from "../../../utils/PixiEx";
 import {loadImgArr} from "../../../utils/JsFunc";
@@ -94,7 +94,7 @@ export class RankView extends BasePanelView {
         }
 
         let style = {
-            fontFamily: 'Arial',
+            fontFamily: FontName.MicrosoftYahei,
             fontSize: '40px',
             fontStyle: 'normal',
             fontWeight: 'bold',

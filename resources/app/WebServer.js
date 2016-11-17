@@ -255,6 +255,9 @@
 	    screenPanel: 'screen',
 	    playerPanel: 'player'
 	};
+	exports.FontName = {
+	    MicrosoftYahei: "Microsoft Yahei"
+	};
 	exports.ServerConst = {
 	    SEND_ASYNC: true,
 	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'

@@ -15,20 +15,20 @@ function _mkGroup(parameters) {
     }
 }
 export let groupPosMap = {
-    "1": _mkGroup({x: 255, y: 95, hints: ['1号种子', "8号种子"]}),
-    "2": _mkGroup({x: 255, y: 95 + 145, hints: ['4号种子', "5号种子"]}),
-    "3": _mkGroup({x: 255, y: 95 + 145 * 2, hints: ['2号种子', "7号种子"]}),
-    "4": _mkGroup({x: 255, y: 95 + 145 * 3, hints: ['3号种子', "6号种子"]}),
-    "5": _mkGroup({x: 255, y: 805, hints: ['第1场败者', "第2场败者"]}),
-    "6": _mkGroup({x: 255, y: 805 + 145, hints: ['第3场败者', "第4场败者"]}),
+    "1": _mkGroup({x: 255, y: 95, hints: ['1号种子 ', "8号种子 "]}),
+    "2": _mkGroup({x: 255, y: 95 + 145, hints: ['4号种子 ', "5号种子 "]}),
+    "3": _mkGroup({x: 255, y: 95 + 145 * 2, hints: ['2号种子 ', "7号种子 "]}),
+    "4": _mkGroup({x: 255, y: 95 + 145 * 3, hints: ['3号种子 ', "6号种子 "]}),
+    "5": _mkGroup({x: 255, y: 805, hints: ['第1场败者 ', "第2场败者 "]}),
+    "6": _mkGroup({x: 255, y: 805 + 145, hints: ['第3场败者 ', "第4场败者 "]}),
     "7": _mkGroup({x: 655, y: 168}),
     "8": _mkGroup({x: 655, y: 457}),
-    "9": _mkGroup({x: 655, y: 900, hints: ['第7场败者', ""]}),
-    "10": _mkGroup({x: 655, y: 755, hints: ['第8场败者', ""]}),
+    "9": _mkGroup({x: 655, y: 900, hints: ['第7场败者 ', ""]}),
+    "10": _mkGroup({x: 655, y: 755, hints: ['第8场败者 ', ""]}),
     "11": _mkGroup({x: 1055, y: 312}),
     "12": _mkGroup({x: 1055, y: 825}),
-    "13": _mkGroup({x: 1460, y: 755, hints: ['第11场败者', ""]}),
-    "14": _mkGroup({x: 1460, y: 390, hints: ['', "第13场胜者"]}),
+    "13": _mkGroup({x: 1460, y: 755, hints: ['第11场败者 ', ""]}),
+    "14": _mkGroup({x: 1460, y: 390, hints: ['', "第13场胜者 "]}),
 };
 export class BracketGroup {
     x: number;

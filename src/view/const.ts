@@ -10,6 +10,9 @@ export const PanelId = {
     screenPanel: 'screen',
     playerPanel: 'player'
 };
+export const FontName = {
+    MicrosoftYahei: "Microsoft Yahei"
+};
 export const ServerConst = {
     SEND_ASYNC: true,
     DEF_AVATAR: '/img/panel/stage1v1/blue.png'

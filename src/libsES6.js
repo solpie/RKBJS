@@ -6,7 +6,7 @@ import rest from "rest";
 import nedb from "nedb";
 import request from "request";
 
-let nodeLibs = {
+var nodeLibs = {
     express: express,
     ejs: ejs,
     bodyParser: bodyParser,
