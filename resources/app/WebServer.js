@@ -49,7 +49,6 @@
 	var Env_1 = __webpack_require__(2);
 	var PanelRouter_1 = __webpack_require__(4);
 	var RkbModel_1 = __webpack_require__(6);
-	var request = __webpack_require__(17);
 	var fs1 = __webpack_require__(11);
 	var path = __webpack_require__(3);
 	var os = __webpack_require__(12);
@@ -115,13 +114,15 @@
 	        });
 	        app.get('/proxy', function (req, res) {
 	            var url = req.query.url;
-	            request.get({ url: url, encoding: null }, function (error, response, body) {
-	                if (!error && response.statusCode == 200) {
-	                    console.log('body', body);
-	                    var data = "data:image/png;base64," + body.toString('base64');
-	                    res.send(data);
-	                }
-	            });
+	            var reqProxy = new XMLHttpRequest();
+	            reqProxy.open('GET', url, true);
+	            reqProxy.responseType = 'arraybuffer';
+	            reqProxy.onload = function (e) {
+	                var buf = new Buffer(new Uint8Array(reqProxy.response));
+	                var data = "data:image/png;base64," + buf.toString('base64');
+	                res.send(data);
+	            };
+	            reqProxy.send();
 	        });
 	        app.use('/admin', AdminRouter_1.adminRouter);
 	        app.use('/panel', PanelRouter_1.panelRouter);
@@ -1197,14 +1198,6 @@
 /***/ function(module, exports) {
 
 	module.exports = require("http");
-
-/***/ },
-/* 15 */,
-/* 16 */,
-/* 17 */
-/***/ function(module, exports) {
-
-	module.exports = require("request");
 
 /***/ }
 /******/ ]);

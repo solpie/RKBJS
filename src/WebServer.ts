@@ -4,7 +4,7 @@ import {panelRouter, initIO} from "./router/PanelRouter";
 import {RkbModel} from "./model/RkbModel";
 declare let ejs;
 // declare let request1;
-let request = require('request');
+// let request = require('request');
 let fs1 = require('fs');
 let path = require('path');
 let os = require('os');
@@ -116,35 +116,26 @@ export default class WebServer {
 
             // request.get(url).pipe(request.put('http://127.0.0.1/'+filename))
 
-            let url = req.query.url;
-            // request.defaults({encoding: null});
-            request.get({url: url, encoding: null}, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    console.log('body', body);
-                    let data = "data:image/png;base64," + body.toString('base64');
-                    res.send(data);
-                }
-            });
-
             // let url = req.query.url;
-            //todo: no rest
-            // let req2 = new XMLHttpRequest();
-            // req2.open('GET', url, true);
-            // req2.onload = function (res1) {
-            //     let r = res1.target['response'];
-            //     let buf = new Buffer(r);
-            //     console.log(buf);
-            //     let data = "data:image/png;base64," + buf.toString('base64');
-            //     res.send(data);
-            // };
-            // req2.send();
-            // rest(url).then((response) => {
-            //     console.log(response);
-            //     let buf = new Buffer(response.entity);
-            //     console.log('buf', buf);
-            //     let data = "data:image/png;base64," + buf.toString('base64');
-            //     res.send(data)
+            // request.defaults({encoding: null});
+            // request.get({url: url, encoding: null}, function (error, response, body) {
+            //     if (!error && response.statusCode == 200) {
+            //         console.log('body', body);
+            //         let data = "data:image/png;base64," + body.toString('base64');
+            //         res.send(data);
+            //     }
             // });
+
+            let url = req.query.url;
+            let reqProxy = new XMLHttpRequest();
+            reqProxy.open('GET', url, true);
+            reqProxy.responseType = 'arraybuffer';
+            reqProxy.onload = function (e) {
+                let buf = new Buffer(new Uint8Array(reqProxy.response));
+                let data = "data:image/png;base64," + buf.toString('base64');
+                res.send(data);
+            };
+            reqProxy.send();
         });
 
         app.use('/admin', adminRouter);
