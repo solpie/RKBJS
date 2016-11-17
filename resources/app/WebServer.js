@@ -48,7 +48,7 @@
 	var AdminRouter_1 = __webpack_require__(1);
 	var Env_1 = __webpack_require__(2);
 	var PanelRouter_1 = __webpack_require__(4);
-	var RkbModel_1 = __webpack_require__(5);
+	var RkbModel_1 = __webpack_require__(6);
 	var fs1 = __webpack_require__(11);
 	var path = __webpack_require__(3);
 	var os = __webpack_require__(12);
@@ -182,7 +182,7 @@
 
 	"use strict";
 	var Env_1 = __webpack_require__(2);
-	var const_1 = __webpack_require__(6);
+	var const_1 = __webpack_require__(5);
 	exports.panelRouter = express.Router();
 	exports.panelRouter.get('/', function (req, res) {
 	    console.log('get panel:');
@@ -240,10 +240,53 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.PanelId = {
+	    stagePanel: 'stage',
+	    stage1v1Panel: 'stage1v1',
+	    rkbPanel: 'rkb',
+	    bracketPanel: 'bracket',
+	    rankPanel: 'rankPanel',
+	    onlinePanel: 'online',
+	    winPanel: 'win',
+	    actPanel: 'act',
+	    screenPanel: 'screen',
+	    playerPanel: 'player'
+	};
+	exports.ServerConst = {
+	    SEND_ASYNC: true,
+	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
+	};
+	exports.ViewConst = {
+	    STAGE_WIDTH: 1920,
+	    STAGE_HEIGHT: 1080
+	};
+	exports.TimerState = {
+	    START_STR: 'start',
+	    PAUSE_STR: 'pause',
+	    PAUSE: 0,
+	    RUNNING: 1
+	};
+	exports.ViewEvent = {
+	    PLAYER_EDIT: 'edit player',
+	    PLAYER_ADD: 'add player',
+	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
+	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
+	};
+	function ScParam(param) {
+	    return param;
+	}
+	exports.ScParam = ScParam;
+
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var const_1 = __webpack_require__(6);
+	var const_1 = __webpack_require__(5);
 	var Command_1 = __webpack_require__(7);
 	var Env_1 = __webpack_require__(2);
 	var GameRkbInfo_1 = __webpack_require__(8);
@@ -497,8 +540,6 @@
 	        this.emit("" + Command_1.CommandId.setScorePanelVisible, const_1.ScParam(param));
 	    };
 	    RkbModel.prototype.cs_updatePlayer = function (param) {
-	        var playerId = param.playerId;
-	        var playerIdx = param.idx;
 	    };
 	    RkbModel.prototype.getFlyPlayerDoc = function (id) {
 	    };
@@ -543,49 +584,6 @@
 	    return RkbModel;
 	}());
 	exports.RkbModel = RkbModel;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-	exports.PanelId = {
-	    stagePanel: 'stage',
-	    stage1v1Panel: 'stage1v1',
-	    rkbPanel: 'rkb',
-	    bracketPanel: 'bracket',
-	    rankPanel: 'rankPanel',
-	    onlinePanel: 'online',
-	    winPanel: 'win',
-	    actPanel: 'act',
-	    screenPanel: 'screen',
-	    playerPanel: 'player'
-	};
-	exports.ServerConst = {
-	    SEND_ASYNC: true,
-	    DEF_AVATAR: '/img/panel/stage1v1/blue.png'
-	};
-	exports.ViewConst = {
-	    STAGE_WIDTH: 1920,
-	    STAGE_HEIGHT: 1080
-	};
-	exports.TimerState = {
-	    START_STR: 'start',
-	    PAUSE_STR: 'pause',
-	    PAUSE: 0,
-	    RUNNING: 1
-	};
-	exports.ViewEvent = {
-	    PLAYER_EDIT: 'edit player',
-	    PLAYER_ADD: 'add player',
-	    STRAIGHT3_LEFT: 'STRAIGHT3_LEFT',
-	    STRAIGHT3_RIGHT: 'STRAIGHT3_RIGHT'
-	};
-	function ScParam(param) {
-	    return param;
-	}
-	exports.ScParam = ScParam;
 
 
 /***/ },
@@ -759,7 +757,7 @@
 	"use strict";
 	var PlayerInfo_1 = __webpack_require__(9);
 	var BaseInfo_1 = __webpack_require__(10);
-	var const_1 = __webpack_require__(6);
+	var const_1 = __webpack_require__(5);
 	exports.bracketMap = {
 	    "1": { 'loser': [5, 0], 'winner': [7, 0] },
 	    "2": { 'loser': [5, 1], 'winner': [7, 1] },

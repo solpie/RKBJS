@@ -48,20 +48,20 @@ export class StagePlayerCard extends Container {
     }
 
     setKingLabel() {
-        var kingLabel: Bitmap;
-
-        if (this.isBlue) {
-            kingLabel = new createjs.Bitmap('/img/panel/stage1v1/kingLabelL.png');
-
-            kingLabel.x = -14
-        }
-        else {
-            kingLabel = new createjs.Bitmap('/img/panel/stage1v1/kingLabelR.png');
-            kingLabel.x = -10
-        }
-        kingLabel.y = -6;
-
-        this.addChild(kingLabel);
+        // var kingLabel: Bitmap;
+        //
+        // if (this.isBlue) {
+        //     kingLabel = new createjs.Bitmap('/img/panel/stage1v1/kingLabelL.png');
+        //
+        //     kingLabel.x = -14
+        // }
+        // else {
+        //     kingLabel = new createjs.Bitmap('/img/panel/stage1v1/kingLabelR.png');
+        //     kingLabel.x = -10
+        // }
+        // kingLabel.y = -6;
+        //
+        // this.addChild(kingLabel);
     }
 
     setPlayerInfo(playerDoc: PlayerDoc, scale = 1, isBlue = true) {

@@ -4,7 +4,7 @@ import {PlayerDoc} from "../../../../model/PlayerInfo";
 import {BasePanelView} from "../../BasePanelView";
 import {PanelId} from "../../../const";
 import {FTInfo} from "../../../../model/FTInfo";
-import {imgToTex, newBitmap} from "../../../utils/PixiEx";
+import {newBitmap} from "../../../utils/PixiEx";
 import {loadImgArr} from "../../../utils/JsFunc";
 import Shape = createjs.Shape;
 import Text = createjs.Text;
@@ -222,27 +222,26 @@ export class RankView extends BasePanelView {
     }
 
     fadeInMixRank(param) {
-        // this.ctn.removeAllChildren();
+        this.ctn.addChild(newBitmap({url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'}));
+        for (let i = 0; i < 5; i++) {
+            let curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
+            curItem.x = 45;
+            curItem.y = 140 + i * 185;
+            let itemBg = newBitmap({url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
+            curItem.addChildAt(itemBg, 0);
+            this.ctn.addChild(curItem);
+            if (param.totalFtDocArr[i]) {
+                let totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
+                totalItem.x = 1005;
+                totalItem.y = curItem.y;
+                this.ctn.addChild(totalItem);
+            }
+        }
         let imgArr = [];
         imgArr.push({name: 'itemBg', url: '/img/panel/stage1v1/ft/ftRankPlayer.jpg'});
 
         loadImgArr(imgArr, (imgCol) => {
-            this.ctn.addChild(newBitmap({url: '/img/panel/stage1v1/ft/ftRankBg2.jpg'}));
-            for (let i = 0; i < 5; i++) {
-                let curItem = RankView.getPlayerItem(param.totalPlayerDocArr[i], param.ftMap, (i == 0 || i == 1 ? i + 1 : null));
-                curItem.x = 45;
-                curItem.y = 140 + i * 185;
-                let itemBg = new PIXI.Sprite(imgToTex(imgCol['itemBg']));
-                curItem.addChildAt(itemBg, 0);
-                this.ctn.addChild(curItem);
-                if (param.totalFtDocArr[i]) {
-                    let totalItem = RankView.getFtItem(param.totalFtDocArr[i], (i == 0 || i == 1 ? i + 1 : null));
-                    totalItem.x = 1005;
-                    totalItem.y = curItem.y;
-                    this.ctn.addChild(totalItem);
-                }
-
-            }
+            console.log('load img', imgCol);
         });
     }
 

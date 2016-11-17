@@ -127,7 +127,7 @@ export class StageRKBView extends BasePanelView {
 
 
                 //test
-                // this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
+                this.eventPanel.playerInfoCard.fadeInWinPlayer(true, data.player.left);
                 // this.eventPanel.playerInfoCard.fadeInWinPlayer(false, data.player.right);
                 // this.scorePanel.resetTimer();
                 // this.scorePanel.toggleTimer1(TimerState.RUNNING);

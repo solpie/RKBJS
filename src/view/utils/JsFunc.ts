@@ -64,11 +64,13 @@ export function loadImgArr(pathArr, callback) {
 
     function onLoadImg() {
         count--;
-        if (count === 0)
+        if (count === 0) {
+            count = -1;
             callback(imgCollection);
+        }
     }
 
-    if (pathArr[0].length && pathArr[0].hasOwnProperty('name') && pathArr[0].hasOwnProperty('url')) {
+    if (count && pathArr[0].hasOwnProperty('name') && pathArr[0].hasOwnProperty('url')) {
         isArr = false;
         imgCollection = {};
     }
@@ -81,15 +83,14 @@ export function loadImgArr(pathArr, callback) {
     let url;
     for (let i = 0; i < pathArr.length; i++) {
         let p = pathArr[i];
+        img = new Image();
         if (isArr) {
-            img = new Image();
-            imgCollection[p.name] = img;
-            url = p.url;
-        }
-        else {
-            img = new Image();
             imgCollection.push(img);
             url = p;
+        }
+        else {
+            imgCollection[p.name] = img;
+            url = p.url;
         }
         img.onload = onLoadImg;
         img.src = url;

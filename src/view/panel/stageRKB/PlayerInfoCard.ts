@@ -60,8 +60,10 @@ export class PlayerInfoCard {
             bgPath += "Red";
         bgPath += '.png';
 
+        console.log('bg Path:', bgPath);
         loadImgArr([p.avatar(), bgPath], (avtImgArr) => {
             var avtImg = avtImgArr[0];
+            var winBgImg = avtImgArr[1];
             var isFinal = (p as any).final;
             var avatar = new createjs.Bitmap(p.avatar());
             var scale = 80 / avatar.getBounds().height;
@@ -85,7 +87,7 @@ export class PlayerInfoCard {
             ctn.addChild(avatar);
 
 
-            var bg = new createjs.Bitmap(bgPath);
+            var bg = new createjs.Bitmap(winBgImg);
             bg.x = -116;
             bg.y = -80;
 
@@ -212,11 +214,11 @@ export class PlayerInfoCard {
 
     fadeInWinPlayer(isBlue, playerDoc) {
         this.ctn.removeAllChildren();
-        var ctn = this.ctn;
+        let ctn = this.ctn;
         $('#ex').html("");
         ctn.addChild(CreateJsEx.newModal());
         ///////////
-        var titlePath = "/img/panel/stage1v1/win/winPanelTitle";
+        let titlePath = "/img/panel/stage1v1/win/winPanelTitle";
         if (isBlue)
             titlePath += 'Blue.png';
         else
@@ -224,9 +226,9 @@ export class PlayerInfoCard {
         // if (playerDoc.isKing)
         //     titlePath = '/img/panel/stage1v1/win/winPanelTitleKing.png';
 
-        var titleCtn = new createjs.Container();
+        let titleCtn = new createjs.Container();
         loadImg(titlePath, function () {
-            var title = new createjs.Bitmap(titlePath);
+            let title = new createjs.Bitmap(titlePath);
             title.x = -419;//838 315
             title.y = -158;
             titleCtn.x = (ViewConst.STAGE_WIDTH) * .5;
@@ -240,13 +242,13 @@ export class PlayerInfoCard {
         ctn.addChild(titleCtn);
         /////////////////
 
-        var playerInfo = new PlayerInfo(playerDoc);
+        let playerInfo = new PlayerInfo(playerDoc);
         (playerInfo as any).isBlue = isBlue;
         // if (playerDoc.isKing)
         //     (playerInfo as any).final = true;
 
-        var playerCard = this.getWinPlayerCard(playerInfo, (pInfo2)=> {
-            var bound = pInfo2.playerCard.getBounds();
+        let playerCard = this.getWinPlayerCard(playerInfo, (pInfo2)=> {
+            let bound = pInfo2.playerCard.getBounds();
             if (bound)
                 pInfo2.playerCard.cache(bound.x, bound.y, bound.width, bound.height);
         });
@@ -261,7 +263,7 @@ export class PlayerInfoCard {
         createjs.Tween.get(playerCard)
             .to({x: playerCard.px, scaleX: 1.1, scaleY: 1.1}, 200)
             .to({scaleX: 1, scaleY: 1}, 60).call(()=> {
-            var $playerIntro = $('.PlayerIntro').css({left: '835px'});
+            let $playerIntro = $('.PlayerIntro').css({left: '835px'});
             $playerIntro.show();
         });
         ctn.addChild(playerCard);
