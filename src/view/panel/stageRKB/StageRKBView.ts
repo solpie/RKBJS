@@ -68,6 +68,7 @@ export class StageRKBView extends BasePanelView {
                 this.scorePanel.toggleTimer1(TimerState.PAUSE)
             })
             .on(CommandId.sc_resetTimer, (data)=> {
+                console.log("CommandId.sc_resetTimer", data);
                 this.scorePanel.resetTimer()
             })
     }

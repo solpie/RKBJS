@@ -11,7 +11,7 @@ let stageRKBView: StageRKBView;
 declare let $;
 
 let opReq = (cmdId: string, param: any, callback: any)=> {
-    $.post(`/panel/${PanelId.rkbPanel}/${cmdId}`,
+    $.post(`/panel/${PanelId.onlinePanel}/${cmdId}`,
         param,
         callback);
 };
@@ -78,14 +78,12 @@ export class RKBView extends VueBase {
         {
             opReq(`${CommandId.cs_pauseTimer}`, { _: null}, ()=> {
                 console.log("onClkPauseTimer")
-
             })
         },
         onClkResetTimer()
         {
             opReq(`${CommandId.cs_resetTimer}`, { _: null}, ()=> {
                 console.log("onClkResetTimer")
-
             })
         }
     };
