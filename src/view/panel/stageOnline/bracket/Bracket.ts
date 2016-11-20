@@ -59,7 +59,9 @@ export class Bracket extends BasePanelView {
                 .drawRoundedRect(0,0,45,45,5)
             winHint.x = 160
             winHint.y=3
+            winHint.visible = false;
             group2.winHint = winHint;
+
             groupCtn.addChild(winHint);
 
             //game idx
@@ -212,8 +214,6 @@ export class Bracket extends BasePanelView {
             group1.scores[1].text = dataObj.right.score || "0";
         }
 
-
-
         for (let i = 0; i < 14; i++) {
             let isClose = closeGame[14 - i];
             if (isClose) {
@@ -228,9 +228,16 @@ export class Bracket extends BasePanelView {
         for (let i = 0; i < 14; i++) {
             let isClose = closeGame[i+1];
             if (!isClose) {
-                break;
+                groupPosMap[i+1].winHint.visible = false;
             }
-            groupPosMap[i+1].ctn.alpha = 0.5
+            else{
+                groupPosMap[i+1].ctn.alpha = 0.3;
+                groupPosMap[i+1].winHint.visible = true;
+                if(groupPosMap[i+1].playerArr[0].isWin)
+                    groupPosMap[i+1].winHint.y = 3;
+                else
+                    groupPosMap[i+1].winHint.y =51;
+            }
         }
     }
 }
