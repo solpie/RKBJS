@@ -47,10 +47,12 @@ export class Bracket extends BasePanelView {
         for (let idx in groupPosMap) {
             let group2 = groupPosMap[idx];
             //todo 优化newBitmap options use tex
-            ctn.addChild(newBitmap({
+            group2.bg = newBitmap({
                 url: "/img/panel/bracket/group.png",
                 x: group2.x, y: group2.y
-            }));
+            });
+
+            ctn.addChild(group2.bg);
             //game idx
             let gameIdx = Number(idx);
             let gameIdxText = new PIXI.Text(idx, s);
@@ -201,10 +203,19 @@ export class Bracket extends BasePanelView {
             group1.scores[1].text = dataObj.right.score || "0";
         }
 
+
+
         for (let i = 0; i < 14; i++) {
             let isClose = closeGame[14 - i];
             if (isClose) {
                 this.showComingIdx(14 - i + 1);
+                break;
+            }
+        }
+        for (let i = 0; i < 14; i++) {
+            let isClose = closeGame[i];
+            groupPosMap[i+1].bg.alpha = 0.5
+            if (isClose) {
                 break;
             }
         }
