@@ -5,10 +5,10 @@ function _mkGroup(parameters) {
     let hints = parameters.hints ? parameters.hints : ['', ''];
     let s = {font: '25px', fill: '#C1C1C1', align: 'right'};
     let s1 = new PIXI.Text('', s);
-    s1.y = y + 8;
+    s1.y = 8;
     let s2 = new PIXI.Text('', s);
-    s2.y = y + 8 + 50;
-    s1.x = s2.x = x + 175;
+    s2.y =  8 + 50;
+    s1.x = s2.x = 175;
     return {
         x: x, y: y, labels: [], hints: hints,
         scores: [s1, s2]

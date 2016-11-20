@@ -47,39 +47,48 @@ export class Bracket extends BasePanelView {
         for (let idx in groupPosMap) {
             let group2 = groupPosMap[idx];
             //todo 优化newBitmap options use tex
-            group2.bg = newBitmap({
+            let groupCtn  = group2.ctn = newBitmap({
                 url: "/img/panel/bracket/group.png",
                 x: group2.x, y: group2.y
             });
 
-            ctn.addChild(group2.bg);
+            ctn.addChild(groupCtn);
+
+            let winHint = new PIXI.Graphics()
+            winHint.beginFill(0xff0000)
+                .drawRoundedRect(0,0,45,45,5)
+            winHint.x = 160
+            winHint.y=3
+            group2.winHint = winHint;
+            groupCtn.addChild(winHint);
+
             //game idx
             let gameIdx = Number(idx);
             let gameIdxText = new PIXI.Text(idx, s);
             if (gameIdx > 9)
-                gameIdxText.x = group2.x - 50;
+                gameIdxText.x =  - 50;
             else
-                gameIdxText.x = group2.x - 30;
-            gameIdxText.y = group2.y + 5;
-            ctn.addChild(gameIdxText);
+                gameIdxText.x =  - 30;
+            gameIdxText.y =  5;
+            groupCtn.addChild(gameIdxText);
 
             //hint
             for (let i = 0; i < group2.hints.length; i++) {
                 let hint = group2.hints[i];
                 let label = new PIXI.Text(hint, hintStyle);
-                label.x = group2.x + 15;
-                label.y = group2.y + 8 + i * 48;
+                label.x =  15;
+                label.y =  8 + i * 48;
                 group2.labels.push(label);
-                ctn.addChild(label);
+                groupCtn.addChild(label);
 
                 let msk = new PIXI.Graphics();
                 msk.y = label.y;
                 msk.x = label.x;
                 msk.beginFill(0x000000).drawRect(0, 0, 135, 50);
-                ctn.addChild(msk);
+                groupCtn.addChild(msk);
                 label.mask = msk;
 
-                ctn.addChild(group2.scores[i]);
+                groupCtn.addChild(group2.scores[i]);
                 group2.playerArr = [new PlayerSvg, new PlayerSvg]
             }
             if (gameIdx > 4) {
@@ -211,13 +220,17 @@ export class Bracket extends BasePanelView {
                 this.showComingIdx(14 - i + 1);
                 break;
             }
+            else if(i==13)
+            {
+                this.showComingIdx(1);
+            }
         }
         for (let i = 0; i < 14; i++) {
-            let isClose = closeGame[i];
-            groupPosMap[i+1].bg.alpha = 0.5
-            if (isClose) {
+            let isClose = closeGame[i+1];
+            if (!isClose) {
                 break;
             }
+            groupPosMap[i+1].ctn.alpha = 0.5
         }
     }
 }
