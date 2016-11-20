@@ -67,6 +67,26 @@ export class RKBView extends VueBase {
 
                 })
             }
+        },
+        onClkStartTimer()
+        {
+            opReq(`${CommandId.cs_startTimer}`, { _: null}, ()=> {
+                console.log("onClkStartTimer")
+            })
+        },
+        onClkPauseTimer()
+        {
+            opReq(`${CommandId.cs_pauseTimer}`, { _: null}, ()=> {
+                console.log("onClkPauseTimer")
+
+            })
+        },
+        onClkResetTimer()
+        {
+            opReq(`${CommandId.cs_resetTimer}`, { _: null}, ()=> {
+                console.log("onClkResetTimer")
+
+            })
         }
     };
 

@@ -7,7 +7,7 @@ enum cmdEnum{
     toggleTimer,
     cs_toggleTimer,
     resetTimer,
-    cs_resetTimer,
+    // cs_resetTimer,
     disableTracker,
     updateLeftScore,
     cs_addLeftScore,//1000010
@@ -96,7 +96,7 @@ enum cmdEnum{
     setScorePanelVisible,//隐藏记分面板
     cs_autoSaveGameRec,//hupu 记录比赛
     cs_setDelayTime,//
-    setDelayTime,//
+    sc_setDelayTime,//
         //onlinePanel
     cs_showRank,//
     sc_showRank,//
@@ -104,6 +104,13 @@ enum cmdEnum{
     sc_showBracket,//
     cs_hideOnlinePanel,//
     sc_hideOnlinePanel,//
+        // rkb panel
+        cs_resetTimer,
+        sc_resetTimer,
+        cs_startTimer,
+        sc_startTimer,
+        cs_pauseTimer,
+        sc_pauseTimer,
         //---------------- player panel
 
     cs_startingLine,

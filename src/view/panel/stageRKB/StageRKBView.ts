@@ -16,7 +16,7 @@ declare let io;
 declare let hupuWsUrl;
 export class StageRKBView extends BasePanelView {
     $opView: RKBView;
-    scorePanel;
+    scorePanel:ScorePanel;
     playerPanel;
     eventPanel;
     countDownRender;
@@ -57,9 +57,18 @@ export class StageRKBView extends BasePanelView {
             console.log('connect', window.location.host);
             localWs.emit("opUrl", {opUrl: window.location.host});
         })
-            .on(`${CommandId.setDelayTime}`, (data)=> {
+            .on(`${CommandId.sc_setDelayTime}`, (data)=> {
                 console.log("CommandId.setDelayTime", data);
                 this.delayTimeMS = data.delayTimeMS;
+            })
+            .on(CommandId.sc_startTimer, (data)=> {
+                this.scorePanel.toggleTimer1(TimerState.RUNNING)
+            })
+            .on(CommandId.sc_pauseTimer, (data)=> {
+                this.scorePanel.toggleTimer1(TimerState.PAUSE)
+            })
+            .on(CommandId.sc_resetTimer, (data)=> {
+                this.scorePanel.resetTimer()
             })
     }
 

@@ -15,6 +15,8 @@
         <label class="label">现场时间:{{liveTime}}</label>
         <label class="label">面板时间:{{panelTime}}</label>
 
-        <button class="button is-primary">重置比赛时间</button>
+        <button class="button is-primary" @click="onClkStartTimer">开始</button>
+        <button class="button is-primary" @click="onClkPauseTimer">暂停</button>
+        <button class="button is-primary" @click="onClkResetTimer">重置</button>
     </div>
 </div>
