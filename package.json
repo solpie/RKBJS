@@ -38,11 +38,11 @@
     "app": "electron resources/app",
     "build": "rollup -c&&npm run server-build",
     "view": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.view.js",
+    "server": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
     "view-build": "webpack --progress --profile --colors --disZplay-error-details --display-cached --config webpack.view.js",
+    "server-build": "webpack --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
     "pack64": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=x64 --overwrite",
     "pack32": "electron-packager resources/app RKB --ignore=node_modules/electron-* --platform=win32 --arch=ia32 --overwrite",
-    "server": "webpack --watch --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
-    "server-build": "webpack --progress --profile --colors --display-error-details --display-cached --config webpack.server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
