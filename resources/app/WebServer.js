@@ -250,6 +250,7 @@
 	    stagePanel: 'stage',
 	    stage1v1Panel: 'stage1v1',
 	    rkbPanel: 'rkb',
+	    scorePanel: 'score',
 	    bracketPanel: 'bracket',
 	    rankPanel: 'rankPanel',
 	    onlinePanel: 'online',

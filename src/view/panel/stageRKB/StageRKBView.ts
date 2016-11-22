@@ -50,7 +50,6 @@ export class StageRKBView extends BasePanelView {
         this.initOp();
         this.initAuto();
     }
-
     initOp() {
         let localWs = io.connect(`http://${window.location.host}/${PanelId.rkbPanel}`);
         localWs.on('connect', function (msg) {
