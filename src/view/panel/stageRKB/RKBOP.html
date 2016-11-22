@@ -9,14 +9,14 @@
                    return c >= 48 && c <= 57 ||c==46'
                    placeholder="" style="width: 50px;"
                    v-model="delayTime">
-            <button class="button is-primary" @click="onClkSetDelay">确定</button>
+            <button class="button" @click="onClkSetDelay">确定</button>
         </p>
 
         <label class="label">现场时间:{{liveTime}}</label>
         <label class="label">面板时间:{{panelTime}}</label>
 
-        <button class="button is-primary" @click="onClkStartTimer">开始</button>
-        <button class="button is-primary" @click="onClkPauseTimer">暂停</button>
-        <button class="button is-primary" @click="onClkResetTimer">重置</button>
+        <button class="button" @click="onClkStartTimer">开始</button>
+        <button class="button" @click="onClkPauseTimer">暂停</button>
+        <button class="button" @click="onClkResetTimer">重置</button>
     </div>
 </div>
