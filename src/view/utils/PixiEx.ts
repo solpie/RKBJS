@@ -82,7 +82,7 @@ export class BitmapText extends PIXI.Container {
     private _digiWidth: number
     private _digiCtn: PIXI.Container
 
-    constructor(options: { texture: PIXI.Texture, text: string, frames: Array<Array<number>>, animations: any }) {
+    constructor(options: { img: string, text: string, frames: Array<Array<number>>, animations: any }) {
         super()
         let text = options.text
         this.animations = options.animations
@@ -91,8 +91,15 @@ export class BitmapText extends PIXI.Container {
         this._digiCtn = new PIXI.Container
         this.addChild(this._digiCtn)
 
-        this._tex = options.texture
         this.text = text;
+
+        loadRes(options.img, (img) => {
+            this._tex = imgToTex(img)
+            for (var k in this.digis) {
+                var digi = this.digis[k]
+                digi['sp'].texture = this._tex
+            }
+        })
     }
 
     set text(v: string) {
@@ -116,7 +123,6 @@ export class BitmapText extends PIXI.Container {
                 digiFrame['idx'] = digiIdx
                 digiFrame['sp'].x = - ofsX
                 digiFrame['sp'].y = - ofsY
-
 
                 digiIdx += 1
                 num = v.charAt(digiIdx)

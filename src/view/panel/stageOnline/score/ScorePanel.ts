@@ -18,34 +18,29 @@ export class ScorePanel {
 
 
         var px = 865
-        loadRes("/img/panel/stage1v1/scoreNum.png", (img) => {
-            let tex = imgToTex(img);
-            let leftScoreNum = new BitmapText({
-                text: '10',
-                animations: {
-                    "0": 1, "1": 2, "2": 3, "3": 4, "4": 5,
-                    "5": 6, "6": 7, "7": 8, "8": 9, "9": 0
-                },
-                texture: tex,
-                frames: [[0, 0, 40, 54],
-                [41, 0, 40, 54],
-                [0, 55, 40, 54],
-                [41, 55, 40, 54],
-                [82, 0, 40, 54],
-                [82, 55, 40, 54],
-                [123, 0, 40, 54],
-                [123, 55, 40, 54],
-                [0, 110, 40, 54],
-                [41, 110, 40, 54]]
-            })
-            leftScoreNum.x = px
-            leftScoreNum.y = 60
-            leftScoreNum.align = 'right'
-            ctn.addChild(leftScoreNum)
-            // this._makeFrame(options.frames)
-        }, false);
 
-
+        let leftScoreNum = new BitmapText({
+            text: '10',
+            animations: {
+                "0": 1, "1": 2, "2": 3, "3": 4, "4": 5,
+                "5": 6, "6": 7, "7": 8, "8": 9, "9": 0
+            },
+            img: "/img/panel/stage1v1/scoreNum.png",
+            frames: [[0, 0, 40, 54],
+            [41, 0, 40, 54],
+            [0, 55, 40, 54],
+            [41, 55, 40, 54],
+            [82, 0, 40, 54],
+            [82, 55, 40, 54],
+            [123, 0, 40, 54],
+            [123, 55, 40, 54],
+            [0, 110, 40, 54],
+            [41, 110, 40, 54]]
+        })
+        leftScoreNum.x = px
+        leftScoreNum.y = 60
+        leftScoreNum.align = 'right'
+        ctn.addChild(leftScoreNum)
     }
 
     toggleTimer1(state) {
