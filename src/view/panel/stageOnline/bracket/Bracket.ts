@@ -1,9 +1,9 @@
-import {BasePanelView} from "../../BasePanelView";
-import {PanelId, ViewConst, FontName} from "../../../const";
-import {groupPosMap, PlayerSvg} from "./BracketGroup";
-import {newBitmap} from "../../../utils/PixiEx";
-import {drawLine1, drawLine2, drawLine4} from "./GroupLine";
-import {blink2} from "../../../utils/Fx";
+import { BasePanelView } from "../../BasePanelView";
+import { PanelId, ViewConst, FontName } from "../../../const";
+import { groupPosMap, PlayerSvg } from "./BracketGroup";
+import { newBitmap } from "../../../utils/PixiEx";
+import { drawLine1, drawLine2, drawLine4 } from "./GroupLine";
+import { blink2 } from "../../../utils/Fx";
 import Container = createjs.Container;
 import Bitmap = createjs.Bitmap;
 declare let $;
@@ -35,8 +35,8 @@ export class Bracket extends BasePanelView {
         });
         bg.alpha = 0.8;
         ctn.addChild(bg);
-        ctn.addChild(newBitmap({url: "/img/panel/bracket/title.png"}));
-        let s = {font: '25px', fill: '#C1C1C1', align: 'right'};
+        ctn.addChild(newBitmap({ url: "/img/panel/bracket/title.png" }));
+        let s = { font: '25px', fill: '#C1C1C1', align: 'right' };
         let hintStyle = {
             fontFamily: FontName.MicrosoftYahei,
             fontSize: '25px',
@@ -47,7 +47,7 @@ export class Bracket extends BasePanelView {
         for (let idx in groupPosMap) {
             let group2 = groupPosMap[idx];
             //todo 优化newBitmap options use tex
-            let groupCtn  = group2.ctn = newBitmap({
+            let groupCtn = group2.ctn = newBitmap({
                 url: "/img/panel/bracket/group.png",
                 x: group2.x, y: group2.y
             });
@@ -56,9 +56,9 @@ export class Bracket extends BasePanelView {
 
             let winHint = new PIXI.Graphics()
             winHint.beginFill(0xff0000)
-                .drawRoundedRect(0,0,45,45,5)
+                .drawRoundedRect(0, 0, 45, 45, 5)
             winHint.x = 160
-            winHint.y=3
+            winHint.y = 3
             winHint.visible = false;
             group2.winHint = winHint;
 
@@ -68,18 +68,18 @@ export class Bracket extends BasePanelView {
             let gameIdx = Number(idx);
             let gameIdxText = new PIXI.Text(idx, s);
             if (gameIdx > 9)
-                gameIdxText.x =  - 50;
+                gameIdxText.x = - 50;
             else
-                gameIdxText.x =  - 30;
-            gameIdxText.y =  5;
+                gameIdxText.x = - 30;
+            gameIdxText.y = 5;
             groupCtn.addChild(gameIdxText);
 
             //hint
             for (let i = 0; i < group2.hints.length; i++) {
                 let hint = group2.hints[i];
                 let label = new PIXI.Text(hint, hintStyle);
-                label.x =  15;
-                label.y =  8 + i * 48;
+                label.x = 15;
+                label.y = 8 + i * 48;
                 group2.labels.push(label);
                 groupCtn.addChild(label);
 
@@ -120,7 +120,7 @@ export class Bracket extends BasePanelView {
         g1 = groupPosMap[11];
         ctn.addChild(drawLine4(g1.x + ofsX, g1.y + ofsY - 1));
 
-        this.comingTitle = newBitmap({url: '/img/panel/bracket/comingTitle.png'});
+        this.comingTitle = newBitmap({ url: '/img/panel/bracket/comingTitle.png' });
         this.comingTitle.visible = false;
         ctn.addChild(this.comingTitle);
 
@@ -188,7 +188,7 @@ export class Bracket extends BasePanelView {
 
     onBracketData(res) {
         let closeGame = {};
-        let s = {font: '25px', fill: '#e1e1e1', align: 'right'};
+        let s = { font: '25px', fill: '#e1e1e1', align: 'right' };
         for (let gameIdx in res.data) {
             let dataObj = res.data[gameIdx];
             let group1 = groupPosMap[gameIdx];
@@ -214,29 +214,31 @@ export class Bracket extends BasePanelView {
             group1.scores[1].text = dataObj.right.score || "0";
         }
 
+
+        let comingIdx = 1;
         for (let i = 0; i < 14; i++) {
             let isClose = closeGame[14 - i];
             if (isClose) {
-                this.showComingIdx(14 - i + 1);
+                comingIdx = 14 - i + 1;
                 break;
             }
-            else if(i==13)
-            {
-                this.showComingIdx(1);
-            }
         }
+        this.showComingIdx(comingIdx);
+
         for (let i = 0; i < 14; i++) {
-            let isClose = closeGame[i+1];
+            let isClose = closeGame[i + 1];
             if (!isClose) {
-                groupPosMap[i+1].winHint.visible = false;
+                if (i + 1 != comingIdx)
+                    groupPosMap[i + 1].ctn.alpha = 0.3;
+                groupPosMap[i + 1].winHint.visible = false;
             }
-            else{
-                groupPosMap[i+1].ctn.alpha = 0.3;
-                groupPosMap[i+1].winHint.visible = true;
-                if(groupPosMap[i+1].playerArr[0].isWin)
-                    groupPosMap[i+1].winHint.y = 3;
+            else {
+                groupPosMap[i + 1].ctn.alpha = 1;
+                groupPosMap[i + 1].winHint.visible = true;
+                if (groupPosMap[i + 1].playerArr[0].isWin)
+                    groupPosMap[i + 1].winHint.y = 3;
                 else
-                    groupPosMap[i+1].winHint.y =51;
+                    groupPosMap[i + 1].winHint.y = 51;
             }
         }
     }
