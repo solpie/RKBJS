@@ -82,7 +82,7 @@ export class BitmapText extends PIXI.Container {
     private _digiWidth: number
     private _digiCtn: PIXI.Container
 
-    constructor(options: { img: string, text: string, frames: Array<Array<number>>, animations: any }) {
+    constructor(options: { img?: string, texture?: PIXI.Texture, text: string, frames: Array<Array<number>>, animations: any }) {
         super()
         let text = options.text
         this.animations = options.animations
@@ -90,18 +90,24 @@ export class BitmapText extends PIXI.Container {
         this.digis = {}
         this._digiCtn = new PIXI.Container
         this.addChild(this._digiCtn)
-
         this.text = text;
-
-        loadRes(options.img, (img) => {
-            this._tex = imgToTex(img)
-            for (var k in this.digis) {
-                var digi = this.digis[k]
-                digi['sp'].texture = this._tex
-            }
-        })
+        if (options.texture) {
+            this._tex = options.texture
+            this.updateTex()
+        }
+        else if (options.img) {
+            loadRes(options.img, (img) => {
+                this._tex = imgToTex(img)
+                this.updateTex()
+            })
+        }
     }
-
+    private updateTex() {
+        for (var k in this.digis) {
+            var digi = this.digis[k]
+            digi['sp'].texture = this._tex
+        }
+    }
     set text(v: string) {
         var digiIdx = 0
         var num = v.charAt(digiIdx)
@@ -136,9 +142,13 @@ export class BitmapText extends PIXI.Container {
         if (align == 'left') {
             this._digiCtn.x = 0
         }
+        else if (align == 'center') {
+            this._digiCtn.x = -this._digiWidth * .5
+        }
         else if (align == 'right') {
             this._digiCtn.x = -this._digiWidth
         }
+
     }
 
     _makeFrame(width, height) {
